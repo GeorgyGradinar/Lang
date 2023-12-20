@@ -66,7 +66,6 @@ let isActiveRecord = ref(false);
 
 let audioRecorder = ref();
 let audioChunks = ref([]);
-
 let messagesBlock = ref(null);
 
 // src="/sound/brown.mp3"
@@ -104,9 +103,7 @@ function handleRecord(event) {
   audioChunks.value.push(event.data)
 
   const blobObj = new Blob(audioChunks.value, {type: 'audio/mp3'});
-  console.log(blobObj)
   let audioUrl = URL.createObjectURL(blobObj);
-  console.log(audioUrl)
   addMessage({
     isBot: false,
     isText: false,
