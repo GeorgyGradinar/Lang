@@ -5,11 +5,11 @@
     <!--    <p class="tasks-card__descr">{{ card.text }}</p>-->
     <div class="info">
       <div class="count_tasks">
-        <img src="/img/tasks/book.svg" alt="">
+        <img src="img/tasks/book.svg" alt="">
         <p>{{ card?.countLesson }} уроков</p>
       </div>
       <div class="hours">
-        <img src="/img/tasks/clock.svg" alt="">
+        <img src="img/tasks/clock.svg" alt="">
         <p>{{ card?.hours }} hours</p>
       </div>
     </div>
@@ -22,7 +22,7 @@
     </div>
     <div class="progress_done" v-else>
       <div class="done">
-        <img src="/img/done.svg" alt="">
+        <img src="img/done.svg" alt="">
       </div>
       <p>Выполненно!</p>
     </div>

@@ -3,8 +3,8 @@
     <v-expansion-panel-title>
       {{ question.q }}
 
-      <img class="chevron-down" v-if="!isShowImg" src="/img/chevron-down.svg" alt="chevron-down.svg"/>
-      <img class="chevron-up" v-if="isShowImg" src="/img/chevron-up.svg" alt="chevron-up.svg"/>
+      <img class="chevron-down" v-if="!isShowImg" src="img/chevron-down.svg" alt="chevron-down.svg"/>
+      <img class="chevron-up" v-if="isShowImg" src="img/chevron-up.svg" alt="chevron-up.svg"/>
 
     </v-expansion-panel-title>
     <v-expansion-panel-text>

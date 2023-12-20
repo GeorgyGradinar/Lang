@@ -38,10 +38,10 @@
       </div>
       <div class="wrapper-input" v-if="!isActiveRecord">
         <input v-model="messageToBot" @keydown.enter="sendMessage">
-        <button class="sendMessage" @click="sendMessage"><img src="/img/chart/send.svg" alt=""></button>
+        <button class="sendMessage" @click="sendMessage"><img src="img/chart/send.svg" alt=""></button>
       </div>
       <button class="micro" @mousedown="toggleActiveRecord" @mouseup="toggleActiveRecord">
-        <img src="/img/chart/mic.svg" alt="">
+        <img src="img/chart/mic.svg" alt="">
       </button>
     </div>
   </div>
