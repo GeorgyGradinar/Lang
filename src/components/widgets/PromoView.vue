@@ -36,20 +36,19 @@ function onClick() {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  height: 250px;
+  width: 50%;
   border-radius: 10px;
   border: 1px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
   cursor: pointer;
   transition: all 0.2s;
+  padding: 10px 30px;
 
   .footer__card {
     width: 100%;
-    max-width: 250px;
-    padding-left: 25px;
 
     .footer__title {
-      font-size: 20px;
+      font-size: 26px;
       font-weight: 700;
       margin-bottom: 24px;
       margin-right: 10px;

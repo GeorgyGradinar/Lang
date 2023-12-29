@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <div class="header__burger-wrap v-center">
+      <div class="header__burger-wrap">
         <div class="header__burger " :class="{active:mobileMenu}" @click="mobileMenu = !mobileMenu">
           <span></span>
         </div>
@@ -65,7 +65,7 @@ let popupMenu = ref(false);
 header {
   width: 100vw;
   height: 82px;
-  background-color: #4f3dca;
+  background-color: var(--green);
   display: flex;
   justify-content: center;
   position: fixed;
@@ -114,7 +114,7 @@ header {
       margin: 0 10px;
 
       a {
-        background-color: var(--pink);
+        background-color: var(--red);
         padding: 7px;
         border-radius: 8px;
         border: 1px solid var(--dark);
@@ -122,7 +122,7 @@ header {
         transition: all 0.2s;
 
         &:hover {
-          color: #ffd073;
+          color: var(--dark);
         }
 
         &:active {
@@ -156,7 +156,7 @@ header {
         font-size: 15px;
         width: 100%;
         height: 100%;
-        background-color: #4f3dca;
+        background-color: var(--green);
         z-index: 103;
 
         button {
@@ -221,8 +221,10 @@ header {
     }
 
     .header__burger-wrap {
+      display: none;
+
       .header__burger {
-        display: none
+
       }
     }
   }
@@ -318,6 +320,7 @@ header {
       }
 
       .header__burger-wrap {
+        display: block;
         width: 30px;
         height: 30px;
 

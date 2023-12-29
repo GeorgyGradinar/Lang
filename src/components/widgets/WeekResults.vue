@@ -1,15 +1,22 @@
 <template>
   <div class="state-week">
+    <div class="chart">
+      <canvas ref="chart"></canvas>
+    </div>
     <div class="state-week__statistic">
-      <p>Задания на сегодня:&nbsp;&nbsp;<span class="bold">{{ success + errors }}/{{ total }}</span></p>
+      <!--      <p>Задания на сегодня:&nbsp;&nbsp;<span class="bold">{{ success + errors }}/{{ total }}</span></p>-->
       <div class="statistic">
         <div class="wrapper__success">
-          <img src="img/icon/bxs-check-circle.png">&nbsp;
-          Успешно:&nbsp;<span class="bold">{{ success }}</span>
+          <img src="img/icon/check-done.svg">&nbsp;
+          <p> Успешно:&nbsp;<span class="bold">{{ success }}</span></p>
         </div>
         <div class="wrapper__errors">
-          <img src="img/icon/bxs-error-circle.png">&nbsp;
+          <img src="img/icon/info.svg">&nbsp;
           С ошибками:&nbsp;<span class="bold">{{ errors }}</span>
+        </div>
+        <div class="wrapper__without-result">
+          <img src="img/icon/close.svg">&nbsp;
+          Не выполнено:&nbsp;<span class="bold">{{ errors }}</span>
         </div>
       </div>
     </div>
@@ -17,11 +24,11 @@
       <div class="day"
            v-for="(item, index) in weekResults" :key="item.day"
       >
-        <div>{{ item.day }} {{ index + 1 }}</div>
+        <p>{{ item.day }}</p>
         <div
             class="results"
             :class="{'no': item.state === 'lock', 'now': index === currentIndex, 'cursor': item.state !== 'lock'}"
-            @click="changeDay(index)"
+            @click="changeDay(index, item)"
         >
           <span v-if="item.total">{{ item.success + item.errors }}/{{ item.total }}</span>
         </div>
@@ -31,6 +38,7 @@
 </template>
 
 <script setup>
+import Chart from 'chart.js/auto';
 import {useWeekResult} from '@/store/weekResult';
 import {storeToRefs} from "pinia/dist/pinia";
 import {onMounted, ref, watch} from "vue";
@@ -39,17 +47,100 @@ const weekResult = useWeekResult();
 const {changeIndex} = weekResult;
 const {weekResults, currentIndex} = storeToRefs(weekResult);
 
+const labelsT = ['Выполненно', 'С ошибками', 'Не выполненно'];
+
+let chart = ref(null);
+
 let success = ref(0);
 let errors = ref(0);
 let total = ref(0);
+let currentDay = ref('Пн');
+let myChart = ref();
+let ctx;
+
+// let doughnutLabel = ref({
+//   id: 'doughnutLabel',
+//
+//   // eslint-disable-next-line no-unused-vars
+//   beforeDatasetsDraw(chart, args, options) {
+//     // eslint-disable-next-line no-unused-vars
+//     const {ctx, data} = chart;
+//     ctx.save();
+//
+//     const x = chart.getDatasetMeta(0).data[0].x;
+//     const y = chart.getDatasetMeta(0).data[0].y;
+//     ctx.font = 'bold 15px sans-serif'
+//     ctx.fillStyle = '#f45b49';
+//     ctx.textAlign = 'center';
+//     ctx.fillText(currentDay.value, x, y + 5)
+//   }
+// })
 
 onMounted(() => {
   showResults();
+  ctx = chart.value.getContext("2d");
+  setDataToChart();
 })
 
 watch(currentIndex, () => {
   showResults();
 })
+
+let dataT = ref([1, 5, 4]);
+
+function setDataToChart() {
+  console.log(ctx)
+  myChart.value = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: labelsT,
+      datasets: [{
+        data: dataT.value,
+        backgroundColor: [
+          '#00c6ad',
+          '#ffd073',
+          '#d4fdf7',
+        ],
+        borderColor: [
+          '#00c6ad',
+          '#ffd073',
+          '#d4fdf7',
+        ],
+        borderWidth: 1,
+        borderRadius: 5,
+        offset: 6,
+      }],
+    },
+    options: {
+      plugins: {
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          enabled: false
+        }
+      },
+    },
+    plugins: [
+      {
+        id: 'doughnutLabel',
+
+        // eslint-disable-next-line no-unused-vars
+        beforeDatasetsDraw(chart, args, options) {
+          // eslint-disable-next-line no-unused-vars
+          const {ctx, data} = chart;
+          ctx.save();
+          const x = chart.getDatasetMeta(0).data[0].x;
+          const y = chart.getDatasetMeta(0).data[0].y;
+          ctx.font = 'bold 15px sans-serif'
+          ctx.fillStyle = '#fef7f1';
+          ctx.textAlign = 'center';
+          ctx.fillText(currentDay.value, x, y + 5)
+        }
+      }
+    ]
+  });
+}
 
 function showResults() {
   success.value = weekResults.value[currentIndex.value].success;
@@ -57,19 +148,39 @@ function showResults() {
   total.value = weekResults.value[currentIndex.value].total;
 }
 
-function changeDay(index) {
+
+function changeDay(index, data) {
   if (weekResults.value[index].state !== 'lock') {
     changeIndex(index);
+    currentDay.value = data.day;
+    // dataT.value[1] = 10
+    // myChart.value.data.datasets[0].data = [data.success, data.errors, data.total - (data.success + data.errors)]
+    // myChart.value.draw();
+
+    dataT.value = [data.success, data.errors, data.total - (data.success + data.errors)];
+
+    console.log('test')
+    console.log(myChart.value)
   }
 }
 </script>
 
 <style lang="scss">
 .state-week {
-  height: 90px;
+  height: 100px;
   display: flex;
   justify-content: space-around;
+  align-items: center;
   background-color: var(--pink);
+
+  .chart {
+    width: 80px;
+    height: 80px;
+
+    canvas {
+      max-height: 250px;
+    }
+  }
 
   .state-week__statistic {
     display: flex;
@@ -77,12 +188,12 @@ function changeDay(index) {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    width: 300px;
     height: 100%;
     font-size: 15px;
     font-weight: 600;
 
     p {
+      display: flex;
       width: 100%;
       text-align: start;
 
@@ -92,6 +203,7 @@ function changeDay(index) {
     }
 
     .bold {
+      display: block;
       width: 20px;
       font-weight: 900;
     }
@@ -100,11 +212,27 @@ function changeDay(index) {
       width: 100%;
       display: flex;
       justify-content: space-between;
+      gap: 5px;
 
       .wrapper__success,
-      .wrapper__errors {
+      .wrapper__errors,
+      .wrapper__without-result {
         display: flex;
         align-items: center;
+        color: var(--green);
+
+        img {
+          width: 30px;
+          height: 30px;
+        }
+      }
+
+      .wrapper__errors {
+        color: var(--yellow);
+      }
+
+      .wrapper__without-result {
+        color: var(--light-green);
       }
     }
   }
@@ -126,6 +254,10 @@ function changeDay(index) {
       height: 100%;
       font-size: 12px;
       font-weight: 700;
+
+      p {
+        font-size: 15px;
+      }
     }
 
     .results {
@@ -135,7 +267,7 @@ function changeDay(index) {
       justify-content: center;
       align-items: center;
       font-weight: 900;
-      margin-top: 8px;
+      margin-top: 4px;
       background-color: #4f3dca;
       border-radius: 8px;
       border: 1px solid var(--dark);
@@ -177,6 +309,7 @@ function changeDay(index) {
 
       p {
         text-align: center;
+
         span {
 
         }

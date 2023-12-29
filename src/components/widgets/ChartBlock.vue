@@ -12,11 +12,6 @@
             </template>
           </template>
           <template v-else>
-            <!--            <audio controls>-->
-            <!--              <source :src="message.message" type="audio/ogg">-->
-            <!--              <source :src="message.message" type="audio/mpeg">-->
-            <!--              Your browser does not support the audio element.-->
-            <!--            </audio>-->
             <div class="message sound-message" :class="{'person_message': !message.isBot}">
               <Vue3WaveAudioPlayer
                   :wave_width="200"
@@ -26,24 +21,44 @@
                   :disable_seeking="false"
               />
             </div>
-
           </template>
         </div>
       </div>
     </div>
     <div class="input-block">
-      <div class="record" v-if="isActiveRecord">
-        <div class="marker"></div>
-        <p class="timer">{{ second }},{{ ms }}</p>
+
+      <div class="wrapper-input">
+        <input v-model="messageToBot"
+               v-if="!isActiveRecord"
+               @keydown.enter="sendMessage">
+
+        <div class="record" v-if="isActiveRecord">
+          <div class="marker"></div>
+          <p class="timer">{{ second }},{{ ms }}</p>
+        </div>
+
+        <div class="wrapper-buttons">
+          <button class="trash" @click="deleteRecord" :class="{'show': isActiveRecord}">
+            <img src="img/chart/trash.svg" alt="">
+          </button>
+
+          <button class="sendMessage"
+                  :class="{'show': isActiveRecord || !!messageToBot}"
+                  @click="sendMessage">
+            <img src="img/chart/send.svg" alt="">
+          </button>
+
+          <button class="micro"
+                  :class="{ 'show': !messageToBot && !isActiveRecord}"
+                  @click="toggleActiveRecord">
+            <img src="img/chart/mic.svg" alt="">
+          </button>
+        </div>
       </div>
-      <div class="wrapper-input" v-if="!isActiveRecord">
-        <input v-model="messageToBot" @keydown.enter="sendMessage">
-        <button class="sendMessage" @click="sendMessage"><img src="img/chart/send.svg" alt=""></button>
-      </div>
-      <button class="micro" @mousedown="toggleActiveRecord" @mouseup="toggleActiveRecord">
-        <img src="img/chart/mic.svg" alt="">
-      </button>
     </div>
+  </div>
+  <div class="allow_microphone_message" :class="{'show-message': isShowMessage}">
+    <p>Пожалуйста, разрешите доступ к своему микрофону</p>
   </div>
 </template>
 
@@ -63,106 +78,130 @@ let timerInterval;
 let ms = ref(0);
 let second = ref(0);
 let isActiveRecord = ref(false);
+let isDeleteRecord = ref(false);
+let isShowMessage = ref(false);
+// eslint-disable-next-line no-unused-vars
+let stream = ref(null);
 
 let audioRecorder = ref();
 let audioChunks = ref([]);
 let messagesBlock = ref(null);
-
-// src="/sound/brown.mp3"
+let isAllowMicrophone = ref(false);
 
 onMounted(() => {
-  navigator.mediaDevices.getUserMedia({audio: true})
-      .then(stream => {
-        audioRecorder.value = new MediaRecorder(stream);
-        audioRecorder.value.addEventListener('dataavailable', handleRecord);
-        audioRecorder.value.addEventListener('stop', handleStopRecord);
-      })
+
 })
 
-function sendMessage() {
-  if (!messageToBot.value) return;
+function getAllowForMicrophone(isStartRecord = false) {
+  navigator.mediaDevices.getUserMedia({audio: true})
+      .then(activeStream => {
+        isAllowMicrophone.value = true;
+        audioRecorder.value = ''
+        stream.value = activeStream;
+        audioRecorder.value = new MediaRecorder(activeStream);
+        audioRecorder.value.addEventListener('dataavailable', handleRecord);
+        audioRecorder.value.addEventListener('stop', handleStopRecord);
+        if (isStartRecord) {
+          toggleActiveRecord();
+        }
+      })
+      .catch(() => {
+        isAllowMicrophone.value = false;
+        activeMessageForMicrophone();
+      })
+}
 
-  addMessage({
-    isBot: false,
-    isText: true,
-    message: messageToBot.value,
-    errorMessage: ''
-  });
+function sendMessage() {
+  if (!messageToBot.value.trim().length && !isActiveRecord.value) return;
+
+  if (isActiveRecord.value) {
+    toggleActiveRecord();
+  } else {
+    addMessage({
+      isBot: false,
+      isText: true,
+      message: messageToBot.value,
+      errorMessage: ''
+    });
+  }
 
   messageToBot.value = '';
+  scrollDown();
+}
 
+// eslint-disable-next-line no-unused-vars
+function handleRecord(event) {
+  audioChunks.value.push(event.data)
+
+  const blobObj = new Blob(audioChunks.value, {type: 'audio/mp3'});
+  const audioUrl = URL.createObjectURL(blobObj);
+
+  if (!isDeleteRecord.value) {
+    addMessage({
+      isBot: false,
+      isText: false,
+      message: audioUrl,
+      errorMessage: ''
+    });
+  }
+
+  isDeleteRecord.value = false;
+  audioChunks.value = [];
+}
+
+// eslint-disable-next-line no-unused-vars
+function handleStopRecord() {
+  stream.value.getAudioTracks().forEach(function (track) {
+    track.stop();
+  });
+  audioRecorder.value.removeEventListener('dataavailable', handleRecord);
+  audioRecorder.value.removeEventListener('stop', handleStopRecord);
+  scrollDown();
+}
+
+function toggleActiveRecord() {
+  if (!isAllowMicrophone.value) {
+    getAllowForMicrophone(true);
+    return;
+  }
+
+  if (isActiveRecord.value) {
+    isActiveRecord.value = false;
+    stopTimer();
+    audioRecorder.value.stop();
+    isAllowMicrophone.value = false;
+  } else {
+    isActiveRecord.value = true;
+    startTimer();
+    audioRecorder.value.start();
+  }
+}
+
+function deleteRecord() {
+  isDeleteRecord.value = true;
+  toggleActiveRecord();
+}
+
+let activeTimeOut = ref(null);
+
+function activeMessageForMicrophone() {
+  if (activeTimeOut.value) {
+    clearTimeout(activeTimeOut.value);
+  }
+
+  isShowMessage.value = true;
+  activeTimeOut.value = setTimeout(() => {
+    isShowMessage.value = false;
+  }, 2000);
+}
+
+function scrollDown() {
   setTimeout(() => {
     messagesBlock.value.scrollTo({
       top: messagesBlock.value.scrollHeight,
       behavior: "smooth"
     });
   }, 0)
-}
-
-function handleRecord(event) {
-  audioChunks.value.push(event.data)
-
-  const blobObj = new Blob(audioChunks.value, {type: 'audio/mp3'});
-  let audioUrl = URL.createObjectURL(blobObj);
-  addMessage({
-    isBot: false,
-    isText: false,
-    message: audioUrl,
-    errorMessage: ''
-  });
-  audioChunks.value = [];
-  // const audio = new Audio(audioUrl);
-  // audio.play();
-}
-
-function handleStopRecord() {
-  // let binary = convertDataURIToBinary(audioChunks.value[0]);
-  // const blob = new Blob(audioChunks.value, {
-  //   'type': 'audio/mp3'
-  // });
-  // let audioUrl = URL.createObjectURL(blob);
-
-  // sendAudioFile(blob).then(response => {
-  //   console.log(response)
-  // })
-  //     .catch(erro => {
-  //       console.dir(erro)
-  //     })
-}
-
-// function convertDataURIToBinary(dataURI) {
-//   let BASE64_MARKER = ';base64,';
-//   let base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
-//   let base64 = dataURI.substring(base64Index);
-//   let raw = window.atob(base64);
-//   let rawLength = raw.length;
-//   let array = new Uint8Array(new ArrayBuffer(rawLength));
-//
-//   for (let i = 0; i < rawLength; i++) {
-//     array[i] = raw.charCodeAt(i);
-//   }
-//   return array;
-// }
-
-// const sendAudioFile = file => {
-//   const formData = new FormData();
-//   formData.append('audio-file', file);
-//   return fetch('http://localhost:3000/audioUpload', {
-//     method: 'POST',
-//     body: formData
-//   });
-// };
-
-function toggleActiveRecord() {
-  if (event.buttons === 1) {
-    isActiveRecord.value = true;
-    startTimer();
-    audioRecorder.value.start();
-  } else {
-    isActiveRecord.value = false;
-    stopTimer();
-    audioRecorder.value.stop();
-  }
 }
 
 function startTimer() {
@@ -263,8 +302,21 @@ function stopTimer() {
 
           #play {
             padding: 0;
+
             svg {
               fill: var(--green);
+            }
+          }
+
+          #slider {
+            svg {
+              #path1 {
+                stroke: #232323;
+              }
+
+              #path2 {
+                stroke: #00c6ad;
+              }
             }
           }
 
@@ -289,7 +341,7 @@ function stopTimer() {
       display: flex;
       align-items: center;
       gap: 10px;
-      width: 100%;
+      width: 100px;
       height: 50px;
 
       .marker {
@@ -303,12 +355,13 @@ function stopTimer() {
 
     .wrapper-input {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
       width: 100%;
       height: 50px;
       border-radius: 10px;
       border: 1px solid var(--dark);
       padding: 5px;
-      margin: 0 10px 0 0;
 
       input {
         width: 100%;
@@ -318,74 +371,89 @@ function stopTimer() {
         }
       }
 
-      button {
+      .wrapper-buttons {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-        margin-right: 5px;
 
-        img {
-          width: 35px;
+        .trash {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 0;
           height: 35px;
+          opacity: 0;
+          background-color: rgba(89, 155, 255, 0);
+          border-radius: 50%;
+          transition: all 0.2s;
+          overflow: hidden;
+
+          img {
+            width: 35px;
+            height: 35px;
+          }
+
+          &:hover {
+            transform: scale(0.9);
+          }
         }
 
-        &:active {
-          transform: scale(0.85);
+        .sendMessage {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 0;
+          height: 35px;
+          opacity: 0;
+          overflow: hidden;
+          transition: all 0.2s;
+          margin-right: 5px;
+
+          img {
+            width: 35px;
+            height: 35px;
+          }
+
+          &:hover {
+            transform: scale(0.9);
+          }
+
+          &:active {
+            transform: scale(0.85);
+          }
+        }
+
+        .micro {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 10px;
+          width: 0;
+          height: 35px;
+          opacity: 0;
+          overflow: hidden;
+          transition: all 0.2s;
+
+          img {
+            width: 35px;
+            height: 35px;
+          }
+
+          &:hover {
+            transform: scale(0.9);
+          }
+
+          &:active {
+            transform: scale(0.85);
+          }
+        }
+
+        .show {
+          width: 35px;
+          opacity: 1;
         }
       }
     }
 
-    .micro {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      width: 50px;
-      height: 50px;
-      border: 1px solid var(--dark);
-      box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
-      overflow: hidden;
-      transition: all 0.2s;
-
-      &:after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        background-color: var(--red);
-        border-radius: 50%;
-        transition: all 0.6s;
-        z-index: 1;
-      }
-
-      img {
-        width: 35px;
-        height: 35px;
-        transition: all 0.2s;
-        z-index: 2;
-      }
-
-      &:active {
-        animation: pulseShadow 1s infinite linear;
-        border: 1px solid var(--red);
-        border-radius: 50%;
-
-        img {
-          transform: scale(0.85);
-        }
-
-        &:after {
-          top: -50%;
-          left: -50%;
-          width: 200%;
-          height: 200%;
-        }
-      }
-    }
 
     @keyframes pulseShadow {
       0% {
@@ -405,16 +473,44 @@ function stopTimer() {
     @keyframes pulse {
       0% {
         transform: scale(1);
+        -moz-box-shadow: 0 0 0 0 var(--red);
+        box-shadow: 0 0 0 0 var(--red);
       }
       70% {
         transform: scale(0.9);
         opacity: 0.4;
+        -moz-box-shadow: 0 0 0 10px rgba(204, 169, 44, 0);
+        box-shadow: 0 0 0 10px rgba(204, 169, 44, 0);
       }
       100% {
         transform: scale(1);
+        -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+        box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
       }
     }
 
   }
+}
+
+.allow_microphone_message {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 225px);
+  background-color: rgba(35, 35, 35, 0.6);
+  padding: 10px;
+  border-radius: 10px;
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.6s;
+
+  p {
+    display: flex;
+  }
+}
+
+.show-message {
+  opacity: 1;
+  z-index: 1;
 }
 </style>

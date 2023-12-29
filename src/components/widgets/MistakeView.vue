@@ -1,12 +1,12 @@
 <template>
   <div class="mistakes__list-wrap">
     <div class="mistakes__list-row">
-      <div class="mistake__title"
+      <p class="mistake__title"
            v-for="item in mistakes.title" :key="item"
            :class="{ 'w60' : item.w === 60, 'w50' : item.w === 50}"
       >
         {{ item.text }}
-      </div>
+      </p>
     </div>
     <div class="mistakes__list-row"
          v-for="row in mistakes.rows" :key="row"
@@ -38,6 +38,7 @@ const props = defineProps({
 
     .mistake__title {
       text-align: center;
+      font-size: 20px;
       font-weight: 700;
       padding-bottom: 30px;
       width: 33%
@@ -54,13 +55,12 @@ const props = defineProps({
 
   .mistake__item {
     border-radius: 10px;
-    background-color: var(--yellow);
+    background-color: var(--light-yellow);
     color: var(--dark);
     padding: 20px;
     margin-bottom: 30px;
     width: 33%;
     border: 1px solid var(--dark);
-    //box-shadow: 1px 4px 1px var(--dark);
   }
 
   .mistake__item.w60 {

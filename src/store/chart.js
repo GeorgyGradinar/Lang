@@ -30,7 +30,7 @@ export const useChart = defineStore('chart', () => {
         {
             isBot: true,
             isText: false,
-            message: '/sound/brown.mp3',
+            message: 'sound/brown.mp3',
             errorMessage: 'Граматическая ошибка'
         },
     ])

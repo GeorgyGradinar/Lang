@@ -1,12 +1,13 @@
 <template>
   <div class="mistakes__nav">
-    <p class="div-center"
-         v-for="tab in tabs" :key="tab.id"
+    <div class="navigation-errors"
+         :class="{'left' : selectedID === 0, 'middle': selectedID === 1, 'right': selectedID === 2}">
+      <p v-for="tab in tabs" :key="tab.id"
          :class="{'active' : tab.id === selectedID}"
-         @click="()=>{selectedID=tab.id; emit('selected', tab)}"
-    >
-      {{ tab.title }}
-    </p>
+         @click="()=>{selectedID=tab.id; emit('selected', tab)}">
+        {{ tab.title }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -32,42 +33,75 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .mistakes__nav {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  height: 60px;
+  justify-content: flex-start;
+  height: 50px;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 20px;
 
-  p {
-    cursor: pointer;
-    width: 200px;
-    font-weight: 700;
-    text-align: center;
-    background-color: #4f3dca;
-    transition: all 0.2s;
-    border-top: 1px solid var(--dark);
-    box-shadow: 1px 4px 1px var(--dark);
+  .navigation-errors {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: var(--light-yellow);
+    border-radius: 10px;
+    border: 1px solid var(--dark);
 
-    &:hover {
-      background-color: #9747ff;
-    }
-
-    &:first-child {
-      border-top-left-radius: 10px;
+    &:after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: calc(100% - 200px);
+      width: 200px;
+      height: 100%;
+      border-radius: 10px;
+      background-color: var(--red);
+      transition: all 0.2s;
       border: 1px solid var(--dark);
-      border-bottom: unset;
+      box-shadow: 1px 4px 1px var(--dark);
+      z-index: 1;
     }
 
-    &:last-child {
-      border-top-right-radius: 10px;
-      border: 1px solid var(--dark);
-      border-bottom: unset;
-    }
+    p {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      width: 200px;
+      height: 100%;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      transition: all 0.2s;
+      z-index: 2;
+      color: var(--dark);
 
-    &.active {
-      background-color: #bc32fc;
+      &:hover {
+        color: var(--blue);
+      }
+
+      &.active {
+        color: var(--white);
+      }
+    }
+  }
+
+  .left {
+    &:after {
+      left: 0;
+    }
+  }
+
+  .middle {
+    &:after {
+      left: 200px;
+    }
+  }
+
+  .right {
+    &:after {
+      right: 0;
     }
   }
 }

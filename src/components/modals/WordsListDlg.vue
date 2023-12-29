@@ -64,7 +64,7 @@ export default {
 @import "src/assets/buttons";
 
 .words-wrap {
-  background-color: var(--blue);
+  background-color: var(--green);
   width: 100%;
   max-width: 950px;
   border-radius: 10px;

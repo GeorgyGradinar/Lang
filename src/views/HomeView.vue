@@ -4,7 +4,7 @@
     <week-results/>
 
     <!-- Секция чата и заданий -->
-    <div class="dialog-promo bg-base-light-violet">
+    <div class="dialog-promo">
       <!--        <div class="card half bg-orange dialog-chat">-->
       <!--          <chat-view-->
       <!--              :smallMode="true"-->
@@ -12,11 +12,6 @@
       <!--        </div>-->
       <slider-view :feed="sliderFeed1"/>
       <slider-view :feed="sliderFeed2"/>
-    </div>
-
-    <!-- Секция словаря -->
-    <div class="words">
-      <!-- новые слова -->
       <div class="words-wrap">
         <p class="words__title">Новые добавленные слова</p>
         <wordlist-view
@@ -31,8 +26,27 @@
           </svg>
         </router-link>
       </div>
+    </div>
+
+    <!-- Секция словаря -->
+    <div class="words">
+      <!-- новые слова -->
+      <!--      <div class="words-wrap">-->
+      <!--        <p class="words__title">Новые добавленные слова</p>-->
+      <!--        <wordlist-view-->
+      <!--            :words="newWords"-->
+      <!--            :columns="2"-->
+      <!--        />-->
+
+      <!--        <router-link to="/dictionary" class="secondary-button">-->
+      <!--          Перейти в словарь &nbsp;&nbsp;&nbsp;-->
+      <!--          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">-->
+      <!--            <path d="m700-300-57-56 84-84H120v-80h607l-83-84 57-56 179 180-180 180Z"/>-->
+      <!--          </svg>-->
+      <!--        </router-link>-->
+      <!--      </div>-->
       <!-- группы слов -->
-      <div class="words-wrap bg-purple">
+      <div class="wrapper-words-theme">
         <p class="words__title">Группы слов по темам</p>
         <words-group-list
             :groups="wordGroups"
@@ -198,7 +212,8 @@ export default {
     ]
     // структура с ошибками
     this.mistakesArray = [{
-      id: 0, data: {
+      id: 0,
+      data: {
         title: [
           {w: 50, text: 'Оригинальное'},
           {w: 50, text: 'Верное'},
@@ -235,7 +250,8 @@ export default {
       }
     },
       {
-        id: 1, data: {
+        id: 1,
+        data: {
           title: [
             {w: 60, text: 'Оригинальное'},
             {w: 40, text: 'Рекомендации'}
@@ -259,7 +275,8 @@ export default {
         }
       },
       {
-        id: 2, data: {
+        id: 2,
+        data: {
           title: [
             {w: 50, text: 'Ваши продвинутые грамматические конструкции'},
             {w: 50, text: 'Распространенные грамматические проблемы'}
@@ -278,7 +295,6 @@ export default {
           ]
         }
       }
-
     ]
     this.selectMistakeTab({id: 0})
 
@@ -342,21 +358,11 @@ export default {
     display: flex;
     justify-content: center;
     gap: 20px;
-    padding: 90px 0;
+    padding: 90px 0 0 0;
     font-size: 15px;
     font-weight: 600;
-    color: #fff;
-  }
-
-  .words {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 90px 0;
-    font-size: 15px;
-    font-weight: 700;
     color: var(--white);
-    background-color: var(--yellow);
+    background-color: var(--light-yellow);
 
     .words-wrap {
       display: flex;
@@ -367,7 +373,11 @@ export default {
       border-radius: 10px;
       border: 2px solid var(--dark);
       box-shadow: 1px 4px 1px var(--dark);
-      background-color: var(--blue);
+      background-color: var(--green);
+
+      .words__title {
+        font-size: 26px;
+      }
 
       .secondary-button {
         width: 230px;
@@ -385,9 +395,33 @@ export default {
         }
       }
     }
+  }
 
-    .bg-purple {
-      background-color: var(--light_pink);
+  .words {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 60px 0 90px 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    background-color: var(--light-yellow);
+
+    .wrapper-words-theme {
+      display: flex;
+      flex-direction: column;
+      width: 70%;
+      padding: 30px 20px 40px;
+      border-radius: 10px;
+      border: 2px solid var(--dark);
+      box-shadow: 1px 4px 1px var(--dark);
+      background-color: var(--red);
+
+      .words__title {
+        font-size: 26px;
+        margin-bottom: 20px;
+      }
     }
   }
 
@@ -399,12 +433,13 @@ export default {
     font-size: 15px;
     font-weight: 600;
     color: var(--white);
+    background-color: var(--blue);
 
     .mistakes__title {
       font-size: 28px;
       font-weight: 800;
       text-align: center;
-      margin-bottom: 26px
+      margin-bottom: 30px
     }
 
     .mistakes__list {
@@ -412,7 +447,7 @@ export default {
       max-width: 1200px;
       padding: 32px;
       border-radius: 10px;
-      background-color: var(--blue);
+      background-color: var(--red);
       border: 1px solid var(--dark);
       box-shadow: 1px 4px 1px var(--dark);
     }
@@ -421,7 +456,7 @@ export default {
   .footer {
     display: flex;
     gap: 40px;
-    padding: 80px 5%;
+    padding: 40px 5%;
     font-size: 18px;
     font-weight: 600;
     color: #fff;

@@ -25,6 +25,7 @@ const emit = defineEmits(['selected']);
 .words__group-row {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
 
   .words__group {

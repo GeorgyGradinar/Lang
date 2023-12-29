@@ -11,6 +11,7 @@
   "dependencies": {
     "@vueuse/components": "^10.5.0",
     "@vueuse/core": "^10.5.0",
+    "chart.js": "^4.4.1",
     "core-js": "^3.8.3",
     "pinia": "^2.1.7",
     "swiper": "^11.0.3",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@mdi/font": "^7.4.47",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
