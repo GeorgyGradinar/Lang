@@ -1,67 +1,60 @@
 <template>
-<div class="container bg-base-light-violet">
-  <main class="fullscreen sign-wrap">
-    <div class="sign__form-wrap">
+  <main class="signin-wrap">
+    <div class="signin">
 
-      <div class="sign__form-wrap-col1">
-        <div class="sign__form-promotitle">Бесплатная регистрация</div>
-        <div class="sign__form-title" v-if="mode == 'signin'">Создайте аккаунт</div>
-        <div class="sign__form-title" v-if="mode == 'signup'">Войти</div>
-        <div class="row mb-20" v-if="mode == 'signin'">
-          <div>Уже есть? </div>
-          <div class="switcher"><a href="#" @click="changeMode()">Войти</a></div>
-        </div>
-        <div class="row mb-20" v-if="mode == 'signup'">
-          <div>Нет аккаунта? </div>
-          <div class="switcher"><a href="#" @click="changeMode()">Создать</a></div>
-        </div>
-        <div class="input mb-16">
-          <input type="text" placeholder="Email">
-        </div>
-        <div class="input mb-8">
-          <input type="text" placeholder="Пароль">
-        </div>
-        <div class="input forgot-password mb-20" v-if="mode == 'signin'">
-          <a href="#">восстановить пароль</a>
-        </div>
-        <div class="sign__form-button">
-          <button class="bg-base-green white cursor shadow" v-if="mode == 'signup'">Войти</button>
-          <button class="bg-base-green white cursor shadow" v-if="mode == 'signin'">Создать аккаунт</button>
-        </div>
-        <div class="sign__form-accept row mb-20">
-          <div class="checkbox-wrap"><input type="checkbox"></div>
-          <div class="label-wrap">Согласие с <a href="#">условиями соглашения и политикой конфиденциальности</a></div>
-        </div>
-        <div class="sign__form-icon">
-          <a href="http://www.ya.ru"><img src="img/icon/yandex-ic.svg" class="shadow"></a>
-          <a href="http://www.google.com"><img src="img/icon/google-ic1.svg" class="shadow"></a>
-          <a href="http://www.vc.com"><img src="img/icon/vk-ic.svg" class="shadow"></a>
-        </div>
-      </div>
-      <div class="sign-promo">
-        <img src="img/Saly.png">
+      <div class="content__signin" :class="{'show-login': isShowLoginBlock}">
+        <RegistrationBlock @openLogin="changeMode">
+        </RegistrationBlock>
+        <LoginBlock @openRegistration="changeMode">
+        </LoginBlock>
       </div>
     </div>
   </main>
-</div>
 </template>
 
-<script>
-export default {
-  name: 'SigninView',
+<script setup>
+import RegistrationBlock from "@/components/signin/RegistrationBlock";
+import LoginBlock from "@/components/signin/LoginBlock";
+import {ref} from "vue";
 
-  data: () => ({
-    mode: 'signin',
-  }),
+let isShowLoginBlock = ref(false);
 
-  methods : {
-    changeMode () {
-      this.mode = (this.mode =='signin') ? 'signup' : 'signin'
-    }
-  }
+function changeMode(arg) {
+  isShowLoginBlock.value = arg;
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+.signin-wrap {
+  width: 100vw;
+  height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+  .signin {
+    position: relative;
+    width: 850px;
+    height: 450px;
+    display: flex;
+    border-radius: 10px;
+    transition: all 0.2s;
+
+    .content__signin {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 400ms;
+      border-radius: 10px;
+      border: 2px solid var(--dark);
+      box-shadow: 1px 4px 1px var(--dark);
+    }
+
+    .show-login {
+      transform: rotateX(180deg);
+      border: 2px solid var(--dark);
+      box-shadow: 1px -4px 1px var(--dark);
+    }
+  }
+}
 </style>

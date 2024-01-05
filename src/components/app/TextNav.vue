@@ -6,7 +6,6 @@
         :class="{'active': tab.id === tabID}">
       {{ tab.title }}
     </div>
-
   </div>
 </template>
 
@@ -76,12 +75,12 @@ onMounted(() => {
       color: var(--yellow);
     }
   }
-}
 
-.words-2__nav2.left {
-  &:after {
-    left: -2px;
-    width: 110px;
+  &.left {
+    &:after {
+      left: -2px;
+      width: 110px;
+    }
   }
 }
 </style>

@@ -1,23 +1,23 @@
 <template>
-  <!--  <div class="progress bg-orange ">-->
-  <!--    <div class="wrap">-->
-  <!--      <month-select-view -->
-  <!--        @changeMonth="changedMonth"-->
-  <!--      />-->
-
-  <!--      <progress-data-view-->
-  <!--        :progressData="progressData"-->
-  <!--       />-->
-  <!--    </div>-->
-  <!--  </div>-->
   <div class="wrapper-progress-page">
     <div class="wrapper-show-result">
-      <div class="progress-chart">
-        <p>5 / 10</p>
+      <div class="statistic">
+        <div class="progress-chart" :class="{'clean-history': isActiveCleanAnimation}">
+          <p>{{ currentHistoryDay?.done }} / 10</p>
+          <p class="progress-chart--title">Выполненно</p>
+          <div class="main_wave"
+               :style="{'bottom': currentHistoryDay?.done * 10 + '%'}">
+          </div>
+          <div class="secondary_wave" :style="{'bottom':( currentHistoryDay?.done * 10) * 0.95 + '%'}"></div>
+        </div>
+        <div class="progress-chart" :class="{'clean-history': isActiveCleanAnimation}">
+          <p>{{ currentHistoryDay?.exception }} / 10</p>
+          <p class="progress-chart--title">С ошибкой</p>
+          <div class="main_wave" :style="{'bottom': currentHistoryDay?.exception * 10 + '%'}"></div>
+          <div class="secondary_wave" :style="{'bottom':( currentHistoryDay?.exception * 10) * 0.95 + '%'}"></div>
+        </div>
       </div>
-      <div class="progress-chart">
-        <p>3 / 10</p>
-      </div>
+      <DetailStatistic></DetailStatistic>
     </div>
 
     <v-container>
@@ -37,207 +37,208 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
+import DetailStatistic from "@/components/progress-page/DetailStatistic";
 
-let progressData = ref([]);
+const history = [
+  {
+    done: 6,
+    exception: 2
+  },
+  {
+    done: 2,
+    exception: 4
+  },
+  {
+    done: 8,
+    exception: 0
+  },
+  {
+    done: 4,
+    exception: 4
+  },
+  {
+    done: 1,
+    exception: 4
+  },
+  {
+    done: 1,
+    exception: 1
+  },
+  {
+    done: 2,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+]
+
 let currentData = ref(new Date());
+let currentHistoryDay = ref();
+let isActiveCleanAnimation = ref(false)
 
 onMounted(() => {
-
+  currentHistoryDay.value = history[currentData.value.getDate()];
 })
 
-// eslint-disable-next-line no-unused-vars
-function changedMonth(date) {
-  createRandomData()
-}
-
-function createRandomData() {
-  progressData.value = [];
-  const week = [
-    {id: 0, title: 'понедельник', bgclass: 'bg-base-blue'},
-    {id: 1, title: 'вторник', bgclass: 'bg-base-light-violet'},
-    {id: 2, title: 'среда', bgclass: 'bg-base-purple'},
-    {id: 3, title: 'четверг', bgclass: 'bg-base-dark-purple'},
-    {id: 4, title: 'пятница', bgclass: 'bg-base-blue'},
-    {id: 5, title: 'суббота', bgclass: 'bg-base-light-violet'},
-    {id: 6, title: 'воскресенье', bgclass: 'bg-base-purple'}
-  ]
-
-  for (let i = 0; i < week.length; i++) {
-    // создаем день
-    let days = []
-    for (let j = 0; j < 4; j++) {
-      let randompoint = Math.random() * 1000;
-      let day = {}
-
-      day.id = i * 4 + j
-      if (randompoint <= 350) {
-        day.type = 1
-        day.day = '25'
-        day.task = {total: 10, done: 10, success: 10, words: 3}
-        day.img = 'img/icon/bxs-party.png'
-        day.bgclass = 'bg-base-purple'
-      }
-      if ((randompoint > 350) && (randompoint <= 700)) {
-        day.type = 2
-        day.day = '1'
-        day.img = 'img/icon/bxs-star.png'
-        day.bgclass = 'bg-base-light-violet'
-        day.task = {total: 12, done: 7, success: 10, error: 2, words: 3}
-      }
-      if ((randompoint > 700) && (randompoint <= 850)) {
-        day.type = 3
-        day.day = '14'
-        day.bgclass = 'bg-base-blue'
-      }
-      if ((randompoint > 850) && (randompoint <= 1000)) {
-        day.type = 4
-        day.day = 45
-        day.bgclass = 'bg-base-blue'
-      }
-
-      days.push(day)
-    }
-
-    // заполняем массив с данными
-    progressData.value.push({
-      title: week[i],
-      days: days
-    })
-  }
-}
-
 function handleSelectedDay() {
-  console.log(currentData.value)
+  isActiveCleanAnimation.value = true;
+  setTimeout(() => {
+    currentHistoryDay.value = history[currentData.value.getDate()];
+    isActiveCleanAnimation.value = false;
+  }, 500);
 }
-
 </script>
 
 <style scoped lang="scss">
 .wrapper-progress-page {
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  min-width: 100vw;
+  min-height: calc(100vh - 122px);
 
   .wrapper-show-result {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 30px;
+    gap: 50px;
     width: 50%;
-    height: 70vh;
+    height: calc(100vh - 122px);
 
-    .progress-chart {
-      position: relative;
+    .statistic {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      background-color: var(--green);
-      border: 2px solid var(--dark);
-      box-shadow: 1px 4px 1px var(--dark);
-      overflow: hidden;
+      gap: 30px;
 
-      p {
-        font-size: 40px;
-        font-weight: 700;
-        color: var(--red);
-        mix-blend-mode: difference;
-        z-index: 2;
+      .progress-chart {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background-color: var(--green);
+        border: 2px solid var(--dark);
+        box-shadow: 1px 4px 1px var(--dark);
+        overflow: hidden;
+
+        p {
+          font-size: 40px;
+          font-weight: 700;
+          color: var(--red);
+          mix-blend-mode: difference;
+          z-index: 2;
+        }
+
+        .progress-chart--title {
+          font-size: 20px;
+        }
+
+        .main_wave,
+        .secondary_wave {
+          position: absolute;
+          left: 50%;
+          min-width: 100vw;
+          min-height: 100vw;
+          background-color: var(--light-yellow);
+          animation-name: rotate;
+          animation-iteration-count: 1;
+          animation-timing-function: ease-in-out;
+          transition: all 1s;
+          animation-fill-mode: forwards;
+        }
+
+        // 100% - 110
+        .main_wave {
+          border-radius: 45%;
+          animation-duration: 1s;
+        }
+
+        // 100% - 105
+        .secondary_wave {
+          opacity: .5;
+          border-radius: 47%;
+          animation-duration: 1s;
+          animation-name: rotateLeft;
+        }
+
+        &:nth-child(even) {
+          background-color: var(--yellow);
+
+          .main_wave,
+          .secondary_wave {
+            transform: translate(-50%, 0) rotateZ(10deg);
+          }
+        }
       }
 
-      &:before,
-      &:after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        min-width: 100vw;
-        min-height: 100vw;
-        background-color: var(--light-yellow);
-        animation-name: rotate;
-        animation-iteration-count: 1;
-        animation-timing-function: linear;
-        transition: all 1s;
-        animation-fill-mode: forwards;
+      .clean-history {
+        .main_wave {
+          animation-duration: 0.5s;
+          animation-name: clean;
+        }
       }
 
-      // 100% - 110
-      &:before {
-        bottom: 60%;
-        border-radius: 45%;
-        animation-duration: 10s;
-      }
-
-      // 100% - 105
-      &:after {
-        bottom: 55%;
-        opacity: .5;
-        border-radius: 47%;
-        animation-duration: 10s;
-        animation-name: rotateLeft;
-      }
-
-      &:nth-child(even) {
-        background-color: var(--yellow);
-
-        &:before,
-        &:after {
-          animation-delay: 1s;
+      @keyframes rotate {
+        0% {
           transform: translate(-50%, 0) rotateZ(10deg);
+          bottom: 0;
         }
-
-        &:before {
-          bottom: 30%;
-        }
-
-        &:after {
-          bottom: 25%;
+        100% {
+          transform: translate(-50%, 0%) rotateZ(90deg);
         }
       }
-    }
 
-    @keyframes rotate {
-      0% {
-        transform: translate(-50%, 0) rotateZ(10deg);
-        bottom: 0;
+      @keyframes rotateLeft {
+        0% {
+          transform: translate(-50%, 0%) rotateZ(360deg);
+          bottom: 0;
+        }
+        50% {
+          transform: translate(-50%, -2%) rotateZ(180deg);
+        }
+        85% {
+          transform: translate(-50%, 0%) rotateZ(200deg);
+        }
+        90% {
+          transform: translate(-50%, 0%) rotateZ(210deg);
+        }
+        95% {
+          transform: translate(-50%, 0%) rotateZ(220deg);
+        }
+        100% {
+          transform: translate(-50%, 0) rotateZ(240deg);
+        }
       }
-      50% {
-        transform: translate(-50%, -2%) rotateZ(180deg);
-      }
-      90% {
-        transform: translate(-50%, 0%) rotateZ(360deg);
-      }
-      100% {
-        transform: translate(-50%, 0%) rotateZ(370deg);
-      }
-    }
 
-    @keyframes rotateLeft {
-      0% {
-        transform: translate(-50%, 0%) rotateZ(360deg);
-        bottom: 0;
-      }
-      50% {
-        transform: translate(-50%, -2%) rotateZ(180deg);
-      }
-      90% {
-        transform: translate(-50%, 0%) rotateZ(0deg);
-      }
-      100% {
-        transform: translate(-50%, 0) rotateZ(-10deg);
+      @keyframes clean {
+        0% {
+          transform: translate(-50%, 0%) rotateZ(360deg);
+        }
+        100% {
+          transform: translate(-50%, 0) rotateZ(350deg);
+          bottom: 0;
+        }
       }
     }
   }
 
   :deep(.v-container) {
-    max-width: 800px;
+    max-width: 45vw;
+    max-height: calc(100vh - 125px);
     padding: unset;
     margin-left: unset;
-    margin-right: 20px;
+    margin-right: 2.5%;
     margin-top: 40px;
 
     .v-picker.v-sheet {
-      width: 800px;
+      width: 100%;
+      height: calc(100vh - 125px);
       border-radius: 10px;
       border: 2px solid var(--dark);
       box-shadow: 1px 4px 1px var(--dark);
@@ -250,6 +251,7 @@ function handleSelectedDay() {
     }
 
     .v-picker__body {
+      min-height: calc(100vh - 125px);
       background-color: var(--green);
 
       .v-date-picker-controls {
@@ -288,10 +290,11 @@ function handleSelectedDay() {
       }
 
       .v-date-picker-month {
-        padding: 0 12px 30px;
+        height: 100%;
+        padding: 0 12px 75px;
 
         .v-date-picker-month__days {
-          row-gap: 30px;
+          row-gap: 0;
 
           button {
             --v-btn-height: 40px;

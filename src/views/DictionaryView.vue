@@ -2,7 +2,13 @@
   <div class="words-2 bg-base-purple">
     <div class="words-2__nav">
       <border-nav :tabs="wordNav" @selected="showPage"/>
-      <TextNav :tabs="textNav" @selected="sortPage"/>
+      <div class="wrapper-right-block">
+        <TextNav :tabs="textNav" @selected="sortPage"/>
+        <button class="add-new-word" @click="openDialogNewWord">
+          <img src="img/dictionary/plus.svg" alt="plus">
+          Добавить слово
+        </button>
+      </div>
     </div>
 
     <dict-view :words="wordShow"/>
@@ -19,7 +25,13 @@
       <p class="words-3__title">
         Группы слов по темам
       </p>
-      <text-nav :tabs="textNav"/>
+      <div class="wrapper-right-block">
+        <text-nav :tabs="textNav"/>
+        <button class="add-new-word" @click="openDialogNewGroup">
+          <img src="img/dictionary/plus.svg" alt="plus">
+          Добавить словарь
+        </button>
+      </div>
     </div>
 
     <thems-view
@@ -35,8 +47,10 @@
     </div>
 
     <!--Модальное окно словаря -->
-<!--    <dict-words-dlg ref="dictwordsdlg"/>-->
+    <!--    <dict-words-dlg ref="dictwordsdlg"/>-->
     <words-list-dlg ref="wordslistdlg"/>
+    <AddNewWord v-if="isOpenDialogAddWords" @close="closeDialogNewWord"></AddNewWord>
+    <AddNewGroup v-if="isOpenDialogGroup" @close="closeDialogNewGroup"></AddNewGroup>
   </div>
 </template>
 
@@ -47,9 +61,11 @@ import DictView from '@/components/widgets/DictView.vue';
 import ThemsView from '@/components/widgets/ThemsView.vue';
 // import DictWordsDlg from '@/components/modals/DictWordsDlg.vue';
 import WordsListDlg from '@/components/modals/WordsListDlg.vue';
-
+import AddNewWord from "@/components/modals/new-words/AddNewWord";
+import AddNewGroup from "@/components/modals/new-group/AddNewGroup";
 import {sortUPbyField} from '@/assets/js/lib';
 import {onMounted, ref} from "vue";
+
 
 let wordNav = ref([]);
 let textNav = ref([]);
@@ -59,6 +75,9 @@ let themsAll = ref([]);
 let themsShow = ref([]);
 // let dictwordsdlg = ref(null);
 let wordslistdlg = ref(null);
+
+let isOpenDialogAddWords = ref(false);
+let isOpenDialogGroup = ref(false);
 
 onMounted(() => {
   wordNav.value = [
@@ -197,6 +216,23 @@ function addWords(count) {
   }
 }
 
+function openDialogNewWord() {
+  isOpenDialogAddWords.value = true;
+}
+
+function closeDialogNewWord() {
+  isOpenDialogAddWords.value = false;
+}
+
+function openDialogNewGroup() {
+  isOpenDialogGroup.value = true;
+}
+
+function closeDialogNewGroup() {
+  isOpenDialogGroup.value = false;
+}
+
+
 function showPage(tab) {
   wordShow.value = [];
   if (tab.id === 0) {
@@ -257,11 +293,47 @@ function showThemeDlg(them) {
     justify-content: space-between;
     align-items: center;
 
-    .words-3__title {
-      line-height: 40px;
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 20px;
+    .wrapper-right-block {
+      display: flex;
+      align-items: center;
+
+      .words-3__title {
+        line-height: 40px;
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 20px;
+      }
+
+      .add-new-word {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        border-radius: 10px;
+        margin-left: 15px;
+        margin-bottom: 23px;
+        padding: 0 10px 0 0;
+        color: var(--dark);
+        background-color: var(--yellow);
+        border: 1px solid var(--dark);
+        box-shadow: 1px 4px 1px var(--dark);
+        transition: all 0.2s;
+
+        img {
+          width: 30px;
+          height: 30px;
+        }
+
+        &:hover {
+          background-color: var(--red);
+          color: var(--white);
+        }
+
+        &:active {
+          box-shadow: 0 0 1px var(--dark);
+          transform: translateY(5px);
+        }
+      }
     }
   }
 
