@@ -41,7 +41,7 @@
       <SocialsBlock></SocialsBlock>
     </div>
     <div class="sign-promo">
-      <img src="img/Saly.png">
+      <img src="img/Фоны-01.png">
     </div>
   </div>
 </template>
@@ -89,32 +89,31 @@ function submitRegistration() {
   display: flex;
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding: 25px;
   border-radius: 7px;
   backface-visibility: hidden;
   background-color: var(--light-yellow);
 
-  .signin__form-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--dark);
-  }
-
   .signin__form {
+
+    .signin__form-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--dark);
+    }
 
     form {
       display: flex;
       flex-direction: column;
       gap: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
 
       .wrapper-buttons {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 10px;
-        margin-bottom: 10px;
 
         .login_question {
           display: flex;
@@ -152,6 +151,13 @@ function submitRegistration() {
         }
       }
     }
+  }
+
+  .sign-promo {
+    display: flex;
+    align-items: flex-end;
+    width: 55%;
+    height: 100%;
   }
 }
 </style>

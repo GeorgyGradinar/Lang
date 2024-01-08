@@ -1,21 +1,16 @@
 <template>
-<div class="card bg-base-light-violet second">
-  <div class="tariffs__card-wrap">
-    <div class="tariffs__card-title">
+  <div class="wrapper-payment-method">
+    <h2>
       Способ оплаты
-    </div>
-    <div class="tariffs__card-descr">
+    </h2>
+    <p>
       Ваш метод оплаты для совершения операций по подписке
-    </div>
-    <div class="tariffs__card-paymethod">
+    </p>
+    <p>
       Дебетовая карта <span> {{ state.cardNumber }}</span>
-    </div>
-    <div>
-      <a href="#">Изменить способ оплаты</a>
-    </div>
-
+    </p>
+    <button>Изменить способ оплаты</button>
   </div>
-</div>
 </template>
 
 <script>
@@ -27,6 +22,31 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+.wrapper-payment-method {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--dark);
+  box-shadow: 1px 4px 1px var(--dark);
+  background-color: var(--blue);
 
+  button {
+    padding: 5px 10px;
+    color: var(--dark);
+    background-color: var(--yellow);
+    border-radius: 10px;
+    border: 1px solid var(--dark);
+    box-shadow: 1px 4px 1px var(--dark);
+    transition: all 0.2s;
+
+    &:active {
+      box-shadow: 0 0 1px var(--dark);
+      transform: translateY(5px);
+    }
+  }
+}
 </style>

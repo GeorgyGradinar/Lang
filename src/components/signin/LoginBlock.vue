@@ -1,7 +1,7 @@
 <template>
   <div class="login-block">
     <div class="login__form">
-      <p class="login__form-title">Создайте аккаунт</p>
+      <p class="login__form-title">Войдите в аккаунт</p>
       <form>
         <InputElement :title="'email'"
                       :data="login"
@@ -27,7 +27,7 @@
       <SocialsBlock></SocialsBlock>
     </div>
     <div class="sign-promo">
-      <img src="img/Saly.png">
+      <img src="img/Фоны-01.png">
     </div>
   </div>
 </template>
@@ -72,7 +72,7 @@ function submitLogin() {
   display: flex;
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding: 25px;
   border-radius: 7px;
   backface-visibility: hidden;
   transform: rotateX(180deg);
@@ -82,18 +82,17 @@ function submitLogin() {
     .login__form-title {
       font-size: 18px;
       font-weight: 700;
-      margin: 10px 0;
+      margin-bottom: 10px;
       color: var(--dark);
     }
 
     form {
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      margin-bottom: 20px;
+      gap: 25px;
 
       .wrapper-buttons {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
 
         .login_question {
           display: flex;
@@ -132,6 +131,13 @@ function submitLogin() {
         }
       }
     }
+  }
+
+  .sign-promo {
+    display: flex;
+    align-items: flex-end;
+    width: 50%;
+    height: 100%;
   }
 }
 </style>

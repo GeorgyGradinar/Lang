@@ -12,8 +12,8 @@
       {{ mapErrors(validationInput[title]?.$errors)[0] }}
     </p>
     <div class="wrapper-eyes" v-if="title === 'password' || title === 'confirmPass'">
-      <img v-if="isShowPassword" @click.prevent="toggleShowPassword" src="img/signin/eye-on.svg" alt="">
-      <img v-else @click.prevent="toggleShowPassword" src="img/signin/eye-off.svg" alt="">
+      <img v-show="isShowPassword" @click.prevent="toggleShowPassword" src="img/signin/eye-on.svg" alt="">
+      <img v-show="!isShowPassword" @click.prevent="toggleShowPassword" src="img/signin/eye-off.svg" alt="">
     </div>
   </div>
 </template>

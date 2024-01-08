@@ -31,11 +31,12 @@ function changeMode(arg) {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--pink);
 
   .signin {
     position: relative;
     width: 850px;
-    height: 450px;
+    height: 470px;
     display: flex;
     border-radius: 10px;
     transition: all 0.2s;

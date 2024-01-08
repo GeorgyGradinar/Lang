@@ -1,7 +1,7 @@
 <template>
-  <div class="meaage bg-base-dark-purple">
-    <div class="wrap div-center">
-      <img src="img/icon/bxs-bell1.png">&nbsp;{{ messageText }}
+  <div class="message-date-subscribe">
+    <div class="message">
+      <img src="img/icon/notification.svg">&nbsp;{{ messageText }}
     </div>
   </div>
 </template>
@@ -13,6 +13,22 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+.message-date-subscribe {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+  background-color: var(--blue);
 
+  .message {
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 35px;
+      height: 35px;
+    }
+  }
+}
 </style>

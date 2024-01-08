@@ -1,24 +1,17 @@
 <template>
-  <div class="card bg-base-light-violet">
-    <div class="tariffs__card-wrap">
-      <div class="tariffs__card-title row-center">
-        <img src="img/icon/bxs-crown1.svg">&nbsp;PRO-подписка
-      </div>
-      <div class="tariffs__card-descr">
-        Изучайте анлийский со всеми преимуществами подписки на эксклюзивные материалы и специальные функции
-      </div>
-      <div class="tariffs__card-price">
-        {{ state.price }} <span class="lower">₽ </span>
-      </div>
-      <div class="tariffs__card-button">
-        <button class="bg-base-1" @click="$router.push('/tariff')">Открыть тарифы</button>
-      </div>
-      <div class="tariffs__card-deadline">
-        Следующая оплата {{ state.stopDate }}
-      </div>
-      <div @click="$emit('cancelSubscr')">
-        <a href="#">Отменить подписку</a>
-      </div>
+  <div class="wrapper-state">
+    <h2><img src="img/icon/bxs-crown1.svg">&nbsp;PRO-подписка</h2>
+    <p>
+      - Изучайте анлийский со всеми преимуществами подписки на эксклюзивные материалы и специальные функции
+    </p>
+    <p>
+      - {{ state.price }} <span class="lower">₽ </span>
+    </p>
+
+    <p>- Следующая оплата {{ state.stopDate }}</p>
+    <div class="wrapper-buttons">
+      <button class="button-cancel-subscribe" @click="$emit('cancelSubscr')">Отменить подписку</button>
+      <button @click="$router.push('/tariff')">Открыть тарифы</button>
     </div>
   </div>
 </template>
@@ -27,15 +20,48 @@
 export default {
   name: 'PaymentStateView',
 
-  props:{
-    'state' : Object
+  props: {
+    'state': Object
   },
 
   emits: ['cancelSubscr']
-
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+.wrapper-state {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--dark);
+  box-shadow: 1px 4px 1px var(--dark);
+  background-color: var(--red);
 
+  h2 {
+    display: flex;
+    align-items: center;
+  }
+
+  .wrapper-buttons {
+    display: flex;
+    gap: 20px;
+
+    button {
+      padding: 5px 10px;
+      color: var(--dark);
+      background-color: var(--yellow);
+      border-radius: 10px;
+      border: 1px solid var(--dark);
+      box-shadow: 1px 4px 1px var(--dark);
+      transition: all 0.2s;
+
+      &:active {
+        box-shadow: 0 0 1px var(--dark);
+        transform: translateY(5px);
+      }
+    }
+  }
+}
 </style>
