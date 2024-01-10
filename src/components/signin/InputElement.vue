@@ -41,14 +41,12 @@ let isShowPassword = ref(false);
 
 onBeforeMount(() => {
   currentData.value = props.data;
-  if (title.value === 'password') {
+  if (title.value === 'password' || title.value === 'confirmPass') {
     currentType.value = 'password';
   } else {
     currentType.value = type.value;
   }
-
 })
-
 
 function toggleShowPassword() {
   isShowPassword.value = !isShowPassword.value;

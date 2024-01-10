@@ -89,7 +89,7 @@ onMounted(() => {
 
   .left {
     &:after {
-      left: 0;
+      left: -1px;
     }
   }
 

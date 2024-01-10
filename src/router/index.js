@@ -6,7 +6,6 @@ import ProgressView from '../views/ProgressView.vue'
 import TariffView from '../views/TariffView.vue'
 import PaymentView from '../views/PaymentView.vue'
 import CallbackView from '../views/CallbackView.vue'
-import SignoutView from '../views/SignoutView.vue'
 import SigninView from '../views/SigninView.vue'
 import LessonView from '../views/LessonView.vue'
 
@@ -30,12 +29,12 @@ const routes = [
   {
     path: '/progress',
     name: 'progress',
-    component: ProgressView 
+    component: ProgressView
   },
   {
     path: '/tariff',
     name: 'tariff',
-    component: TariffView 
+    component: TariffView
   },
   {
     path: '/payment',
@@ -48,13 +47,8 @@ const routes = [
     component: CallbackView
   },
   {
-    path: '/signout',
-    name: 'signout',
-    component: SignoutView
-  },
-  {
-    path: '/signin',
-    name: 'signin',
+    path: '/auth',
+    name: 'auth',
     component: SigninView
   },
   {

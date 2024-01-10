@@ -68,7 +68,7 @@ function showSLide() {
 .card {
   display: flex;
   align-items: center;
-  width: 285px;
+  width: 300px;
   border-radius: 15px;
   -webkit-transition: all .3s ease;
   transition: all .3s ease;

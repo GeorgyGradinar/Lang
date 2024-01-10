@@ -1,28 +1,31 @@
 <template>
   <div class="signin__form-wrap">
     <div class="signin__form">
-      <p class="signin__form-title">Создайте аккаунт</p>
+      <div class="wrapper-title">
+        <p class="signin__form-title">Создайте аккаунт</p>
+        <p class="error-message">{{ errorMessage }}</p>
+      </div>
       <form v-if="vRegistration$.email">
         <InputElement :title="'name'"
-                      :data="registration"
+                      :data="registrationData"
                       :validationInput="vRegistration$"
                       :type="'text'">
         </InputElement>
 
         <InputElement :title="'email'"
-                      :data="registration"
+                      :data="registrationData"
                       :validationInput="vRegistration$"
                       :type="'email'">
         </InputElement>
 
         <InputElement :title="'password'"
-                      :data="registration"
+                      :data="registrationData"
                       :validationInput="vRegistration$"
                       :type="'text'">
         </InputElement>
 
         <InputElement :title="'confirmPass'"
-                      :data="registration"
+                      :data="registrationData"
                       :validationInput="vRegistration$"
                       :type="'text'">
         </InputElement>
@@ -31,7 +34,7 @@
           <button @click.prevent="submitRegistration">Создать аккаунт</button>
           <div class="login_question">
             <p>Уже есть?</p>
-            <button class="switcher" @click.prevent="emit('openLogin', true)">
+            <button @click.prevent="emit('openLogin', true)">
               <a href="#">Войти</a>
             </button>
           </div>
@@ -49,22 +52,27 @@
 <script setup>
 import SocialsBlock from "@/components/signin/SocialsBlock";
 import AcceptPolicy from "@/components/signin/AcceptPolicy";
+import InputElement from "@/components/signin/InputElement";
 import {computed, ref} from "vue";
 import {email, minLength, required, sameAs} from "@vuelidate/validators";
 import {useVuelidate} from "@vuelidate/core";
-import InputElement from "@/components/signin/InputElement"
+import authRequests from "@/mixins/requests/authRequests";
+import {useRouter} from "vue-router/dist/vue-router";
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['openLogin']);
+const {registration} = authRequests();
+const router = useRouter();
 
-let registration = ref({
+let errorMessage = ref('');
+let registrationData = ref({
   name: '',
   email: '',
   password: '',
   confirmPass: ''
 })
 
-const passwordRef = computed(() => registration.value.password);
+const passwordRef = computed(() => registrationData.value.password);
 const rulesRegistration = {
   name: {required},
   email: {required, email},
@@ -72,13 +80,21 @@ const rulesRegistration = {
   confirmPass: {required, sameAs: sameAs(passwordRef)}
 }
 
-const vRegistration$ = useVuelidate(rulesRegistration, registration.value);
+const vRegistration$ = useVuelidate(rulesRegistration, registrationData.value);
 
 function submitRegistration() {
+  errorMessage.value = '';
   vRegistration$.value.$validate();
 
   if (!vRegistration$.value.$error) {
-    console.log('registration')
+    registration(registrationData.value)
+        .then(response => {
+          if (response.data) {
+            router.push({path: '/'})
+          } else {
+            errorMessage.value = response.response.data.message;
+          }
+        })
   }
 }
 </script>
@@ -96,11 +112,22 @@ function submitRegistration() {
 
   .signin__form {
 
-    .signin__form-title {
-      font-size: 18px;
-      font-weight: 700;
+    .wrapper-title {
+      display: flex;
+      align-items: center;
+      gap: 20px;
       margin-bottom: 10px;
-      color: var(--dark);
+
+      .signin__form-title {
+        font-size: 18px;
+        font-weight: 700;
+
+        color: var(--dark);
+      }
+
+      .error-message {
+        color: var(--red);
+      }
     }
 
     form {
@@ -127,6 +154,10 @@ function submitRegistration() {
             a {
               color: var(--dark);
               text-decoration: none;
+            }
+
+            &:hover {
+              background-color: var(--light-yellow);
             }
           }
         }

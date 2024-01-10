@@ -1,36 +1,38 @@
 <template>
-  <div class="state-week">
-    <div class="chart">
-      <canvas ref="chart"></canvas>
-    </div>
-    <div class="state-week__statistic">
-      <!--      <p>Задания на сегодня:&nbsp;&nbsp;<span class="bold">{{ success + errors }}/{{ total }}</span></p>-->
-      <div class="statistic">
-        <div class="wrapper__success">
-          <img src="img/icon/check-done.svg">&nbsp;
-          <p> Успешно:&nbsp;<span class="bold">{{ success }}</span></p>
-        </div>
-        <div class="wrapper__errors">
-          <img src="img/icon/info.svg">&nbsp;
-          С ошибками:&nbsp;<span class="bold">{{ errors }}</span>
-        </div>
-        <div class="wrapper__without-result">
-          <img src="img/icon/close.svg">&nbsp;
-          Не выполнено:&nbsp;<span class="bold">{{ errors }}</span>
+  <div class="wrapper-state-week">
+    <div class="state-week">
+      <div class="chart">
+        <canvas ref="chart"></canvas>
+      </div>
+      <div class="state-week__statistic">
+        <!--      <p>Задания на сегодня:&nbsp;&nbsp;<span class="bold">{{ success + errors }}/{{ total }}</span></p>-->
+        <div class="statistic">
+          <div class="wrapper__success">
+            <img src="img/icon/check-done.svg">&nbsp;
+            <p> Успешно:&nbsp;<span class="bold">{{ success }}</span></p>
+          </div>
+          <div class="wrapper__errors">
+            <img src="img/icon/info.svg">&nbsp;
+            С ошибками:&nbsp;<span class="bold">{{ errors }}</span>
+          </div>
+          <div class="wrapper__without-result">
+            <img src="img/icon/close.svg">&nbsp;
+            Не выполнено:&nbsp;<span class="bold">{{ errors }}</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="state-week__days">
-      <div class="day"
-           v-for="(item, index) in weekResults" :key="item.day"
-      >
-        <p>{{ item.day }}</p>
-        <div
-            class="results"
-            :class="{'no': item.state === 'lock', 'now': index === currentIndex, 'cursor': item.state !== 'lock'}"
-            @click="changeDay(index, item)"
+      <div class="state-week__days">
+        <div class="day"
+             v-for="(item, index) in weekResults" :key="item.day"
         >
-          <span v-if="item.total">{{ item.success + item.errors }}/{{ item.total }}</span>
+          <p>{{ item.day }}</p>
+          <div
+              class="results"
+              :class="{'no': item.state === 'lock', 'now': index === currentIndex, 'cursor': item.state !== 'lock'}"
+              @click="changeDay(index, item)"
+          >
+            <span v-if="item.total">{{ item.success + item.errors }}/{{ item.total }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -166,134 +168,141 @@ function changeDay(index, data) {
 </script>
 
 <style lang="scss">
-.state-week {
-  height: 100px;
+.wrapper-state-week {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: center;
+  width: 100vw;
   background-color: var(--pink);
 
-  .chart {
-    width: 80px;
-    height: 80px;
-
-    canvas {
-      max-height: 250px;
-    }
-  }
-
-  .state-week__statistic {
+  .state-week {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    height: 100%;
-    font-size: 15px;
-    font-weight: 600;
+    width: 100%;
+    max-width: 1440px;
+    height: 100px;
 
-    p {
-      display: flex;
-      width: 100%;
-      text-align: start;
+    .chart {
+      width: 80px;
+      height: 80px;
 
-      span {
-        letter-spacing: 2px;
+      canvas {
+        max-height: 250px;
       }
     }
 
-    .bold {
-      display: block;
-      width: 20px;
-      font-weight: 900;
-    }
-
-    .statistic {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      gap: 5px;
-
-      .wrapper__success,
-      .wrapper__errors,
-      .wrapper__without-result {
-        display: flex;
-        align-items: center;
-        color: var(--green);
-
-        img {
-          width: 30px;
-          height: 30px;
-        }
-      }
-
-      .wrapper__errors {
-        color: var(--yellow);
-      }
-
-      .wrapper__without-result {
-        color: var(--light-green);
-      }
-    }
-  }
-
-  .state-week__days {
-    width: 450px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    text-align: center;
-
-    .day {
+    .state-week__statistic {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 50px;
+      gap: 10px;
       height: 100%;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 600;
 
       p {
-        font-size: 15px;
+        display: flex;
+        width: 100%;
+        text-align: start;
+
+        span {
+          letter-spacing: 2px;
+        }
+      }
+
+      .bold {
+        display: block;
+        width: 20px;
+        font-weight: 900;
+      }
+
+      .statistic {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        gap: 5px;
+
+        .wrapper__success,
+        .wrapper__errors,
+        .wrapper__without-result {
+          display: flex;
+          align-items: center;
+          color: var(--green);
+
+          img {
+            width: 30px;
+            height: 30px;
+          }
+        }
+
+        .wrapper__errors {
+          color: var(--yellow);
+        }
+
+        .wrapper__without-result {
+          color: var(--light-green);
+        }
       }
     }
 
-    .results {
-      width: 40px;
-      height: 40px;
+    .state-week__days {
+      width: 450px;
       display: flex;
-      justify-content: center;
       align-items: center;
-      font-weight: 900;
-      margin-top: 4px;
-      background-color: #4f3dca;
-      border-radius: 8px;
-      border: 1px solid var(--dark);
-      box-shadow: 1px 4px 1px var(--dark);
-      transition: all 0.2s;
+      justify-content: center;
+      gap: 20px;
+      text-align: center;
 
-      &:hover {
-        color: var(--yellow);
+      .day {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 100%;
+        font-size: 12px;
+        font-weight: 700;
+
+        p {
+          font-size: 15px;
+        }
       }
 
-      &:active {
-        box-shadow: 0 0 1px var(--dark);
-        transform: translateY(5px);
-      }
+      .results {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 900;
+        margin-top: 4px;
+        background-color: #4f3dca;
+        border-radius: 8px;
+        border: 1px solid var(--dark);
+        box-shadow: 1px 4px 1px var(--dark);
+        transition: all 0.2s;
 
-      &.now {
-        box-shadow: 0 0 1px var(--dark);
-        transform: translateY(5px);
-      }
+        &:hover {
+          color: var(--yellow);
+        }
 
-      &.no {
+        &:active {
+          box-shadow: 0 0 1px var(--dark);
+          transform: translateY(5px);
+        }
 
+        &.now {
+          box-shadow: 0 0 1px var(--dark);
+          transform: translateY(5px);
+        }
+
+        &.no {
+
+        }
       }
     }
   }
-
 }
 
 @media screen and (max-width: 800px) {

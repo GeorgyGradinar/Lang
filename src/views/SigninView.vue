@@ -15,9 +15,18 @@
 <script setup>
 import RegistrationBlock from "@/components/signin/RegistrationBlock";
 import LoginBlock from "@/components/signin/LoginBlock";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import {useRoute} from "vue-router/dist/vue-router";
+
+const route = useRoute();
 
 let isShowLoginBlock = ref(false);
+
+onMounted(() => {
+  if (route.query?.type === 'signin'){
+    isShowLoginBlock.value = true;
+  }
+})
 
 function changeMode(arg) {
   isShowLoginBlock.value = arg;

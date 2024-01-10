@@ -4,68 +4,61 @@
     <week-results/>
 
     <!-- Секция чата и заданий -->
-    <div class="dialog-promo">
-      <!--        <div class="card half bg-orange dialog-chat">-->
-      <!--          <chat-view-->
-      <!--              :smallMode="true"-->
-      <!--          />-->
-      <!--        </div>-->
-      <slider-view :feed="sliderFeed1"/>
-      <slider-view :feed="sliderFeed2"/>
-      <div class="words-wrap">
-        <p class="words__title">Новые добавленные слова</p>
-        <wordlist-view
-            :words="newWords"
-            :columns="2"
-        />
+    <div class="wrapper-dialog-promo">
+      <div class="dialog-promo">
+        <!--        <div class="card half bg-orange dialog-chat">-->
+        <!--          <chat-view-->
+        <!--              :smallMode="true"-->
+        <!--          />-->
+        <!--        </div>-->
+        <slider-view :feed="sliderFeed1"/>
+        <slider-view :feed="sliderFeed2"/>
+        <div class="words-wrap">
+          <p class="words__title">Новые добавленные слова</p>
+          <wordlist-view
+              :words="newWords"
+              :columns="3"
+          />
 
-        <router-link to="/dictionary" class="secondary-button">
-          Перейти в словарь &nbsp;&nbsp;&nbsp;
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-            <path d="m700-300-57-56 84-84H120v-80h607l-83-84 57-56 179 180-180 180Z"/>
-          </svg>
-        </router-link>
+          <router-link to="/dictionary" class="secondary-button">
+            Перейти в словарь
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+              <path d="m700-300-57-56 84-84H120v-80h607l-83-84 57-56 179 180-180 180Z"/>
+            </svg>
+          </router-link>
+        </div>
       </div>
     </div>
 
-    <!-- Секция словаря -->
-    <div class="words">
-      <!-- новые слова -->
-      <!--      <div class="words-wrap">-->
-      <!--        <p class="words__title">Новые добавленные слова</p>-->
-      <!--        <wordlist-view-->
-      <!--            :words="newWords"-->
-      <!--            :columns="2"-->
-      <!--        />-->
+    <div class="wrapper-word-chat">
+      <div class="words">
+        <div class="wrapper-words-theme">
+          <p class="words__title">Группы слов по темам</p>
+          <words-group-list
+              :groups="wordGroups"
+              @selected="selectGroup"
+          />
+        </div>
 
-      <!--        <router-link to="/dictionary" class="secondary-button">-->
-      <!--          Перейти в словарь &nbsp;&nbsp;&nbsp;-->
-      <!--          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">-->
-      <!--            <path d="m700-300-57-56 84-84H120v-80h607l-83-84 57-56 179 180-180 180Z"/>-->
-      <!--          </svg>-->
-      <!--        </router-link>-->
-      <!--      </div>-->
-      <!-- группы слов -->
-      <div class="wrapper-words-theme">
-        <p class="words__title">Группы слов по темам</p>
-        <words-group-list
-            :groups="wordGroups"
-            @selected="selectGroup"
-        />
+        <div class="wrapper-chat">
+          <ChartBlock></ChartBlock>
+        </div>
       </div>
     </div>
 
     <!-- Секция ошибок-->
-    <div class="mistakes">
-      <h3 class="mistakes__title">Ваши ошибки и что можно улучшить</h3>
-      <tab-nav
-          :tabs="mistakeTabs"
-          @selected="selectMistakeTab"
-      />
-      <div class="mistakes__list">
-        <mistake-view
-            :mistakes="currentMistakes"
+    <div class="wrapper-mistakes">
+      <div class="mistakes">
+        <h3 class="mistakes__title">Ваши ошибки и что можно улучшить</h3>
+        <tab-nav
+            :tabs="mistakeTabs"
+            @selected="selectMistakeTab"
         />
+        <div class="mistakes__list">
+          <mistake-view
+              :mistakes="currentMistakes"
+          />
+        </div>
       </div>
     </div>
 
@@ -81,23 +74,28 @@
     <!--Модальное окно словаря -->
     <words-list-dlg ref="wordslistdlg"/>
   </div>
+
+  <MiniChat></MiniChat>
 </template>
 
-
 <script>
-import WeekResults from '@/components/widgets/WeekResults.vue'
-// import ChatView from '@/components/widgets/ChatView.vue'
-import SliderView from '@/components/widgets/SliderView.vue'
-import WordlistView from '@/components/widgets/WordlistView.vue'
-import WordsGroupList from '@/components/widgets/WordsGroupList.vue'
-import WordsListDlg from '@/components/modals/WordsListDlg.vue'
-import TabNav from '@/components/app/TabNav.vue'
-import MistakeView from '@/components/widgets/MistakeView.vue'
-import PromoView from '@/components/widgets/PromoView.vue'
+import WeekResults from '@/components/widgets/WeekResults.vue';
+// import ChatView from '@/components/widgets/ChatView.vue';
+import SliderView from '@/components/widgets/SliderView.vue';
+import WordlistView from '@/components/widgets/WordlistView.vue';
+import WordsGroupList from '@/components/widgets/WordsGroupList.vue';
+import WordsListDlg from '@/components/modals/WordsListDlg.vue';
+import TabNav from '@/components/app/TabNav.vue';
+import MistakeView from '@/components/widgets/MistakeView.vue';
+import PromoView from '@/components/widgets/PromoView.vue';
+import ChartBlock from "@/components/widgets/ChartBlock";
+import MiniChat from "@/components/widgets/MiniChat";
 
 export default {
   name: 'HomeView',
   components: {
+    MiniChat,
+    ChartBlock,
     WeekResults,
     // ChatView,
     SliderView, WordlistView, WordsGroupList, WordsListDlg, TabNav, MistakeView, PromoView
@@ -354,102 +352,132 @@ export default {
 
 .wrapper-home-page {
 
-  .dialog-promo {
+  .wrapper-dialog-promo {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    padding: 90px 0 0 0;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--white);
+    width: 100%;
     background-color: var(--light-yellow);
 
-    .words-wrap {
+    .dialog-promo {
       display: flex;
-      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
       width: 100%;
-      max-width: 550px;
-      padding: 20px;
-      border-radius: 10px;
-      border: 2px solid var(--dark);
-      box-shadow: 1px 4px 1px var(--dark);
-      background-color: var(--green);
+      max-width: 1440px;
+      padding: 90px 0 20px 0;
+      margin: 0 20px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
 
-      .words__title {
-        font-size: 26px;
-      }
+      .words-wrap {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px solid var(--dark);
+        box-shadow: 1px 4px 1px var(--dark);
+        background-color: var(--green);
 
-      .secondary-button {
-        width: 230px;
-        align-self: flex-end;
-
-        svg {
-          fill: var(--white);
-          transition: fill 0.2s;
+        .words__title {
+          font-size: 26px;
         }
 
-        &:hover {
+        .secondary-button {
+          width: 230px;
+          align-self: flex-end;
+
           svg {
-            fill: var(--dark);
+            fill: var(--white);
+            transition: fill 0.2s;
+          }
+
+          &:hover {
+            svg {
+              fill: var(--dark);
+            }
           }
         }
       }
     }
   }
 
-  .words {
+  .wrapper-word-chat {
     display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 20px;
-    padding: 60px 0 90px 0;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--white);
+    width: 100%;
     background-color: var(--light-yellow);
 
-    .wrapper-words-theme {
+    .words {
       display: flex;
-      flex-direction: column;
-      width: 70%;
-      padding: 30px 20px 40px;
-      border-radius: 10px;
-      border: 2px solid var(--dark);
-      box-shadow: 1px 4px 1px var(--dark);
-      background-color: var(--red);
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 1440px;
+      padding: 60px 0 90px 0;
+      margin: 0 20px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
 
-      .words__title {
-        font-size: 26px;
-        margin-bottom: 20px;
+      .wrapper-words-theme {
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+        height: 100%;
+        padding: 30px 20px 40px;
+        border-radius: 10px;
+        border: 2px solid var(--dark);
+        box-shadow: 1px 4px 1px var(--dark);
+        background-color: var(--red);
+
+        .words__title {
+          font-size: 26px;
+          margin-bottom: 20px;
+        }
+      }
+
+      .wrapper-chat {
+        width: 50%;
+        height: 500px;
       }
     }
   }
 
-  .mistakes {
+  .wrapper-mistakes {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 90px 30px;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--white);
+    justify-content: center;
+    width: 100%;
     background-color: var(--blue);
 
-    .mistakes__title {
-      font-size: 28px;
-      font-weight: 800;
-      text-align: center;
-      margin-bottom: 30px
-    }
-
-    .mistakes__list {
+    .mistakes {
+      display: flex;
+      flex-direction: column;
       width: 100%;
-      max-width: 1200px;
-      padding: 32px;
-      border-radius: 10px;
-      background-color: var(--red);
-      border: 1px solid var(--dark);
-      box-shadow: 1px 4px 1px var(--dark);
+      max-width: 1440px;
+      padding: 90px 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+
+      .mistakes__title {
+        width: 100%;
+        font-size: 28px;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 30px
+      }
+
+      .mistakes__list {
+        width: 100%;
+        padding: 32px;
+        border-radius: 10px;
+        background-color: var(--red);
+        border: 1px solid var(--dark);
+        box-shadow: 1px 4px 1px var(--dark);
+      }
     }
   }
 

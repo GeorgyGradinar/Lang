@@ -1,9 +1,10 @@
 <template>
   <header>
     <div class="header__container">
-      <div class="header__logo">
-        <router-link to="/">LOGO</router-link>
-      </div>
+      <router-link to="/" class="header__logo">
+        <img src="img/robots/робот-01.png" alt="">
+        НейроРепетитор
+      </router-link>
 
       <div class="header__menu" :class="{active:mobileMenu}">
         <router-link v-for="item in menu" :key="item.id"
@@ -11,7 +12,7 @@
         </router-link>
       </div>
 
-      <div class="header__sign-wrap" @click="popupMenu = !popupMenu">
+      <div class="header__sign-wrap" v-if="person?.id" @click="popupMenu = !popupMenu">
         <div class="header__sign-title">
           <button>
             <a href="#">Пользователь</a>
@@ -21,10 +22,18 @@
         <div class="header__sign-popup" :class="{'open-popup': popupMenu}">
           <router-link v-for="item in popupmenuList" :key="item.id"
                        :to=item.path
-                       :class="{'red' : item.path === '/signout'}">
+                       :class="{'red' : item.title === 'Выйти'}">
             {{ item.title }}
           </router-link>
+          <button @click="prepareForLogout">Выйти</button>
         </div>
+      </div>
+
+      <div class="wrapper-signin-buttons" v-if="!person?.id">
+        <button @click="routeTo('/auth', {type: 'signin'})">
+          Войти
+        </button>
+        <button @click="routeTo('/auth')">Регистрация</button>
       </div>
 
       <div class="header__burger-wrap">
@@ -39,6 +48,15 @@
 
 <script setup>
 import {ref} from "vue";
+import {useRouter} from "vue-router/dist/vue-router";
+import {storeToRefs} from "pinia/dist/pinia";
+import {mainStore} from "@/store/mainStore";
+import shared from "@/mixins/shared";
+
+const router = useRouter();
+const main = mainStore();
+const {person} = storeToRefs(main);
+const {prepareForLogout} = shared();
 
 const menu = [
   {id: 0, path: '/', title: 'Главная'},
@@ -53,12 +71,15 @@ const popupmenuList = [
   {id: 1, path: '/tariff', title: 'Тириф'},
   {id: 2, path: '/dictionary', title: 'Словарь'},
   {id: 3, path: '/payment', title: 'Платежи'},
-  {id: 4, path: '/callback', title: 'Обратная связь'},
-  {id: 5, path: '/signout', title: 'Выйти'},
+  {id: 4, path: '/callback', title: 'Обратная связь'}
 ];
 
 let mobileMenu = ref(false);
 let popupMenu = ref(false);
+
+function routeTo(path, query) {
+  router.push({path, query})
+}
 </script>
 
 <style scoped lang="scss">
@@ -102,9 +123,16 @@ header {
     }
 
     .header__logo {
-      a {
-        font-size: 40px;
-        font-family: Lilita One;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 30px;
+      font-weight: 900;
+      color: #671ba1;
+
+      img {
+        width: 45px;
       }
     }
 
@@ -120,6 +148,7 @@ header {
         border: 1px solid var(--dark);
         box-shadow: 1px 4px 1px var(--dark);
         transition: all 0.2s;
+        font-weight: 700;
 
         &:hover {
           color: var(--dark);
@@ -217,6 +246,41 @@ header {
 
       .open-popup {
         top: 100%;
+      }
+    }
+
+    .wrapper-signin-buttons {
+      display: flex;
+      gap: 10px;
+
+      button {
+        padding: 5px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--dark);
+        box-shadow: 1px 4px 1px var(--dark);
+        transition: all 0.2s;
+        font-weight: 700;
+
+        &:first-child {
+          background-color: var(--red);
+
+          &:hover {
+            background-color: #f18b80;
+          }
+        }
+
+        &:last-child {
+          background-color: var(--blue);
+
+          &:hover {
+            background-color: var(--light_blue);
+          }
+        }
+
+        &:active {
+          box-shadow: 0 0 1px var(--dark);
+          transform: translateY(5px);
+        }
       }
     }
 

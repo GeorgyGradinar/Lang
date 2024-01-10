@@ -1,15 +1,19 @@
 <template>
   <div class="login-block">
     <div class="login__form">
-      <p class="login__form-title">Войдите в аккаунт</p>
+      <div class="wrapper-title">
+        <p class="login__form-title">Войдите в аккаунт</p>
+        <p class="error-message">{{ errorMessage }}</p>
+      </div>
+
       <form>
         <InputElement :title="'email'"
-                      :data="login"
+                      :data="loginData"
                       :validationInput="vLogin$"
                       :type="'email'">
         </InputElement>
         <InputElement :title="'password'"
-                      :data="login"
+                      :data="loginData"
                       :validationInput="vLogin$"
                       :type="'text'">
         </InputElement>
@@ -39,12 +43,16 @@ import InputElement from "@/components/signin/InputElement";
 import {email, minLength, required} from "@vuelidate/validators";
 import {ref} from "vue";
 import {useVuelidate} from "@vuelidate/core";
-
+import authRequests from "@/mixins/requests/authRequests";
+import {useRouter} from "vue-router/dist/vue-router";
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['openRegistration']);
+const {login} = authRequests();
+const router = useRouter();
 
-let login = ref({
+let errorMessage = ref('');
+let loginData = ref({
   email: '',
   password: ''
 })
@@ -54,13 +62,20 @@ let rulesLogin = {
   password: {required, minLength: minLength(8)}
 }
 
-const vLogin$ = useVuelidate(rulesLogin, login.value);
+const vLogin$ = useVuelidate(rulesLogin, loginData.value);
 
 function submitLogin() {
   vLogin$.value.$validate();
 
   if (!vLogin$.value.$error) {
-    console.log('login')
+    login(loginData.value)
+        .then(response => {
+          if (response.data) {
+            router.push('/');
+          } else {
+            errorMessage.value = response.response.data.error;
+          }
+        })
   }
 }
 
@@ -79,11 +94,22 @@ function submitLogin() {
   background-color: var(--light-yellow);
 
   .login__form {
-    .login__form-title {
-      font-size: 18px;
-      font-weight: 700;
+
+    .wrapper-title {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
       margin-bottom: 10px;
-      color: var(--dark);
+
+      .login__form-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark);
+      }
+
+      .error-message {
+        color: var(--red);
+      }
     }
 
     form {
@@ -107,6 +133,10 @@ function submitLogin() {
             a {
               color: var(--dark);
               text-decoration: none;
+            }
+
+            &:hover {
+              background-color: var(--light-yellow);
             }
           }
         }
@@ -136,7 +166,7 @@ function submitLogin() {
   .sign-promo {
     display: flex;
     align-items: flex-end;
-    width: 50%;
+    width: 52%;
     height: 100%;
   }
 }

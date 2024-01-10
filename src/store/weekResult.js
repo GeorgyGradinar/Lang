@@ -16,6 +16,7 @@ export const useWeekResult = defineStore('weekResult', () => {
 
     function cleanStore() {
         weekResults.value = templateDataResult;
+        currentIndex.value = 0;
     }
 
     function changeWeekResults(data) {

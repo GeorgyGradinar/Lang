@@ -1,7 +1,12 @@
 <template>
   <div class="wrapper-chart">
-    <h3>ИИ-репетитор</h3>
-    <div class="chart">
+    <div class="title-chat">
+      <h3>ИИ-репетитор</h3>
+
+      <img v-if="isMiniChat" src="img/chart/close.svg" alt="close" @click="emit('closeMini')">
+    </div>
+
+    <div class="chart" :class="{'size-mini': isMiniChat}">
       <div class="wrapper-messages" ref="messagesBlock">
         <div class="wrapper-message" v-for="message in messages" :key="message.id">
           <template v-if="message.isText">
@@ -63,10 +68,17 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 import {useChart} from '@/store/chart';
 import {storeToRefs} from "pinia/dist/pinia";
 import Vue3WaveAudioPlayer from 'vue3-wave-audio-player';
+
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['closeMini']);
+// eslint-disable-next-line no-undef,no-unused-vars
+const prop = defineProps({
+  isMiniChat: Boolean
+})
 
 const chart = useChart();
 const {addMessage} = chart;
@@ -87,10 +99,6 @@ let audioRecorder = ref();
 let audioChunks = ref([]);
 let messagesBlock = ref(null);
 let isAllowMicrophone = ref(false);
-
-onMounted(() => {
-
-})
 
 function getAllowForMicrophone(isStartRecord = false) {
   navigator.mediaDevices.getUserMedia({audio: true})
@@ -226,7 +234,7 @@ function stopTimer() {
 .wrapper-chart {
   display: flex;
   flex-direction: column;
-  width: 60%;
+  flex: 1;
   height: 100%;
   border-radius: 10px;
   border: 1px solid var(--dark);
@@ -234,8 +242,24 @@ function stopTimer() {
   background-color: var(--light_pink);
   color: var(--dark);
 
-  h3 {
+  .title-chat {
+    display: flex;
+    justify-content: space-between;
     margin: 10px 20px;
+
+    h3 {
+
+    }
+
+    img {
+      width: 30px;
+      height: 30px;
+      transition: all 0.2s;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
   }
 
   .chart {
@@ -246,14 +270,13 @@ function stopTimer() {
     height: 686px;
     border-top: 1px solid var(--dark);
     border-bottom: 1px solid var(--dark);
-    padding: 10px;
     overflow: hidden;
 
     .wrapper-messages {
       overflow-x: hidden;
       overflow-y: auto;
       scrollbar-gutter: stable;
-      padding-right: 10px;
+      padding: 5px 10px 0 10px;
 
       .wrapper-message {
         display: flex;
@@ -327,6 +350,22 @@ function stopTimer() {
             -webkit-appearance: none;
             cursor: ew-resize;
             background: var(--green);
+          }
+        }
+      }
+    }
+  }
+
+  .size-mini {
+    height: 475px;
+
+    .wrapper-messages {
+      .wrapper-message {
+        :deep(.player) {
+          #slider {
+            svg {
+              width: 150px;
+            }
           }
         }
       }

@@ -52,20 +52,22 @@
     <AddNewWord v-if="isOpenDialogAddWords" @close="closeDialogNewWord"></AddNewWord>
     <AddNewGroup v-if="isOpenDialogGroup" @close="closeDialogNewGroup"></AddNewGroup>
   </div>
+
+  <MiniChat></MiniChat>
 </template>
 
 <script setup>
+// import DictWordsDlg from '@/components/modals/DictWordsDlg.vue';
 import BorderNav from '@/components/app/BorderNav.vue';
 import TextNav from '@/components/app/TextNav.vue';
 import DictView from '@/components/widgets/DictView.vue';
 import ThemsView from '@/components/widgets/ThemsView.vue';
-// import DictWordsDlg from '@/components/modals/DictWordsDlg.vue';
+import MiniChat from "@/components/widgets/MiniChat";
 import WordsListDlg from '@/components/modals/WordsListDlg.vue';
 import AddNewWord from "@/components/modals/new-words/AddNewWord";
 import AddNewGroup from "@/components/modals/new-group/AddNewGroup";
 import {sortUPbyField} from '@/assets/js/lib';
 import {onMounted, ref} from "vue";
-
 
 let wordNav = ref([]);
 let textNav = ref([]);

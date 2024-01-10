@@ -22,11 +22,14 @@
       :title="'Выполненно'"
       :cards="doneTasks"
   />
+
+  <MiniChat></MiniChat>
 </template>
 
 <script setup>
-import WeekResults from '@/components/widgets/WeekResults.vue';
-import CardsSliderView from '@/components/widgets/CardsSliderView.vue';
+import WeekResults from "@/components/widgets/WeekResults.vue";
+import CardsSliderView from "@/components/widgets/CardsSliderView.vue";
+import MiniChat from "@/components/widgets/MiniChat";
 import {onMounted, ref} from "vue";
 
 let roleGames = ref([]);
