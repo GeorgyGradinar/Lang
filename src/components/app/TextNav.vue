@@ -44,8 +44,8 @@ onMounted(() => {
     content: '';
     position: absolute;
     top: -2px;
-    left: calc(100% - 140px);
-    width: 140px;
+    left: calc(100% - 130px);
+    width: 130px;
     height: 100%;
     border-radius: 10px;
     background-color: var(--blue);
@@ -79,7 +79,7 @@ onMounted(() => {
   &.left {
     &:after {
       left: -2px;
-      width: 110px;
+      width: 100px;
     }
   }
 }

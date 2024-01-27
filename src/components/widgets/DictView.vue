@@ -1,19 +1,23 @@
 <template>
   <div class="words-2__list">
-    <template v-for="word in words" :key="word.id">
-      <WordCard :word="word"></WordCard>
-     </template>
-
+      <WordCard v-for="word in words" :key="word.id"
+                :word="word"
+                :list="list">
+      </WordCard>
   </div>
 </template>
 
 <script setup>
 import WordCard from "@/components/widgets/WordCard";
+import {toRefs} from "vue";
 
 // eslint-disable-next-line no-undef
-defineProps({
-  words: Array
+const props = defineProps({
+  words: Array,
+  list: Boolean
 });
+
+const {list} = toRefs(props);
 </script>
 
 <style scoped lang="scss">
@@ -23,5 +27,6 @@ defineProps({
   justify-content: center;
   gap: 2%;
   padding-top: 50px;
+  transition: all 1.5s;
  }
 </style>

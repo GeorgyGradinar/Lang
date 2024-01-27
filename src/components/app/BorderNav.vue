@@ -44,8 +44,8 @@ onMounted(() => {
     content: '';
     position: absolute;
     top: -2px;
-    left: calc(100% - 260px);
-    width: 260px;
+    left: calc(100% - 240px);
+    width: 240px;
     height: 100%;
     border-radius: 10px;
     background-color: var(--blue);
@@ -75,7 +75,7 @@ onMounted(() => {
 .words-2__nav1.left {
   &:after {
     left: -2px;
-    width: 176px;
+    width: 170px;
   }
 }
 

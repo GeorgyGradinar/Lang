@@ -9,7 +9,7 @@
 
 <script setup>
 import {ref} from "vue";
-import ChartBlock from "@/components/widgets/ChartBlock";
+import ChartBlock from "@/components/widgets/NewChat";
 
 let isShowChat = ref(false);
 

@@ -1,13 +1,13 @@
 <template>
   <div class="lesson--page">
     <TaskAndAnswer></TaskAndAnswer>
-    <ChartBlock></ChartBlock>
+    <NewChat></NewChat>
   </div>
 </template>
 
 <script setup>
 import TaskAndAnswer from "@/components/widgets/TaskAndAnswer";
-import ChartBlock from "@/components/widgets/ChartBlock";
+import NewChat from "@/components/widgets/NewChat";
 </script>
 
 <style scoped lang="scss">

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper-task-and-answer">
+  <div class="wrapper-task-and-answer animate__animated animate__bounceInLeft">
     <h3>Упражнение №1</h3>
     <div class="task">
       <div class="wrapper-theme">
@@ -20,20 +20,30 @@
                 ref="textarea"
                 placeholder="Ваш ответ">
       </textarea>
-      <button>Отправить</button>
+      <button @click="submitResult">Отправить</button>
     </div>
   </div>
+
+  <ConfettiAnimation :activeConfetti="submit"></ConfettiAnimation>
 </template>
 
 <script setup>
+import ConfettiAnimation from './ConfettiAnimation';
 import {ref} from "vue";
 
 let textarea = ref(null);
 let answer = ref('');
+let isSubmit = ref(false);
 
 function autoGrow() {
   textarea.value.style.height = "45px";
   textarea.value.style.height = (textarea.value.scrollHeight) + "px";
+}
+
+function submitResult() {
+  setTimeout(() => {
+    isSubmit.value = !isSubmit.value;
+  }, 1000)
 }
 </script>
 

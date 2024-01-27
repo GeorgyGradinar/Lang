@@ -22,13 +22,15 @@
 
     <v-container>
       <v-row justify="space-around">
-        <v-date-picker
-            v-model="currentData"
-            title="text"
-            hide-header="false"
-            show-adjacent-months
-            @update:modelValue="handleSelectedDay"
-        ></v-date-picker>
+        <div class="wrapper-data-picker" ref="dataPicker">
+          <v-date-picker
+              v-model="currentData"
+              title="text"
+              hide-header="false"
+              show-adjacent-months
+              @update:modelValue="handleSelectedDay"
+          ></v-date-picker>
+        </div>
       </v-row>
     </v-container>
   </div>
@@ -72,14 +74,118 @@ const history = [
     done: 7,
     exception: 2
   },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
+  {
+    done: 7,
+    exception: 2
+  },
 ]
 
 let currentData = ref(new Date());
 let currentHistoryDay = ref();
-let isActiveCleanAnimation = ref(false)
+let isActiveCleanAnimation = ref(false);
+
+let dataPicker = ref(null);
+
 
 onMounted(() => {
   currentHistoryDay.value = history[currentData.value.getDate()];
+  updateDataPicker();
 })
 
 function handleSelectedDay() {
@@ -89,6 +195,41 @@ function handleSelectedDay() {
     isActiveCleanAnimation.value = false;
   }, 500);
 }
+
+function updateDataPicker() {
+  const listDate = dataPicker.value.children[0].children[0].children[1].children[0].children;
+  const titleClass = 'v-date-picker-month__weekday';
+  const anotherClass = 'v-date-picker-month__day--adjacent';
+
+  for (let index = 0; index < listDate.length; index++) {
+    if (!listDate[index].className.includes(titleClass) && !listDate[index].className.includes(anotherClass)) {
+      addDataToCurrentDay(listDate, index);
+    }
+  }
+}
+
+function addDataToCurrentDay(listDate, index) {
+  const wrapperDone = document.createElement('div');
+  wrapperDone.appendChild(getImageForStatistic(true));
+  wrapperDone.appendChild(getHtmlTextElement(true, history[+listDate[index].children[0].children[2].innerHTML].done));
+  wrapperDone.appendChild(getImageForStatistic(false));
+  wrapperDone.appendChild(getHtmlTextElement(false, history[+listDate[index].children[0].children[2].innerHTML].exception));
+  listDate[index].children[0].appendChild(wrapperDone);
+}
+
+function getHtmlTextElement(isDoneText, textData) {
+  const textElement = document.createElement('p');
+  isDoneText ? textElement.classList.add("done-result") : textElement.classList.add("reject-result");
+  textElement.innerHTML = `${textData}`;
+  return textElement;
+}
+
+function getImageForStatistic(isDoneImage) {
+  const image = document.createElement('img');
+  image.src = isDoneImage ? 'img/progress/check-done.svg' : 'img/progress/info.svg';
+  return image;
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -228,6 +369,10 @@ function handleSelectedDay() {
     }
   }
 
+  .wrapper-data-picker {
+    width: 100%;
+  }
+
   :deep(.v-container) {
     max-width: 45vw;
     max-height: calc(100vh - 125px);
@@ -238,6 +383,7 @@ function handleSelectedDay() {
 
     .v-picker.v-sheet {
       width: 100%;
+      max-width: 45vw;
       height: calc(100vh - 125px);
       border-radius: 10px;
       border: 2px solid var(--dark);
@@ -296,8 +442,15 @@ function handleSelectedDay() {
         .v-date-picker-month__days {
           row-gap: 0;
 
+          .v-date-picker-month__day {
+            width: 100px;
+            height: 100px;
+          }
+
           button {
-            --v-btn-height: 40px;
+            display: flex;
+            flex-direction: column;
+            --v-btn-height: 90px;
             background-color: var(--light-green);
 
             &:active {
@@ -308,6 +461,46 @@ function handleSelectedDay() {
             &:hover {
               background-color: var(--light-yellow);
             }
+
+            div {
+              display: flex;
+              gap: 1px;
+              justify-content: center;
+              align-items: center;
+
+              p {
+                font-size: 16px;
+                font-weight: 800;
+              }
+
+              img {
+                width: 20px;
+                height: 20px;
+              }
+
+              .done-result {
+                margin-right: 3px;
+                padding-right: 3px;
+                border-right: 2px solid rgba(24, 25, 30, 0.3);
+                color: var(--green);
+              }
+
+              .reject-result {
+                color: #ffa900;
+                margin-right: 0;
+                border-right: unset;
+              }
+            }
+
+            .v-btn__content {
+              font-size: 30px;
+              font-weight: 800;
+            }
+          }
+
+          .v-date-picker-month__weekday {
+            height: 20px;
+            margin-top: 15px;
           }
         }
 

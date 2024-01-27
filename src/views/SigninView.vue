@@ -3,10 +3,8 @@
     <div class="signin">
 
       <div class="content__signin" :class="{'show-login': isShowLoginBlock}">
-        <RegistrationBlock @openLogin="changeMode">
-        </RegistrationBlock>
-        <LoginBlock @openRegistration="changeMode">
-        </LoginBlock>
+        <RegistrationBlock @openLogin="changeMode"></RegistrationBlock>
+        <LoginBlock @openRegistration="changeMode"></LoginBlock>
       </div>
     </div>
   </main>

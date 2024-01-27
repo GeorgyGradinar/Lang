@@ -11,7 +11,19 @@
       </div>
     </div>
 
-    <dict-view :words="wordShow"/>
+    <div class="wrapper-types-view">
+      <div class="types-view" :class="{'left': isListView}">
+        <button @click="changeListViews(true)">
+          <img src="img/dictionary/list.svg" alt="">
+        </button>
+        <button @click="changeListViews(false)">
+          <img src="img/dictionary/grid.svg" alt="">
+        </button>
+      </div>
+    </div>
+
+
+    <dict-view :words="wordShow" :list="isListView"/>
 
     <div class="words-2__next"
          v-if="wordShow.length < wordsAll.length"
@@ -77,6 +89,7 @@ let themsAll = ref([]);
 let themsShow = ref([]);
 // let dictwordsdlg = ref(null);
 let wordslistdlg = ref(null);
+let isListView = ref(true);
 
 let isOpenDialogAddWords = ref(false);
 let isOpenDialogGroup = ref(false);
@@ -258,6 +271,10 @@ function sortPage(tab) {
   }
 }
 
+function changeListViews(isList) {
+  isListView.value = isList;
+}
+
 function showThemeDlg(them) {
   const words = [
     {id: 0, title: 'Shop'},
@@ -334,6 +351,83 @@ function showThemeDlg(them) {
         &:active {
           box-shadow: 0 0 1px var(--dark);
           transform: translateY(5px);
+        }
+      }
+    }
+  }
+
+  //.wrapper-types-view {
+  //  width: 100%;
+  //  display: flex;
+  //  justify-content: flex-end;
+  //
+  //  .types-view {
+  //    display: flex;
+  //    justify-content: flex-end;
+  //    gap: 20px;
+  //  }
+  //}
+
+  .wrapper-types-view {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+    .types-view {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      background-color: var(--purple);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--dark);
+      margin-bottom: 20px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: calc(100% - 60px);
+        width: 60px;
+        height: 100%;
+        border-radius: 10px;
+        background-color: var(--blue);
+        transition: all 0.2s;
+        border: 1px solid var(--dark);
+        box-shadow: 1px 4px 1px var(--dark);
+        z-index: 1;
+      }
+
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        cursor: pointer;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        padding: 5px 10px;
+        z-index: 2;
+        transition: all 0.2s;
+        margin-bottom: 2px;
+
+        &:hover {
+          text-decoration: none;
+          color: var(--yellow);
+        }
+
+        &.active {
+          text-decoration: none;
+          color: var(--yellow);
+        }
+      }
+
+      &.left {
+        &:after {
+          left: -2px;
+          width: 60px;
         }
       }
     }

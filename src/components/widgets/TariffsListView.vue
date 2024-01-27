@@ -1,8 +1,8 @@
 <template>
   <div class="price__tariffs-row">
     <tariff-card-view
-        v-for="tariff in tariffs" :key="tariff.id"
-        :tariff="tariff"
+        v-for="(tariff, index) in tariffs" :key="tariff.id"
+        :tariff="tariff" :index="index"
     />
   </div>
 </template>
@@ -21,8 +21,8 @@ const props = defineProps({
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 50px;
-  gap: 20px;
+  padding: 100px 50px;
+  gap: 50px;
 }
 
 @media screen and (max-width: 1000px){

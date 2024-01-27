@@ -1,10 +1,19 @@
 import axios from 'axios';
 import {testUrl} from '@/../config';
 import {mainStore} from '@/store/mainStore';
+import {ACCOUNT_STORAGE_KEY} from "../../../constants";
+import storage from "@/mixins/storage";
 
 export default function authRequests() {
     const main = mainStore();
     const {changePerson} = main;
+    const {getLocalStorage} = storage();
+
+    function checkLocalStorage() {
+        const personData = getLocalStorage(ACCOUNT_STORAGE_KEY);
+
+        if (personData?.id) changePerson(personData);
+    }
 
     function registration(data) {
         return axios.post(`${testUrl}/api/auth/register`, data)
@@ -28,5 +37,5 @@ export default function authRequests() {
             })
     }
 
-    return {registration, login};
+    return {checkLocalStorage, registration, login};
 }

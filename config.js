@@ -1,1 +1,3 @@
-export const testUrl = 'https://repititor.backendtester.ru'
+export const testUrl = 'https://repititor.backendtester.ru';
+
+

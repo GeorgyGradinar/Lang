@@ -1,7 +1,10 @@
 <template>
   <div class="chat flex-v-rub">
     <div class="chat__header bg-base-dark-purple row-center">
-      <p class="chat__header-title row-center"> ИИ-репетитор</p>
+      <div class="chat-header">
+        <p class="chat__header-title row-center"> ИИ-репетитор</p>
+      </div>
+
 
       <div class="chat__header-microphone cursor" :class="{'bg-orange' : mode === 'sound'}" @click="mode = 'sound'">
         <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

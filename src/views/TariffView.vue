@@ -1,5 +1,5 @@
 <template>
-  <div class="price bg-orange">
+  <div class="price">
     <tariff-pro-view/>
     <tariffs-list-view :tariffs="tariffs"/>
     <f-a-q-view :faq="faq"/>
@@ -79,5 +79,6 @@ onMounted(() => {
 .price {
   border-bottom: 1px solid #fff;
   padding-top: 36px;
+  background-color: var(--light-yellow);
 }
 </style>

@@ -1,23 +1,30 @@
 <template>
-  <div class="wrapper-chart">
+  <div class="wrapper-chart animate__animated animate__bounceInRight">
     <div class="title-chat">
       <h3>ИИ-репетитор</h3>
 
       <img v-if="isMiniChat" src="img/chart/close.svg" alt="close" @click="emit('closeMini')">
+      <div class="wrapper-messages-counter" v-if="!isMiniChat">
+        <p>Использованно сообщений</p>
+        <p> {{ messages.length }} / {{ allowCountMessages }}</p>
+      </div>
     </div>
 
-    <div class="chart" :class="{'size-mini': isMiniChat}">
+    <div class="chat" :class="{'size-mini': isMiniChat}">
       <div class="wrapper-messages" ref="messagesBlock">
-        <div class="wrapper-message" v-for="message in messages" :key="message.id">
+        <div class="wrapper-message"
+             v-for="message in messages" :key="message.id">
           <template v-if="message.isText">
-            <p class="message" :class="{'person_message': !message.isBot}">{{ message.message }}</p>
+            <p class="message animate__animated animate__bounceInLeft"
+               :class="{'person_message animate__bounceInRight': !message.isBot}">{{ message.message }}</p>
             <template v-if="!message.isBot">
-              <p class="error-message" v-if="message.errorMessage">{{ message.errorMessage }}</p>
-              <p class="done-message" v-else>Верно составлено</p>
+              <p class="error-message animate__animated animate__bounceInRight" v-if="message.errorMessage">{{ message.errorMessage }}</p>
+              <p class="done-message animate__animated animate__bounceInRight" v-else>Верно составлено</p>
             </template>
           </template>
           <template v-else>
-            <div class="message sound-message" :class="{'person_message': !message.isBot}">
+            <div class="message sound-message animate__animated animate__bounceInLeft"
+                 :class="{'person_message animate__bounceInRight': !message.isBot}">
               <Vue3WaveAudioPlayer
                   :wave_width="200"
                   :wave_height="40"
@@ -99,6 +106,7 @@ let audioRecorder = ref();
 let audioChunks = ref([]);
 let messagesBlock = ref(null);
 let isAllowMicrophone = ref(false);
+let allowCountMessages = ref(15);
 
 function getAllowForMicrophone(isStartRecord = false) {
   navigator.mediaDevices.getUserMedia({audio: true})
@@ -260,14 +268,24 @@ function stopTimer() {
         transform: scale(1.2);
       }
     }
+
+    .wrapper-messages-counter {
+      display: flex;
+      gap: 10px;
+
+      p {
+        font-weight: 800;
+        font-size: 18px;
+      }
+    }
   }
 
-  .chart {
+  .chat {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    flex: 1;
     width: 100%;
-    height: 686px;
     border-top: 1px solid var(--dark);
     border-bottom: 1px solid var(--dark);
     overflow: hidden;
@@ -358,6 +376,7 @@ function stopTimer() {
 
   .size-mini {
     height: 475px;
+    flex: unset;
 
     .wrapper-messages {
       .wrapper-message {

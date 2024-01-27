@@ -88,7 +88,7 @@ import WordsListDlg from '@/components/modals/WordsListDlg.vue';
 import TabNav from '@/components/app/TabNav.vue';
 import MistakeView from '@/components/widgets/MistakeView.vue';
 import PromoView from '@/components/widgets/PromoView.vue';
-import ChartBlock from "@/components/widgets/ChartBlock";
+import ChartBlock from "@/components/widgets/NewChat";
 import MiniChat from "@/components/widgets/MiniChat";
 
 export default {

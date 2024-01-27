@@ -5,17 +5,9 @@ export default function storage() {
     }
 
     function getLocalStorage(KEY) {
-        let saved = process.client && localStorage.getItem(KEY);
+        const saved = localStorage.getItem(KEY);
         return saved ? JSON.parse(saved) : '';
     }
 
-    function setCookie(key, value) {
-        document.cookie = `${key}=${value}`;
-    }
-
-    function getCookie() {
-        return document.cookie
-    }
-
-    return {setLocalStorage, getLocalStorage, setCookie, getCookie}
+    return {setLocalStorage, getLocalStorage}
 }
