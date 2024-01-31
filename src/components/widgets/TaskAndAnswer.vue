@@ -24,7 +24,7 @@
     </div>
   </div>
 
-  <ConfettiAnimation :activeConfetti="submit"></ConfettiAnimation>
+  <ConfettiAnimation :activeConfetti="isSubmit"></ConfettiAnimation>
 </template>
 
 <script setup>

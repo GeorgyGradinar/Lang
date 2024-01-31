@@ -14,26 +14,33 @@
       <div class="wrapper-messages" ref="messagesBlock">
         <div class="wrapper-message"
              v-for="message in messages" :key="message.id">
-          <template v-if="message.isText">
-            <p class="message animate__animated animate__bounceInLeft"
-               :class="{'person_message animate__bounceInRight': !message.isBot}">{{ message.message }}</p>
-            <template v-if="!message.isBot">
-              <p class="error-message animate__animated animate__bounceInRight" v-if="message.errorMessage">{{ message.errorMessage }}</p>
-              <p class="done-message animate__animated animate__bounceInRight" v-else>Верно составлено</p>
-            </template>
+          <!--          <template v-if="message.isText">-->
+          <div class="message animate__animated animate__bounceInLeft"
+               :class="{'person_message animate__bounceInRight': !message.is_bot}">
+            <p v-for="word in message.message" :key="word.id"
+               @click="openOptionBlock($event, word)">
+              {{ word }}
+            </p>
+          </div>
+          <template v-if="!message.is_bot">
+            <p class="error-message animate__animated animate__bounceInRight" v-if="message.errorMessage">
+              {{ message.errorMessage }}
+            </p>
+            <p class="done-message animate__animated animate__bounceInRight" v-else>Верно составлено</p>
           </template>
-          <template v-else>
-            <div class="message sound-message animate__animated animate__bounceInLeft"
-                 :class="{'person_message animate__bounceInRight': !message.isBot}">
-              <Vue3WaveAudioPlayer
-                  :wave_width="200"
-                  :wave_height="40"
-                  :wave_options='{"samples":40,"type":"steps","width":192,"height":40}'
-                  :src="message.message"
-                  :disable_seeking="false"
-              />
-            </div>
-          </template>
+          <!--          </template>-->
+          <!--          <template v-else>-->
+          <!--            <div class="message sound-message animate__animated animate__bounceInLeft"-->
+          <!--                 :class="{'person_message animate__bounceInRight': !message.isBot}">-->
+          <!--              <Vue3WaveAudioPlayer-->
+          <!--                  :wave_width="200"-->
+          <!--                  :wave_height="40"-->
+          <!--                  :wave_options='{"samples":40,"type":"steps","width":192,"height":40}'-->
+          <!--                  :src="message.message"-->
+          <!--                  :disable_seeking="false"-->
+          <!--              />-->
+          <!--            </div>-->
+          <!--          </template>-->
         </div>
       </div>
     </div>
@@ -42,7 +49,7 @@
       <div class="wrapper-input">
         <input v-model="messageToBot"
                v-if="!isActiveRecord"
-               @keydown.enter="sendMessage">
+               @keydown.enter="sendMessageToNetwork">
 
         <div class="record" v-if="isActiveRecord">
           <div class="marker"></div>
@@ -56,7 +63,7 @@
 
           <button class="sendMessage"
                   :class="{'show': isActiveRecord || !!messageToBot}"
-                  @click="sendMessage">
+                  @click="sendMessageToNetwork">
             <img src="img/chart/send.svg" alt="">
           </button>
 
@@ -69,27 +76,41 @@
       </div>
     </div>
   </div>
-  <div class="allow_microphone_message" :class="{'show-message': isShowMessage}">
-    <p>Пожалуйста, разрешите доступ к своему микрофону</p>
-  </div>
+  <AllowMicrophoneMessage :isShowMessage="isShowMessage"></AllowMicrophoneMessage>
+  <OptionWordBlock ref="optionBlock"
+                   :topPosition="top"
+                   :leftPosition="left"
+                   :word="currentWord?.innerHTML">
+  </OptionWordBlock>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useChart} from '@/store/chart';
+import {chatStore} from "@/store/chatStore";
 import {storeToRefs} from "pinia/dist/pinia";
+// eslint-disable-next-line no-unused-vars
 import Vue3WaveAudioPlayer from 'vue3-wave-audio-player';
+import dialogsRequests from "@/mixins/requests/dialogsRequests";
+import AllowMicrophoneMessage from "@/components/chat/AllowMicrophoneMessage";
+import OptionWordBlock from "@/components/chat/OptionWordBlock";
+import {onClickOutside} from '@vueuse/core'
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['closeMini']);
 // eslint-disable-next-line no-undef,no-unused-vars
 const prop = defineProps({
   isMiniChat: Boolean
-})
+});
+// eslint-disable-next-line no-unused-vars
+const chat = chatStore();
+const {messages} = storeToRefs(chat);
+// eslint-disable-next-line no-unused-vars
+const {sendMessage, getMessageFormNetwork, deleteMessages} = dialogsRequests();
 
 const chart = useChart();
 const {addMessage} = chart;
-const {messages} = storeToRefs(chart);
+const {getMessages} = dialogsRequests();
 
 let messageToBot = ref('');
 let timer = ref(0);
@@ -106,7 +127,28 @@ let audioRecorder = ref();
 let audioChunks = ref([]);
 let messagesBlock = ref(null);
 let isAllowMicrophone = ref(false);
+let top = ref(637);
+let left = ref(null);
 let allowCountMessages = ref(15);
+
+let currentWord = ref();
+let optionBlock = ref(null);
+
+onMounted(() => {
+  getMessages();
+})
+
+onClickOutside(optionBlock, event => {
+  if (JSON.stringify(event.target) !== JSON.stringify(currentWord.value)) {
+    top.value = null;
+  }
+})
+
+function openOptionBlock(event) {
+  top.value = event.y - 140;
+  left.value = event.x - 100;
+  currentWord.value = event.target;
+}
 
 function getAllowForMicrophone(isStartRecord = false) {
   navigator.mediaDevices.getUserMedia({audio: true})
@@ -127,22 +169,26 @@ function getAllowForMicrophone(isStartRecord = false) {
       })
 }
 
-function sendMessage() {
+function sendMessageToNetwork() {
   if (!messageToBot.value.trim().length && !isActiveRecord.value) return;
 
-  if (isActiveRecord.value) {
-    toggleActiveRecord();
-  } else {
-    addMessage({
-      isBot: false,
-      isText: true,
-      message: messageToBot.value,
-      errorMessage: ''
-    });
-  }
+  deleteMessages()
+  // getMessageFormNetwork();
+  // sendMessage(messageToBot.value);
 
-  messageToBot.value = '';
-  scrollDown();
+  // if (isActiveRecord.value) {
+  //   toggleActiveRecord();
+  // } else {
+  //   addMessage({
+  //     isBot: false,
+  //     isText: true,
+  //     message: messageToBot.value,
+  //     errorMessage: ''
+  //   });
+  // }
+  //
+  // messageToBot.value = '';
+  // scrollDown();
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -304,6 +350,8 @@ function stopTimer() {
         margin-bottom: 10px;
 
         .message {
+          display: flex;
+          flex-wrap: wrap;
           align-self: flex-start;
           background-color: var(--yellow);
           border-radius: 20px;
@@ -311,6 +359,17 @@ function stopTimer() {
           border: 1px solid var(--dark);
           box-shadow: 1px 4px 1px var(--dark);
           max-width: 60%;
+
+          p {
+            position: relative;
+            margin-right: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+              color: var(--red);
+            }
+          }
         }
 
         .sound-message {
@@ -548,27 +607,5 @@ function stopTimer() {
     }
 
   }
-}
-
-.allow_microphone_message {
-  display: flex;
-  position: absolute;
-  top: 50%;
-  left: calc(50% - 225px);
-  background-color: rgba(35, 35, 35, 0.6);
-  padding: 10px;
-  border-radius: 10px;
-  opacity: 0;
-  z-index: -1;
-  transition: all 0.6s;
-
-  p {
-    display: flex;
-  }
-}
-
-.show-message {
-  opacity: 1;
-  z-index: 1;
 }
 </style>

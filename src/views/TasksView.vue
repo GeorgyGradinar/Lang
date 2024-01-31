@@ -31,6 +31,9 @@ import WeekResults from "@/components/widgets/WeekResults.vue";
 import CardsSliderView from "@/components/widgets/CardsSliderView.vue";
 import MiniChat from "@/components/widgets/MiniChat";
 import {onMounted, ref} from "vue";
+import taskRequests from "@/mixins/requests/taskRequests";
+
+const {getAllTasks} = taskRequests();
 
 let roleGames = ref([]);
 let vocabulary = ref([]);
@@ -38,6 +41,7 @@ let grammar = ref([]);
 let doneTasks = ref([]);
 
 onMounted(() => {
+  getAllTasks();
   roleGames.value = [
     {
       id: 0,

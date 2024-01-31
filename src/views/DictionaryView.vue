@@ -4,14 +4,15 @@
       <border-nav :tabs="wordNav" @selected="showPage"/>
       <div class="wrapper-right-block">
         <TextNav :tabs="textNav" @selected="sortPage"/>
-        <button class="add-new-word" @click="openDialogNewWord">
-          <img src="img/dictionary/plus.svg" alt="plus">
-          Добавить слово
-        </button>
+<!--        <button class="add-new-word" @click="openDialogNewWord">-->
+<!--          <img src="img/dictionary/plus.svg" alt="plus">-->
+<!--          Добавить слово-->
+<!--        </button>-->
       </div>
     </div>
 
     <div class="wrapper-types-view">
+      <DictionarySearchBlock></DictionarySearchBlock>
       <div class="types-view" :class="{'left': isListView}">
         <button @click="changeListViews(true)">
           <img src="img/dictionary/list.svg" alt="">
@@ -22,7 +23,6 @@
       </div>
     </div>
 
-
     <dict-view :words="wordShow" :list="isListView"/>
 
     <div class="words-2__next"
@@ -32,6 +32,7 @@
       <img src="img/icon/bx-chevron-down1.svg">
     </div>
   </div>
+  
   <div class="words-3 bg-base-1">
     <div class="words-2__nav">
       <p class="words-3__title">
@@ -39,10 +40,10 @@
       </p>
       <div class="wrapper-right-block">
         <text-nav :tabs="textNav"/>
-        <button class="add-new-word" @click="openDialogNewGroup">
-          <img src="img/dictionary/plus.svg" alt="plus">
-          Добавить словарь
-        </button>
+<!--        <button class="add-new-word" @click="openDialogNewGroup">-->
+<!--          <img src="img/dictionary/plus.svg" alt="plus">-->
+<!--          Добавить словарь-->
+<!--        </button>-->
       </div>
     </div>
 
@@ -75,11 +76,15 @@ import TextNav from '@/components/app/TextNav.vue';
 import DictView from '@/components/widgets/DictView.vue';
 import ThemsView from '@/components/widgets/ThemsView.vue';
 import MiniChat from "@/components/widgets/MiniChat";
+import DictionarySearchBlock from "@/components/widgets/DictionarySearchBlock";
 import WordsListDlg from '@/components/modals/WordsListDlg.vue';
 import AddNewWord from "@/components/modals/new-words/AddNewWord";
 import AddNewGroup from "@/components/modals/new-group/AddNewGroup";
+import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {sortUPbyField} from '@/assets/js/lib';
 import {onMounted, ref} from "vue";
+
+const {getGroups} = dictionaryRequests();
 
 let wordNav = ref([]);
 let textNav = ref([]);
@@ -89,12 +94,14 @@ let themsAll = ref([]);
 let themsShow = ref([]);
 // let dictwordsdlg = ref(null);
 let wordslistdlg = ref(null);
-let isListView = ref(true);
+let isListView = ref(false);
 
 let isOpenDialogAddWords = ref(false);
 let isOpenDialogGroup = ref(false);
 
 onMounted(() => {
+  getGroups()
+
   wordNav.value = [
     {id: 0, title: 'Список слов'},
     {id: 1, title: 'Отработанные слова'}
@@ -231,17 +238,17 @@ function addWords(count) {
   }
 }
 
-function openDialogNewWord() {
-  isOpenDialogAddWords.value = true;
-}
+// function openDialogNewWord() {
+//   isOpenDialogAddWords.value = true;
+// }
 
 function closeDialogNewWord() {
   isOpenDialogAddWords.value = false;
 }
 
-function openDialogNewGroup() {
-  isOpenDialogGroup.value = true;
-}
+// function openDialogNewGroup() {
+//   isOpenDialogGroup.value = true;
+// }
 
 function closeDialogNewGroup() {
   isOpenDialogGroup.value = false;
@@ -370,7 +377,7 @@ function showThemeDlg(them) {
 
   .wrapper-types-view {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     width: 100%;
 
     .types-view {

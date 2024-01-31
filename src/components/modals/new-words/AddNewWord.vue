@@ -23,13 +23,16 @@ import {onMounted, ref} from "vue";
 import PopupModal from "@/components/app/PopupModal";
 import NewWord from "@/components/modals/new-words/NewWord";
 import ButtonForAddWordAndGroup from "@/components/modals/shared/ButtonForAddWordAndGroup";
+import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 
 // eslint-disable-next-line no-undef,no-unused-vars
 const emit = defineEmits(['close']);
 const templateNewWord = {
-  english: '',
-  russian: ''
+  id: 255,
+  english: 'test',
+  russian: 'тест'
 }
+const {addWords} = dictionaryRequests();
 
 let popup = ref(null);
 let newWords = ref([{...templateNewWord}]);
@@ -59,7 +62,8 @@ function submit() {
   })
 
   if (!hasErrors) {
-    _cancel();
+    // _cancel();
+    addWords(templateNewWord);
   }
 }
 
