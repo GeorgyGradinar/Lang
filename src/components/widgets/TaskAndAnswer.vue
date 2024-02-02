@@ -54,18 +54,19 @@ function submitResult() {
   border-radius: 10px;
   border: 1px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
-  background-color: var(--light_pink);
+  background-color: var(--dark-pink);
   color: var(--dark);
   padding: 20px;
 
   h3 {
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 23px;
+    font-weight: 900;
     margin-bottom: 20px;
+    color: var(--yellow);
   }
 
   .task {
-    border-bottom: 1px solid var(--dark);
+    border-bottom: 1px solid var(--light-gray);
     margin-bottom: 30px;
 
     .wrapper-theme,
@@ -75,9 +76,10 @@ function submitResult() {
       font-size: 15px;
       font-weight: 700;
       margin-bottom: 20px;
+      color: var(--yellow);
 
       p:first-child {
-        color: var(--blue);
+        color: var(--light-gray);
       }
     }
   }
@@ -88,7 +90,7 @@ function submitResult() {
     gap: 20px;
 
     p {
-      color: var(--blue);
+      color: var(--light-gray);
     }
 
     textarea {
@@ -99,7 +101,7 @@ function submitResult() {
       min-height: 100px;
       max-height: 300px;
       border: 1px solid var(--dark);
-      background-color: var(--yellow);
+      background-color: var(--light-gray);
       color: var(--dark);
       padding: 0.6em;
       transition: border 0.2s;
@@ -114,7 +116,7 @@ function submitResult() {
     button {
       padding: 10px;
       border-radius: 10px;
-      background-color: var(--yellow);
+      background-color: var(--green);
       border: 1px solid var(--dark);
       box-shadow: 1px 4px 1px var(--dark);
       transition: all 0.2s;

@@ -23,7 +23,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 10px;
-    border: 1px solid var(--dark);
+    border: 2px solid var(--dark);
     box-shadow: 1px 4px 1px var(--dark);
     cursor: pointer;
     transition: all 0.2s;
@@ -31,6 +31,10 @@
     img {
       width: 45px;
       height: 45px;
+    }
+
+    &:hover{
+      transform: scale(1.1);
     }
 
     &:active {

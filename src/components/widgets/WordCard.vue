@@ -3,9 +3,9 @@
     <div class="word">
       <div class="scene">
         <div class="cube" :class="{'show_translate': isShowTranslate}">
-          <p class="side top">translate</p>
+          <p class="side top">{{ word?.translation }}</p>
           <p class="side front">
-            {{ word?.title }}
+            {{ word?.word }}
           </p>
         </div>
       </div>
@@ -43,6 +43,11 @@
         <v-tooltip activator="parent" location="bottom">an exciting or unexpected event or course of events</v-tooltip>
       </div>
 
+      <div class="add-word" @click="addWordToAccount()">
+        <img src="img/dictionary/add.svg">
+        <v-tooltip activator="parent" location="bottom">Добавить в аккаунт</v-tooltip>
+      </div>
+
       <div class="learned" v-if="word.count > 0 || word.done">
         <p v-if="word.count > 0"><img src="img/icon/fluent_hat-graduation-24-regular.svg">2</p>
         <p v-if="word.done"><img src="img/icon/lean.png"></p>
@@ -54,19 +59,24 @@
 
 <script setup>
 import {ref, toRefs} from "vue";
+import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 
-// eslint-disable-next-line no-unused-vars,no-undef
+// eslint-disable-next-line no-undef
 const props = defineProps({
   word: Object,
   list: Boolean
 })
-// eslint-disable-next-line no-unused-vars
 const {list} = toRefs(props);
+const {addWords} = dictionaryRequests();
 
 let isShowTranslate = ref(false);
 
 function toggleIsShowTranslate() {
   isShowTranslate.value = !isShowTranslate.value;
+}
+
+function addWordToAccount() {
+  addWords(props.word.id);
 }
 </script>
 
@@ -76,7 +86,7 @@ function toggleIsShowTranslate() {
   flex-direction: column;
   gap: 20px;
   cursor: pointer;
-  width: 18%;
+  width: 250px;
   color: #f5f5f5;
   background-color: #4f3dca;
   border-radius: 10px;
@@ -170,6 +180,7 @@ function toggleIsShowTranslate() {
     .volume,
     .tasks,
     .help,
+    .add-word,
     .learned {
       display: flex;
       border: 1px solid var(--dark);

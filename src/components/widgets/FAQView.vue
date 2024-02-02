@@ -1,5 +1,8 @@
 <template>
-  <div class="price__faq" data-aos="fade-up" :data-aos-delay="50"  data-aos-duration="500">
+  <div class="price__faq" data-aos="fade-up"
+       :data-aos-delay="20"
+       data-aos-duration="500"
+       data-aos-once="true">
     <v-expansion-panels variant="accordion" multiple>
       <ExpansionPanel v-for="question in faq" :key="question.id" :question="question"></ExpansionPanel>
     </v-expansion-panels>

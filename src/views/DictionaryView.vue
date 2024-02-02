@@ -23,16 +23,9 @@
       </div>
     </div>
 
-    <dict-view :words="wordShow" :list="isListView"/>
-
-    <div class="words-2__next"
-         v-if="wordShow.length < wordsAll.length"
-         @click="addWords(66)">
-      Открыть больше слов&nbsp;&nbsp;
-      <img src="img/icon/bx-chevron-down1.svg">
-    </div>
+    <DictView :list="isListView"/>
   </div>
-  
+
   <div class="words-3 bg-base-1">
     <div class="words-2__nav">
       <p class="words-3__title">
@@ -51,13 +44,6 @@
         :thems="themsShow"
         @selected="showThemeDlg"
     />
-
-    <div class="words-2__next div-center"
-         v-if="themsShow.length < themsAll.length"
-         @click="addThems(35)">
-      Открыть больше групп&nbsp;&nbsp;
-      <img src="img/icon/bx-chevron-down1.svg">
-    </div>
 
     <!--Модальное окно словаря -->
     <!--    <dict-words-dlg ref="dictwordsdlg"/>-->
@@ -84,7 +70,7 @@ import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {sortUPbyField} from '@/assets/js/lib';
 import {onMounted, ref} from "vue";
 
-const {getGroups} = dictionaryRequests();
+const {getGroups, getAllWords} = dictionaryRequests();
 
 let wordNav = ref([]);
 let textNav = ref([]);
@@ -101,6 +87,7 @@ let isOpenDialogGroup = ref(false);
 
 onMounted(() => {
   getGroups()
+  getAllWords();
 
   wordNav.value = [
     {id: 0, title: 'Список слов'},
@@ -437,33 +424,6 @@ function showThemeDlg(them) {
           width: 60px;
         }
       }
-    }
-  }
-
-  .words-2__next {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    width: 100%;
-    max-width: 400px;
-    margin-top: 24px;
-    padding: 5px;
-    font-size: 20px;
-    font-weight: 800;
-    border-radius: 10px;
-    background-color: var(--yellow);
-    border: 1px solid var(--dark);
-    box-shadow: 1px 4px 1px var(--dark);
-    transition: all 0.2s;
-
-    &:hover {
-      background-color: var(--blue);
-    }
-
-    &:active {
-      box-shadow: 0 0 1px var(--dark);
-      transform: translateY(5px);
     }
   }
 }

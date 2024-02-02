@@ -1,12 +1,14 @@
 <template>
   <div class="words-3__list">
-    <div
-        v-for="them in thems" :key="them.id"
-        @click="$emit('selected', them)"
-    >
+    <div v-for="them in thems" :key="them.id"
+         @click="$emit('selected', them)">
       {{ them.title }}
-
     </div>
+  </div>
+
+  <div class="words-2__next div-center">
+    Открыть больше групп&nbsp;&nbsp;
+    <img src="img/icon/bx-chevron-down1.svg">
   </div>
 </template>
 
@@ -56,4 +58,30 @@ export default {
   }
 }
 
+.words-2__next {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 24px;
+  padding: 5px;
+  font-size: 20px;
+  font-weight: 800;
+  border-radius: 10px;
+  background-color: var(--yellow);
+  border: 1px solid var(--dark);
+  box-shadow: 1px 4px 1px var(--dark);
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: var(--blue);
+  }
+
+  &:active {
+    box-shadow: 0 0 1px var(--dark);
+    transform: translateY(5px);
+  }
+}
 </style>

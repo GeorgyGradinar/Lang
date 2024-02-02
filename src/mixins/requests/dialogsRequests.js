@@ -5,14 +5,19 @@ import {chatStore} from "@/store/chatStore";
 
 export default function dialogsRequests() {
     const chat = chatStore()
-    const {changeMessages} = chat;
+    const {changeMessages, addNewMessage, changeActiveGeneration, changeLastPage, addNextPageMessages} = chat;
 
-    function getMessages() {
-        axios.get(`${testUrl}/api/user/dialog`, {
+    function getMessages(isPagination) {
+        axios.get(`${testUrl}/api/user/dialog?page=${chat.currentPage}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                changeMessages(response.data.data);
+                if (isPagination){
+                    addNextPageMessages(response.data.data);
+                }else {
+                    changeMessages(response.data.data);
+                    changeLastPage(response.data.pagination.last_page);
+                }
             })
     }
 
@@ -23,20 +28,26 @@ export default function dialogsRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                console.log(response)
-                getMessageFormNetwork()
+                getMessageFormNetwork(response.data.message_id, response);
             })
             .catch(error => {
                 console.log(error)
             })
     }
 
-    function getMessageFormNetwork() {
-        axios.get(`${testUrl}/api/user/dialog/message/get`, {
+    function getMessageFormNetwork(id) {
+        axios.get(`${testUrl}/api/user/dialog/message/get/${id}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                console.log(response)
+                if (response.data.data.status === "processing") {
+                    setTimeout(() => {
+                        getMessageFormNetwork(id)
+                    }, 1000);
+                }else {
+                    addNewMessage(response.data.data.response, true, response.data.data.date);
+                    changeActiveGeneration(false);
+                }
             })
     }
 

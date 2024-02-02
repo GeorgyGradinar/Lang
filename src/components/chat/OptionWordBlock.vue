@@ -7,15 +7,23 @@
     </div>
 
     <div class="wrapper-option-word">
-      <SoundComponent :word="sound"></SoundComponent>
-      <p>Translate</p>
+      <template v-if="!isActiveSearching">
+        <SoundComponent :word="sound"></SoundComponent>
+        <p>{{ foundWord }}</p>
+      </template>
+      <LoaderCircle v-else></LoaderCircle>
     </div>
+
   </div>
 </template>
 
 <script setup>
-import {toRefs} from "vue";
+import {toRefs, watch} from "vue";
 import SoundComponent from "@/components/widgets/SoundComponent";
+import LoaderCircle from "@/components/app/LoaderCircle";
+import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
+import {chatStore} from "@/store/chatStore";
+import {storeToRefs} from "pinia/dist/pinia";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -24,8 +32,17 @@ const props = defineProps({
   word: String
 })
 const {topPosition, leftPosition, word} = toRefs(props);
-const sound = {id: 0, title: 'Cloud', hint: 'подсказка1', sound: 'sound/black.mp3', path: '/lesson'}
+const {searchWord} = dictionaryRequests();
+const chat = chatStore();
+const {changeActiveSearching} = chat;
+const {foundWord, isActiveSearching} = storeToRefs(chat);
 
+const sound = {id: 0, title: 'Cloud', hint: 'подсказка1', sound: 'sound/black.mp3', path: '/lesson'};
+
+watch(topPosition, () => {
+  changeActiveSearching(true);
+  searchWord('приглашение', true);
+})
 </script>
 
 <style scoped lang="scss">

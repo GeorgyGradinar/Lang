@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper-chart animate__animated animate__bounceInRight">
+  <div class="wrapper-chart" :class="{'animate__animated animate__bounceInRight': !(isMiniChat || isMainPageChat)}">
     <div class="title-chat">
       <h3>ИИ-репетитор</h3>
 
@@ -13,21 +13,24 @@
     <div class="chat" :class="{'size-mini': isMiniChat}">
       <div class="wrapper-messages" ref="messagesBlock">
         <div class="wrapper-message"
-             v-for="message in messages" :key="message.id">
+             v-for="message in messages" :key="message?.id">
           <!--          <template v-if="message.isText">-->
-          <div class="message animate__animated animate__bounceInLeft"
-               :class="{'person_message animate__bounceInRight': !message.is_bot}">
-            <p v-for="word in message.message" :key="word.id"
+          <div class="message animate__animated animate__fast"
+               :class="{'person_message animate__fadeInLeft': !message.is_bot,
+               'animate__fadeInRight': message.is_bot}">
+            <p v-for="word in message.message" :key="word?.id"
                @click="openOptionBlock($event, word)">
               {{ word }}
             </p>
           </div>
-          <template v-if="!message.is_bot">
-            <p class="error-message animate__animated animate__bounceInRight" v-if="message.errorMessage">
-              {{ message.errorMessage }}
-            </p>
-            <p class="done-message animate__animated animate__bounceInRight" v-else>Верно составлено</p>
-          </template>
+
+
+          <!--          <template v-if="!message.is_bot">-->
+          <!--            <p class="error-message animate__animated animate__bounceInRight" v-if="message.errorMessage">-->
+          <!--              {{ message.errorMessage }}-->
+          <!--            </p>-->
+          <!--            <p class="done-message animate__animated animate__bounceInRight" v-else>Верно составлено</p>-->
+          <!--          </template>-->
           <!--          </template>-->
           <!--          <template v-else>-->
           <!--            <div class="message sound-message animate__animated animate__bounceInLeft"-->
@@ -42,10 +45,14 @@
           <!--            </div>-->
           <!--          </template>-->
         </div>
+        <div class="wrapper-message" v-if="isActiveGeneration">
+          <div class="message animate__animated animate__fast animate__fadeInLeftBig">
+            <TypingLoader></TypingLoader>
+          </div>
+        </div>
       </div>
     </div>
     <div class="input-block">
-
       <div class="wrapper-input">
         <input v-model="messageToBot"
                v-if="!isActiveRecord"
@@ -85,8 +92,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
-import {useChart} from '@/store/chart';
+import {onBeforeUnmount, onMounted, onUnmounted, ref, watch} from "vue";
 import {chatStore} from "@/store/chatStore";
 import {storeToRefs} from "pinia/dist/pinia";
 // eslint-disable-next-line no-unused-vars
@@ -95,22 +101,22 @@ import dialogsRequests from "@/mixins/requests/dialogsRequests";
 import AllowMicrophoneMessage from "@/components/chat/AllowMicrophoneMessage";
 import OptionWordBlock from "@/components/chat/OptionWordBlock";
 import {onClickOutside} from '@vueuse/core'
+import TypingLoader from "@/components/chat/TypingLoader";
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['closeMini']);
 // eslint-disable-next-line no-undef,no-unused-vars
 const prop = defineProps({
-  isMiniChat: Boolean
+  isMiniChat: Boolean,
+  isMainPageChat: Boolean
 });
 // eslint-disable-next-line no-unused-vars
 const chat = chatStore();
-const {messages} = storeToRefs(chat);
 // eslint-disable-next-line no-unused-vars
-const {sendMessage, getMessageFormNetwork, deleteMessages} = dialogsRequests();
-
-const chart = useChart();
-const {addMessage} = chart;
-const {getMessages} = dialogsRequests();
+const {addNewMessage, changeActiveGeneration, changeCurrentPage} = chat;
+const {messages, isTriggerScrollDown, isActiveGeneration, currentPage, lastPage} = storeToRefs(chat);
+// eslint-disable-next-line no-unused-vars
+const {getMessages, sendMessage, getMessageFormNetwork, deleteMessages} = dialogsRequests();
 
 let messageToBot = ref('');
 let timer = ref(0);
@@ -127,27 +133,48 @@ let audioRecorder = ref();
 let audioChunks = ref([]);
 let messagesBlock = ref(null);
 let isAllowMicrophone = ref(false);
-let top = ref(637);
+let top = ref(null);
 let left = ref(null);
 let allowCountMessages = ref(15);
 
-let currentWord = ref();
+let currentWord = ref(null);
 let optionBlock = ref(null);
 
 onMounted(() => {
   getMessages();
+
+  messagesBlock.value.addEventListener('scroll', handelScrollForPagination);
 })
 
 onClickOutside(optionBlock, event => {
   if (JSON.stringify(event.target) !== JSON.stringify(currentWord.value)) {
-    top.value = null;
+    closeOptionBlock();
   }
 })
+
+watch(isTriggerScrollDown, () => {
+  scrollDown();
+})
+
+function handelScrollForPagination() {
+  if (!messagesBlock.value.scrollTop) {
+    if (currentPage.value < lastPage.value) {
+      changeCurrentPage(currentPage.value + 1);
+      getMessages(true);
+    }
+  }
+}
 
 function openOptionBlock(event) {
   top.value = event.y - 140;
   left.value = event.x - 100;
   currentWord.value = event.target;
+}
+
+function closeOptionBlock() {
+  top.value = null;
+  left.value = null;
+  currentWord.value = null;
 }
 
 function getAllowForMicrophone(isStartRecord = false) {
@@ -171,24 +198,20 @@ function getAllowForMicrophone(isStartRecord = false) {
 
 function sendMessageToNetwork() {
   if (!messageToBot.value.trim().length && !isActiveRecord.value) return;
-
-  deleteMessages()
+  if (isActiveGeneration.value) return;
+  // deleteMessages()
   // getMessageFormNetwork();
-  // sendMessage(messageToBot.value);
 
-  // if (isActiveRecord.value) {
-  //   toggleActiveRecord();
-  // } else {
-  //   addMessage({
-  //     isBot: false,
-  //     isText: true,
-  //     message: messageToBot.value,
-  //     errorMessage: ''
-  //   });
-  // }
-  //
-  // messageToBot.value = '';
-  // scrollDown();
+  if (isActiveRecord.value) {
+    toggleActiveRecord();
+  } else {
+    addNewMessage(messageToBot.value, false, new Date);
+    sendMessage(messageToBot.value);
+    changeActiveGeneration(true);
+  }
+
+  messageToBot.value = '';
+  scrollDown();
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -199,7 +222,7 @@ function handleRecord(event) {
   const audioUrl = URL.createObjectURL(blobObj);
 
   if (!isDeleteRecord.value) {
-    addMessage({
+    addNewMessage({
       isBot: false,
       isText: false,
       message: audioUrl,
@@ -282,6 +305,13 @@ function stopTimer() {
   second.value = 0;
 }
 
+onBeforeUnmount(() => {
+  messagesBlock.value.removeEventListener('scroll', handelScrollForPagination);
+})
+
+onUnmounted(() => {
+  closeOptionBlock();
+})
 </script>
 
 <style scoped lang="scss">
@@ -293,16 +323,17 @@ function stopTimer() {
   border-radius: 10px;
   border: 1px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
-  background-color: var(--light_pink);
+  background-color: var(--dark-pink);
   color: var(--dark);
 
   .title-chat {
     display: flex;
     justify-content: space-between;
-    margin: 10px 20px;
+    padding: 10px 20px;
+    color: var(--light-gray);
 
     h3 {
-
+      font-weight: 900;
     }
 
     img {
@@ -332,8 +363,9 @@ function stopTimer() {
     justify-content: flex-end;
     flex: 1;
     width: 100%;
-    border-top: 1px solid var(--dark);
-    border-bottom: 1px solid var(--dark);
+    border-top: 1px solid var(--dark-pink);
+    border-bottom: 1px solid var(--dark-pink);
+    background-color: var(--pink);
     overflow: hidden;
 
     .wrapper-messages {
@@ -359,6 +391,7 @@ function stopTimer() {
           border: 1px solid var(--dark);
           box-shadow: 1px 4px 1px var(--dark);
           max-width: 60%;
+          background-color: var(--light-gray);
 
           p {
             position: relative;
@@ -370,6 +403,10 @@ function stopTimer() {
               color: var(--red);
             }
           }
+        }
+
+        :deep(.animate__fast) {
+          --animate-duration: 0.3s;
         }
 
         .sound-message {
@@ -477,11 +514,12 @@ function stopTimer() {
       width: 100%;
       height: 50px;
       border-radius: 10px;
-      border: 1px solid var(--dark);
+      border: 1px solid var(--light-gray);
       padding: 5px;
 
       input {
         width: 100%;
+        color: var(--light-gray);
 
         &:focus {
           outline: none;

@@ -1,5 +1,8 @@
 <template>
-  <div class="price__tariff" data-aos="fade-up" :data-aos-delay="(index+1) * 200"  data-aos-duration="500">
+  <div class="price__tariff" data-aos="fade-up"
+       :data-aos-delay="(index+1) * 200"
+       data-aos-duration="500"
+       data-aos-once="true">
     <img class="robot" data-aos="fade-down"
          :data-aos-delay="(index+1) * 300"
          data-aos-duration="500"

@@ -41,7 +41,7 @@
         </div>
 
         <div class="wrapper-chat">
-          <ChartBlock></ChartBlock>
+          <ChartBlock :isMainPageChat="true"></ChartBlock>
         </div>
       </div>
     </div>
