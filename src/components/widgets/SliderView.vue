@@ -57,6 +57,7 @@ function onPage(index) {
 }
 
 function showSLide() {
+  console.log(slideIndex.value)
   if (props.feed.length > 0) {
     bg_class.value = props.feed[slideIndex.value].bgclass;
     slider_style.value = `margin-left:-${100 * slideIndex.value}%;`;
@@ -68,14 +69,24 @@ function showSLide() {
 .card {
   display: flex;
   align-items: center;
+  height: 100%;
   width: 300px;
   border-radius: 15px;
   -webkit-transition: all .3s ease;
   transition: all .3s ease;
   overflow: hidden;
   position: relative;
-  border: 1px solid var(--dark);
+  border: 2px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
+
+  .promo__slides {
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    overflow: hidden;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease
+  }
 
   .promo__chevron {
     position: absolute;
@@ -84,7 +95,7 @@ function showSLide() {
     justify-self: center;
     align-items: center;
     border-radius: 8px;
-    border: 1px solid var(--dark);
+    border: 2px solid var(--dark);
     box-shadow: 1px 4px 1px var(--dark);
     transition: all 0.1s;
 
@@ -97,6 +108,10 @@ function showSLide() {
       box-shadow: 0 0 1px var(--dark);
       transform: translateY(5px);
     }
+  }
+
+  .hide {
+    visibility: hidden
   }
 
   .left {
@@ -141,8 +156,13 @@ function showSLide() {
           img {
             max-width: 150px
           }
+        }
 
-
+        .promo__title-bottom {
+          font-size: 20px;
+          padding-bottom: 8px;
+          font-weight: 800;
+          text-align: center
         }
       }
     }

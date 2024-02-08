@@ -41,7 +41,8 @@ const props = defineProps({
       font-size: 20px;
       font-weight: 700;
       padding-bottom: 30px;
-      width: 33%
+      width: 33%;
+      color: var(--light-yellow);
     }
 
     .mistake__title.w50 {
@@ -60,7 +61,7 @@ const props = defineProps({
     padding: 20px;
     margin-bottom: 30px;
     width: 33%;
-    border: 1px solid var(--dark);
+    border: 2px solid var(--dark);
   }
 
   .mistake__item.w60 {

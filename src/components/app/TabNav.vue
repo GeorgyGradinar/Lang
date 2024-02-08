@@ -44,9 +44,9 @@ onMounted(() => {
     position: relative;
     display: flex;
     align-items: center;
-    background-color: var(--light-yellow);
+    background-color: var(--white);
     border-radius: 10px;
-    border: 1px solid var(--dark);
+    border: 2px solid var(--dark);
 
     &:after {
       content: '';

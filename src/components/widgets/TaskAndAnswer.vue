@@ -1,39 +1,55 @@
 <template>
   <div class="wrapper-task-and-answer animate__animated animate__bounceInLeft">
-    <h3>Упражнение №1</h3>
-    <div class="task">
-      <div class="wrapper-theme">
-        <p>Тема:</p>
-        <p>Бронируем номер в отеле</p>
+    <div>
+      <h3>Упражнение №1</h3>
+      <div class="task">
+        <div class="wrapper-theme">
+          <p>Тема:</p>
+          <p>Бронируем номер в отеле</p>
+        </div>
+
+        <div class="wrapper-task-description">
+          <p>Задание:</p>
+          <p>What season Bot mention in the dialog</p>
+        </div>
       </div>
 
-      <div class="wrapper-task-description">
-        <p>Задание:</p>
-        <p>What season Bot mention in the dialog</p>
-      </div>
-
-    </div>
-    <div class="answer">
-      <p>Введите ваш ответ:</p>
-      <textarea v-model="answer"
-                @input="autoGrow"
-                ref="textarea"
-                placeholder="Ваш ответ">
+      <div class="answer">
+        <p>Введите ваш ответ:</p>
+        <textarea v-model="answer"
+                  @input="autoGrow"
+                  ref="textarea"
+                  placeholder="Ваш ответ">
       </textarea>
-      <button @click="submitResult">Отправить</button>
+        <button @click="submitResult">Отправить</button>
+      </div>
+    </div>
+
+    <div class="wrapper-button-back">
+      <button @click="goBack">
+        <img src="img/chart/redo.svg" alt="">
+        вернуться
+      </button>
     </div>
   </div>
 
-  <ConfettiAnimation :activeConfetti="isSubmit"></ConfettiAnimation>
+  <div class="wrapper-congraduation" v-if="isOpenFinalModal">
+    <CongraduationModal :isOpenDialog="isOpenFinalModal" @closeDialog="closeFinalModal"></CongraduationModal>
+  </div>
 </template>
 
 <script setup>
-import ConfettiAnimation from './ConfettiAnimation';
+
 import {ref} from "vue";
+import {useRouter} from "vue-router/dist/vue-router";
+import CongraduationModal from "@/components/modals/chat/CongraduationModal";
+
+const router = useRouter();
 
 let textarea = ref(null);
 let answer = ref('');
-let isSubmit = ref(false);
+
+let isOpenFinalModal = ref(false);
 
 function autoGrow() {
   textarea.value.style.height = "45px";
@@ -42,17 +58,28 @@ function autoGrow() {
 
 function submitResult() {
   setTimeout(() => {
-    isSubmit.value = !isSubmit.value;
+    isOpenFinalModal.value = true;
   }, 1000)
+}
+
+function closeFinalModal() {
+  isOpenFinalModal.value = false
+}
+
+function goBack() {
+  router.back();
 }
 </script>
 
 <style scoped lang="scss">
 .wrapper-task-and-answer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 40%;
   height: 100%;
   border-radius: 10px;
-  border: 1px solid var(--dark);
+  border: 2px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
   background-color: var(--dark-pink);
   color: var(--dark);
@@ -100,7 +127,7 @@ function submitResult() {
       height: 45px;
       min-height: 100px;
       max-height: 300px;
-      border: 1px solid var(--dark);
+      border: 2px solid var(--dark);
       background-color: var(--light-gray);
       color: var(--dark);
       padding: 0.6em;
@@ -117,7 +144,7 @@ function submitResult() {
       padding: 10px;
       border-radius: 10px;
       background-color: var(--green);
-      border: 1px solid var(--dark);
+      border: 2px solid var(--dark);
       box-shadow: 1px 4px 1px var(--dark);
       transition: all 0.2s;
       cursor: pointer;
@@ -132,5 +159,42 @@ function submitResult() {
       }
     }
   }
+
+  .wrapper-button-back {
+    button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 10px;
+      border-radius: 10px;
+      background-color: var(--pink);
+      border: 2px solid var(--dark);
+      box-shadow: 1px 4px 1px var(--dark);
+      transition: all 0.2s;
+      cursor: pointer;
+      color: var(--white);
+
+      &:active {
+        box-shadow: 0 0 1px var(--dark);
+        transform: translateY(5px);
+      }
+
+      &:hover {
+        background-color: var(--dark-pink);
+      }
+
+      img {
+        width: 30px;
+        height: 30px;
+        transform: rotateY(180deg);
+      }
+    }
+  }
+}
+
+.wrapper-congraduation {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
 }
 </style>

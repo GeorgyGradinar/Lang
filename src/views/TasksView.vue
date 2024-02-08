@@ -33,7 +33,7 @@ import MiniChat from "@/components/widgets/MiniChat";
 import {onMounted, ref} from "vue";
 import taskRequests from "@/mixins/requests/taskRequests";
 
-const {getAllTasks} = taskRequests();
+const {getAllTasks, getTaskInformation} = taskRequests();
 
 let roleGames = ref([]);
 let vocabulary = ref([]);
@@ -42,6 +42,7 @@ let doneTasks = ref([]);
 
 onMounted(() => {
   getAllTasks();
+  getTaskInformation();
   roleGames.value = [
     {
       id: 0,

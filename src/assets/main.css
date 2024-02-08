@@ -1,9 +1,53 @@
 @import "variables.css";
 @import "custom-scrollbar.css";
 
-* {
+*, ::before, ::after {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    box-sizing: border-box !important;
     font-family: 'Nunito', sans-serif;
 }
+
+.row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex
+}
+
+.bg-base-purple {
+    background-color: #d375ff
+}
+
+.bg-base-green {
+    background-color: #2ec386
+}
+
+.bg-base-red {
+    background-color: #f45b49;
+}
+
+.bg-base-3 {
+    background-color: #599bff
+}
+
+.bg-base-1 {
+    background-color: #4f3dca
+}
+
+.bg-base-light-violet {
+    background-color: #7a66ff
+}
+
+.bg-base-dark-purple {
+    background-color: #a336d6
+}
+
+.bg-white {
+    background-color: #fef7f1 !important
+}
+
+.bg-orange {
+    background-color: #ffd073 !important
+}
+
+

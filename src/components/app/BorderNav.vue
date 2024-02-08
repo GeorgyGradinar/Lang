@@ -33,28 +33,30 @@ onMounted(() => {
   position: relative;
   display: flex;
   line-height: 40px;
-  background-color: var(--purple);
+  background-color: var(--pink);
   border-radius: 10px;
   font-size: 18px;
   font-weight: 600;
-  border: 1px solid var(--dark);
+  border: 2px solid var(--dark);
   margin-bottom: 20px;
+
 
   &:after {
     content: '';
     position: absolute;
     top: -2px;
-    left: calc(100% - 240px);
+    left: calc(100% - 239px);
     width: 240px;
     height: 100%;
-    border-radius: 10px;
-    background-color: var(--blue);
+    border-radius: 8px;
+    background-color: var(--dark-pink);
     transition: all 0.2s;
-    border: 1px solid var(--dark);
+    border: 2px solid var(--dark);
     box-shadow: 1px 4px 1px var(--dark);
   }
 
   div {
+    color: var(--white);
     cursor: pointer;
     padding-left: 28px;
     padding-right: 28px;

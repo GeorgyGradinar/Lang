@@ -32,6 +32,7 @@ function toggleShowChat() {
   cursor: pointer;
   transition: all 0.2s;
   overflow: hidden;
+  z-index: 100;
 
   img {
     width: 45px;

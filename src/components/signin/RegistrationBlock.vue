@@ -189,6 +189,10 @@ function submitRegistration() {
     align-items: flex-end;
     width: 55%;
     height: 100%;
+
+    img {
+      width: 430px;
+    }
   }
 }
 </style>

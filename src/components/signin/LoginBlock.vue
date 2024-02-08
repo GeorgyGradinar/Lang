@@ -168,6 +168,10 @@ function submitLogin() {
     align-items: flex-end;
     width: 52%;
     height: 100%;
+
+    img {
+      width: 430px;
+    }
   }
 }
 </style>

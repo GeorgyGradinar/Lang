@@ -11,13 +11,14 @@
         <!--              :smallMode="true"-->
         <!--          />-->
         <!--        </div>-->
-        <slider-view :feed="sliderFeed1"/>
-        <slider-view :feed="sliderFeed2"/>
+        <div class="wrapper-chat">
+          <ChartBlock :isMainPageChat="true"></ChartBlock>
+        </div>
         <div class="words-wrap">
           <p class="words__title">Новые добавленные слова</p>
           <wordlist-view
               :words="newWords"
-              :columns="3"
+              :columns="2"
           />
 
           <router-link to="/dictionary" class="secondary-button">
@@ -39,10 +40,9 @@
               @selected="selectGroup"
           />
         </div>
+        <slider-view :feed="sliderFeed1"/>
+        <slider-view :feed="sliderFeed2"/>
 
-        <div class="wrapper-chat">
-          <ChartBlock :isMainPageChat="true"></ChartBlock>
-        </div>
       </div>
     </div>
 
@@ -356,19 +356,24 @@ export default {
     display: flex;
     justify-content: center;
     width: 100%;
-    background-color: var(--light-yellow);
+    background-color: var(--white);
 
     .dialog-promo {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 25px;
       width: 100%;
       max-width: 1440px;
-      padding: 90px 0 20px 0;
+      padding: 90px 0 12px 0;
       margin: 0 20px;
       font-size: 15px;
       font-weight: 600;
       color: var(--white);
+
+      .wrapper-chat {
+        width: 55%;
+        height: 500px;
+      }
 
       .words-wrap {
         display: flex;
@@ -378,15 +383,26 @@ export default {
         border-radius: 10px;
         border: 2px solid var(--dark);
         box-shadow: 1px 4px 1px var(--dark);
-        background-color: var(--green);
+        background-color: var(--yellow);
+
+        a {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          text-decoration: none;
+          color: var(--light-gray);
+        }
 
         .words__title {
           font-size: 26px;
+          color: var(--dark-pink);
         }
 
         .secondary-button {
           width: 230px;
           align-self: flex-end;
+          border: 2px solid var(--dark);
+          background-color: var(--pink);
 
           svg {
             fill: var(--white);
@@ -407,7 +423,7 @@ export default {
     display: flex;
     justify-content: center;
     width: 100%;
-    background-color: var(--light-yellow);
+    background-color: var(--white);
 
     .words {
       display: flex;
@@ -416,7 +432,7 @@ export default {
       gap: 20px;
       width: 100%;
       max-width: 1440px;
-      padding: 60px 0 90px 0;
+      padding: 15px 0 90px 0;
       margin: 0 20px;
       font-size: 15px;
       font-weight: 700;
@@ -425,7 +441,7 @@ export default {
       .wrapper-words-theme {
         display: flex;
         flex-direction: column;
-        width: 60%;
+        width: 55%;
         height: 100%;
         padding: 30px 20px 40px;
         border-radius: 10px;
@@ -439,10 +455,7 @@ export default {
         }
       }
 
-      .wrapper-chat {
-        width: 50%;
-        height: 500px;
-      }
+
     }
   }
 
@@ -450,7 +463,7 @@ export default {
     display: flex;
     justify-content: center;
     width: 100%;
-    background-color: var(--blue);
+    background-color: var(--white);
 
     .mistakes {
       display: flex;
@@ -464,10 +477,11 @@ export default {
 
       .mistakes__title {
         width: 100%;
-        font-size: 28px;
-        font-weight: 800;
+        font-size: 32px;
+        font-weight: 900;
         text-align: center;
-        margin-bottom: 30px
+        margin-bottom: 30px;
+        color: var(--dark);
       }
 
       .mistakes__list {
@@ -475,7 +489,7 @@ export default {
         padding: 32px;
         border-radius: 10px;
         background-color: var(--red);
-        border: 1px solid var(--dark);
+        border: 2px solid var(--dark);
         box-shadow: 1px 4px 1px var(--dark);
       }
     }

@@ -86,7 +86,7 @@ function routeTo(path, query) {
 header {
   width: 100vw;
   height: 82px;
-  background-color: var(--green);
+  background-color: var(--white);
   display: flex;
   justify-content: center;
   position: fixed;
@@ -97,6 +97,7 @@ header {
   -ms-user-select: none;
   user-select: none;
   z-index: 99;
+  border-bottom: 2px solid var(--dark);
 
   .header__container {
     display: -webkit-box;
@@ -142,7 +143,7 @@ header {
       margin: 0 10px;
 
       a {
-        background-color: var(--red);
+        background-color: var(--dark-pink);
         padding: 7px;
         border-radius: 8px;
         border: 1px solid var(--dark);
@@ -185,7 +186,7 @@ header {
         font-size: 15px;
         width: 100%;
         height: 100%;
-        background-color: var(--green);
+        background-color: var(--white);
         z-index: 103;
 
         button {

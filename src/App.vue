@@ -17,27 +17,13 @@ const {checkLocalStorage} = authRequests();
 onMounted(() => {
   checkLocalStorage();
 })
-
-// export default {
-//   name: 'main-layout',
-//   components: {
-//     HeaderNav
-//   },
-//
-//   mounted() {
-//     // Значения по умолчанию
-//     this.$store.dispatch('weekresults/set', [
-//       {day: 'Пн', total: 10, success: 1, errors: 5, state: ''},
-//       {day: 'Вт', total: 10, success: 5, errors: 5, state: ''},
-//       {day: 'Ср', total: 10, success: 9, errors: 0, state: ''},
-//       {day: 'Чт', total: 0, success: 0, errors: 0, state: 'lock'},
-//       {day: 'Пт', total: 0, success: 0, errors: 0, state: 'lock'},
-//       {day: 'Сб', total: 0, success: 0, errors: 0, state: 'lock'},
-//       {day: 'Вс', total: 0, success: 0, errors: 0, state: 'lock'}
-//     ])
-//   }
-// }
 </script>
-<style>
+<style scoped lang="scss">
 @import "@/assets/main.css";
+
+.container {
+  padding-top: 82px;
+  height: 100%;
+  min-height: 100vh;
+}
 </style>

@@ -1,25 +1,23 @@
 <template>
-  <div class="wrapper-word" :class="{'list-view': list, 'block-view': !list }">
+  <div class="wrapper-word" :class="{'list-view': isShowWordsTypeList, 'block-view': !isShowWordsTypeList }">
     <div class="word">
       <div class="scene">
         <div class="cube" :class="{'show_translate': isShowTranslate}">
-          <p class="side top">{{ word?.translation }}</p>
-          <p class="side front">
+          <p class="side top" @click="toggleIsShowTranslate">{{ word?.translation }}</p>
+          <p class="side front" @click="toggleIsShowTranslate">
             {{ word?.word }}
           </p>
         </div>
       </div>
 
-      <div v-if="list">|</div>
-
-      <p class="translate" :class="{'show-translate': list}">
-        translate
+      <p class="translate show-translate" v-if="isShowWordsTypeList">
+        {{ word?.translation }}
       </p>
     </div>
 
     <div class="actions">
       <div class="translate" @click="toggleIsShowTranslate"
-           v-if="!list"
+           v-if="!isShowWordsTypeList"
            :class="{'is_active-translate': isShowTranslate}">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
           <path
@@ -43,9 +41,15 @@
         <v-tooltip activator="parent" location="bottom">an exciting or unexpected event or course of events</v-tooltip>
       </div>
 
-      <div class="add-word" @click="addWordToAccount()">
+
+      <div v-if="isSearching" class="add-word" @click="addWordToAccount()">
         <img src="img/dictionary/add.svg">
         <v-tooltip activator="parent" location="bottom">Добавить в аккаунт</v-tooltip>
+      </div>
+
+      <div v-if="!isSearching" class="delete-word" @click="deleteUserWord()">
+        <img src="img/dictionary/trash.svg">
+        <v-tooltip activator="parent" location="bottom">Удалить слово</v-tooltip>
       </div>
 
       <div class="learned" v-if="word.count > 0 || word.done">
@@ -58,25 +62,38 @@
 </template>
 
 <script setup>
-import {ref, toRefs} from "vue";
+import {ref, toRefs, watch} from "vue";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
+import {storeToRefs} from "pinia/dist/pinia";
+import {dictionaryStore} from "@/store/dictionaryStore";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
-  word: Object,
-  list: Boolean
+  word: Object
 })
-const {list} = toRefs(props);
-const {addWords} = dictionaryRequests();
+const {word} = toRefs(props);
+const {addWords, deleteWord} = dictionaryRequests();
+const dictionary = dictionaryStore();
+const {isSearching, isShowWordsTypeList} = storeToRefs(dictionary);
 
 let isShowTranslate = ref(false);
 
+watch(isShowWordsTypeList, () => {
+  isShowTranslate.value = false;
+})
+
 function toggleIsShowTranslate() {
-  isShowTranslate.value = !isShowTranslate.value;
+  if (!isShowWordsTypeList.value){
+    isShowTranslate.value = !isShowTranslate.value;
+  }
 }
 
 function addWordToAccount() {
   addWords(props.word.id);
+}
+
+function deleteUserWord() {
+  deleteWord(word.value.id);
 }
 </script>
 
@@ -84,67 +101,73 @@ function addWordToAccount() {
 .wrapper-word {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  cursor: pointer;
-  width: 250px;
-  color: #f5f5f5;
-  background-color: #4f3dca;
+  justify-content: center;
+  gap: 40px;
+  width: 23%;
+  height: 275px;
+  background-color: var(--pink);
   border-radius: 10px;
   font-size: 15px;
   font-weight: 800;
-  padding: 20px 10px;
+  padding: 0 10px;
   margin-bottom: 20px;
-  border: 1px solid var(--dark);
+  cursor: pointer;
+  border: 2px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
+  overflow: hidden;
 
+  p {
+    width: 100px;
+  }
 
   .word {
     font-size: 20px;
-    color: var(--yellow);
+    color: var(--dark-pink);
     position: relative;
 
     .scene {
-      width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      border-radius: 10px;
+      width: 100%;
+      height: 150px;
+      border-radius: 7px;
 
       .cube {
         width: 100%;
-        color: var(--white);
         cursor: pointer;
-        transition: all 0.85s cubic-bezier(.17, .67, .14, .93);
+        transition: all 0.85s cubic-bezier(.15, .70, .15, 1);
         transform-style: preserve-3d;
         transform-origin: 100% 50%;
-        height: 30px;
+        height: 150px;
         border-radius: 10px;
 
         .side {
           width: 100%;
+          height: 150px;
           position: absolute;
           display: flex;
           justify-content: center;
           align-items: center;
-          height: 30px;
           text-align: center;
           text-transform: uppercase;
           font-weight: bold;
           border-radius: 5px;
 
           &.top {
-            background: var(--yellow);
-            color: var(--blue);
-            transform: rotateX(90deg) translate3d(0, 0, 15px);
+            background: var(--purple);
+            color: var(--light-yellow);
+            transform: rotateX(90deg) translate3d(0, 0, 75px);
             border: 1px solid var(--dark);
             box-shadow: 1px 4px 1px var(--dark);
           }
 
           &.front {
-            color: var(--yellow);
+            background-color: var(--light_pink);
+            color: var(--dark);
             box-shadow: 1px 4px 1px var(--dark);
             border: 1px solid var(--dark);
-            transform: translate3d(0, 0, 15px);
+            transform: translate3d(0, 0, 75px);
           }
 
           span {
@@ -181,6 +204,7 @@ function addWordToAccount() {
     .tasks,
     .help,
     .add-word,
+    .delete-word,
     .learned {
       display: flex;
       border: 1px solid var(--dark);
@@ -188,6 +212,7 @@ function addWordToAccount() {
       border-radius: 10px;
       padding: 7px;
       transition: all 0.2s;
+      background-color: var(--dark-pink);
 
       img,
       svg {
@@ -203,10 +228,10 @@ function addWordToAccount() {
     }
 
     .is_active-translate {
-      background-color: var(--yellow);
+      background-color: var(--purple);
 
       svg {
-        fill: var(--blue);
+        //fill: var(--blue);
       }
     }
 
@@ -216,9 +241,6 @@ function addWordToAccount() {
       align-items: center;
       width: 40px;
       height: 40px;
-      box-shadow: 0 0 1px var(--yellow);
-      border: 1px solid var(--yellow);
-      color: var(--yellow);
 
       P {
         display: flex;
@@ -236,9 +258,26 @@ function addWordToAccount() {
 }
 
 .block-view {
+
+  .word {
+    .scene {
+
+
+      .cube {
+
+        .side {
+
+          &.front {
+
+          }
+        }
+      }
+    }
+  }
+
   animation-name: resizeBlock;
   animation-timing-function: ease-out;
-  animation-duration: 1s;
+  animation-duration: 0.5s;
   animation-fill-mode: forwards;
 }
 
@@ -246,40 +285,56 @@ function addWordToAccount() {
   justify-content: space-between;
   padding: 10px 20px;
   width: 90%;
+  height: unset;
   flex-direction: row;
   animation-name: resizeLine;
   animation-timing-function: ease-in;
-  animation-duration: 1s;
+  animation-duration: 0.5s;
   animation-fill-mode: forwards;
 
   .word {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     align-items: center;
-    width: 60%;
+    width: 70%;
 
     .scene {
+      height: 100%;
+
       .cube {
+        height: 100%;
+        transition: unset;
+
         .side {
+          height: 100%;
+
           &.front {
             box-shadow: unset;
-            border: 1px solid var(--yellow);
+            border: 2px solid var(--dark-pink);
+            background-color: var(--light-gray);
+            color: var(--dark-pink);
           }
         }
       }
     }
 
     .show-translate {
-      display: flex;
-      justify-content: center;
-      width: 75%;
-      height: 30px;
+      text-align: center;
+      height: unset;
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      background-color: var(--dark-pink);
+      border: 2px solid var(--light-gray);
+      color: var(--light-gray);
       opacity: 1;
     }
   }
 
   .actions {
     gap: 20px;
+    align-items: center;
   }
 }
 
@@ -301,7 +356,6 @@ function addWordToAccount() {
   }
 }
 
-
 .v-tooltip > .v-overlay__content {
   background-color: var(--yellow) !important;
   opacity: 0.8;
@@ -309,7 +363,6 @@ function addWordToAccount() {
   border-radius: 10px;
   border: 1px solid var(--dark);
 }
-
 
 @media screen and (max-width: 1350px) {
   .wrapper-word {

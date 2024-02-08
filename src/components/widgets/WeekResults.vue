@@ -270,18 +270,20 @@ function changeDay(index, data) {
       }
 
       .results {
-        width: 40px;
+        width: 45px;
         height: 40px;
         display: flex;
         justify-content: center;
         align-items: center;
         font-weight: 900;
         margin-top: 4px;
-        background-color: #4f3dca;
+        background-color: var(--white);
+        color: var(--dark-pink);
         border-radius: 8px;
-        border: 1px solid var(--dark);
+        border: 2px solid var(--dark);
         box-shadow: 1px 4px 1px var(--dark);
         transition: all 0.2s;
+        cursor: pointer;
 
         &:hover {
           color: var(--yellow);

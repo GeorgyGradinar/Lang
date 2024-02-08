@@ -9,6 +9,7 @@ export const chatStore = defineStore('chat', () => {
     let lastPage = ref(null);
     let foundWord = ref(null);
     let isActiveSearching = ref(false);
+    let triggerSaveScrollForPagination = ref(false);
 
     function clearChatStore() {
         messages.value = [];
@@ -18,6 +19,7 @@ export const chatStore = defineStore('chat', () => {
         lastPage.value = null;
         foundWord.value = null;
         isActiveSearching.value = false;
+        triggerSaveScrollForPagination.value = false;
     }
 
     function changeMessages(allMessages) {
@@ -38,11 +40,9 @@ export const chatStore = defineStore('chat', () => {
             }
         })
 
-        newData.forEach(message => {
-            setTimeout(() => {
-                messages.value.unshift(message);
-            }, 100)
-        })
+        messages.value.unshift(...newData);
+
+        triggerSaveScrollForPagination.value = !triggerSaveScrollForPagination.value;
     }
 
     function addNewMessage(newMessage, isBot, timestamp) {
@@ -88,6 +88,7 @@ export const chatStore = defineStore('chat', () => {
         lastPage, changeLastPage,
         foundWord, changeSearchWord,
         isActiveSearching, changeActiveSearching,
+        triggerSaveScrollForPagination,
         clearChatStore
     }
 })

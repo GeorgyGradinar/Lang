@@ -1,6 +1,8 @@
 <template>
   <div class="tasks-card" :class="card.bgclass" @click="onClick">
-    <div class="tasks-card__img"><img :src="card.img"></div>
+    <div class="tasks-card__img">
+      <img :src="card.img">
+    </div>
     <h3 class="tasks-card__title">{{ card.title }}</h3>
     <!--    <p class="tasks-card__descr">{{ card.text }}</p>-->
     <div class="info">

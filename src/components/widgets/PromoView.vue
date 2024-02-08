@@ -38,7 +38,7 @@ function onClick() {
   justify-content: space-around;
   width: 50%;
   border-radius: 10px;
-  border: 1px solid var(--dark);
+  border: 2px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
   cursor: pointer;
   transition: all 0.2s;

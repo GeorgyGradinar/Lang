@@ -7,7 +7,14 @@ import {chatStore} from "@/store/chatStore";
 
 export default function dictionaryRequests() {
     const dictionary = dictionaryStore();
-    const {changeWord} = dictionary;
+    const {
+        changeWords,
+        changeIsSearch,
+        changeGroups,
+        changeGroupWords,
+        toggleActiveLoader,
+        toggleActiveGroupWordsLoader
+    } = dictionary;
     const chat = chatStore();
     const {changeSearchWord, changeActiveSearching} = chat;
 
@@ -16,7 +23,20 @@ export default function dictionaryRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                console.log(response)
+                changeGroups(response.data.data);
+            })
+    }
+
+    function getWordsFromGroup(id) {
+        toggleActiveGroupWordsLoader(true);
+        axios.get(`${testUrl}/api/group/${id}`, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
+        })
+            .then(response => {
+                setTimeout(() => {
+                    changeGroupWords(response.data.data.words);
+                    toggleActiveGroupWordsLoader(false);
+                }, 1000)
             })
     }
 
@@ -30,16 +50,20 @@ export default function dictionaryRequests() {
     }
 
     function getAllUsersWords() {
+        toggleActiveLoader(true);
         axios.get(`${testUrl}/api/user/dictionary/words`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization]),
         })
             .then(response => {
-                console.log(response)
-                changeWord(response.data.data);
+                setTimeout(() => {
+                    changeWords(response.data.data);
+                    toggleActiveLoader(false);
+                }, 1000);
             })
     }
 
     function searchWord(word, isChatsSearch) {
+        toggleActiveLoader(true);
         axios.get(`${testUrl}/api/user/dictionary/words/search?word=${word}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization]),
         })
@@ -48,11 +72,14 @@ export default function dictionaryRequests() {
                     changeSearchWord(response.data.data[0].word);
                     changeActiveSearching(false);
                 } else {
-                    changeWord(response.data.data);
+                    setTimeout(() => {
+                        changeWords(response.data.data);
+                        changeIsSearch(true);
+                        toggleActiveLoader(false);
+                    }, 1000);
                 }
             })
     }
-
 
     function addWords(idWord) {
         axios.post(`${testUrl}/api/user/dictionary/words/add`, {id: idWord}, {
@@ -63,11 +90,25 @@ export default function dictionaryRequests() {
             })
     }
 
+    function deleteWord(idWord) {
+        axios.delete(`${testUrl}/api/user/dictionary/words/delete`, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization]),
+            data: {
+                id: idWord
+            }
+        })
+            .then(response => {
+                console.log(response)
+            })
+    }
+
     return {
         getGroups,
+        getWordsFromGroup,
         getAllWords,
         getAllUsersWords,
         searchWord,
-        addWords
+        addWords,
+        deleteWord
     }
 }

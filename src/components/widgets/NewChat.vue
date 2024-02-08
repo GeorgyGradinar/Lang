@@ -114,7 +114,14 @@ const prop = defineProps({
 const chat = chatStore();
 // eslint-disable-next-line no-unused-vars
 const {addNewMessage, changeActiveGeneration, changeCurrentPage} = chat;
-const {messages, isTriggerScrollDown, isActiveGeneration, currentPage, lastPage} = storeToRefs(chat);
+const {
+  messages,
+  isTriggerScrollDown,
+  isActiveGeneration,
+  currentPage,
+  lastPage,
+  triggerSaveScrollForPagination
+} = storeToRefs(chat);
 // eslint-disable-next-line no-unused-vars
 const {getMessages, sendMessage, getMessageFormNetwork, deleteMessages} = dialogsRequests();
 
@@ -139,6 +146,7 @@ let allowCountMessages = ref(15);
 
 let currentWord = ref(null);
 let optionBlock = ref(null);
+let scrollPosition = ref(null);
 
 onMounted(() => {
   getMessages();
@@ -156,11 +164,19 @@ watch(isTriggerScrollDown, () => {
   scrollDown();
 })
 
+watch(triggerSaveScrollForPagination, () => {
+  console.dir(messagesBlock.value.scrollTop)
+  messagesBlock.value.scrollTop = scrollPosition.value;
+  scrollPosition.value = null;
+})
+
 function handelScrollForPagination() {
+  console.log(event)
   if (!messagesBlock.value.scrollTop) {
     if (currentPage.value < lastPage.value) {
       changeCurrentPage(currentPage.value + 1);
       getMessages(true);
+      scrollPosition.value = event.target.scrollHeight - event.target.offsetHeight;
     }
   }
 }
@@ -321,7 +337,7 @@ onUnmounted(() => {
   flex: 1;
   height: 100%;
   border-radius: 10px;
-  border: 1px solid var(--dark);
+  border: 2px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
   background-color: var(--dark-pink);
   color: var(--dark);
@@ -385,10 +401,9 @@ onUnmounted(() => {
           display: flex;
           flex-wrap: wrap;
           align-self: flex-start;
-          background-color: var(--yellow);
           border-radius: 20px;
           padding: 5px 10px;
-          border: 1px solid var(--dark);
+          border: 2px solid var(--dark);
           box-shadow: 1px 4px 1px var(--dark);
           max-width: 60%;
           background-color: var(--light-gray);

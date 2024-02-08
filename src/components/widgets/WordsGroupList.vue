@@ -33,7 +33,7 @@ const emit = defineEmits(['selected']);
     padding: 10px;
     border-radius: 10px;
     color: var(--white);
-    border: 1px solid var(--dark);
+    border: 2px solid var(--dark);
     box-shadow: 1px 4px 1px var(--dark);
     cursor: pointer;
     transition: all 0.2s;

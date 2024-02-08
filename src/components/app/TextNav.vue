@@ -33,24 +33,24 @@ onMounted(() => {
 .words-2__nav2 {
   position: relative;
   display: flex;
-  background-color: var(--purple);
+  background-color: var(--pink);
   border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  border: 1px solid var(--dark);
+  border: 2px solid var(--dark);
   margin-bottom: 20px;
 
   &:after {
     content: '';
     position: absolute;
     top: -2px;
-    left: calc(100% - 130px);
+    left: calc(100% - 129px);
     width: 130px;
     height: 100%;
-    border-radius: 10px;
-    background-color: var(--blue);
+    border-radius: 8px;
+    background-color: var(--dark-pink);
     transition: all 0.2s;
-    border: 1px solid var(--dark);
+    border: 2px solid var(--dark);
     box-shadow: 1px 4px 1px var(--dark);
     z-index: 1;
   }

@@ -18,6 +18,6 @@ import NewChat from "@/components/widgets/NewChat";
   width: 100vw;
   height: calc(100vh - 82px);
   padding: 30px;
-  background-color: var(--light-gray);
+  background-color: var(--white);
 }
 </style>
