@@ -18,10 +18,9 @@
           <div class="message animate__animated animate__fast"
                :class="{'person_message animate__fadeInLeft': !message.is_bot,
                'animate__fadeInRight': message.is_bot}">
-            <p v-for="word in message.message" :key="word?.id"
-               @click="openOptionBlock($event, word)">
-              {{ word }}
-            </p>
+            <span v-for="word in message.message" :key="word?.id"
+               @click="openOptionBlock($event, word)" v-html="word">
+            </span>
           </div>
 
 
@@ -165,13 +164,11 @@ watch(isTriggerScrollDown, () => {
 })
 
 watch(triggerSaveScrollForPagination, () => {
-  console.dir(messagesBlock.value.scrollTop)
   messagesBlock.value.scrollTop = scrollPosition.value;
   scrollPosition.value = null;
 })
 
 function handelScrollForPagination() {
-  console.log(event)
   if (!messagesBlock.value.scrollTop) {
     if (currentPage.value < lastPage.value) {
       changeCurrentPage(currentPage.value + 1);
@@ -182,7 +179,7 @@ function handelScrollForPagination() {
 }
 
 function openOptionBlock(event) {
-  top.value = event.y - 140;
+  top.value = event.y - 140 + event.view.scrollY;
   left.value = event.x - 100;
   currentWord.value = event.target;
 }
@@ -330,7 +327,7 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .wrapper-chart {
   display: flex;
   flex-direction: column;
@@ -408,13 +405,11 @@ onUnmounted(() => {
           max-width: 60%;
           background-color: var(--light-gray);
 
-          p {
+          span {
             position: relative;
-            margin-right: 5px;
             cursor: pointer;
             transition: all 0.2s;
-
-            &:hover {
+            span.kuku:hover {
               color: var(--red);
             }
           }

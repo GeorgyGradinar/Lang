@@ -26,7 +26,7 @@ export const chatStore = defineStore('chat', () => {
         messages.value = allMessages.map(data => {
             return {
                 ...data,
-                message: data.message.split(' ')
+                message: handleMessage(data.message)
             }
         })
         triggerScrollDown();
@@ -43,6 +43,10 @@ export const chatStore = defineStore('chat', () => {
         messages.value.unshift(...newData);
 
         triggerSaveScrollForPagination.value = !triggerSaveScrollForPagination.value;
+    }
+
+    function handleMessage(message) {
+        return message.replaceAll(/([\wа-яА-Я-']+)/ig, (substr) => `|divider|<span class="kuku">${substr}</span>|divider|`).split('|divider|')
     }
 
     function addNewMessage(newMessage, isBot, timestamp) {

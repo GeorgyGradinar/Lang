@@ -40,8 +40,12 @@ const {foundWord, isActiveSearching} = storeToRefs(chat);
 const sound = {id: 0, title: 'Cloud', hint: 'подсказка1', sound: 'sound/black.mp3', path: '/lesson'};
 
 watch(topPosition, () => {
-  changeActiveSearching(true);
-  searchWord('приглашение', true);
+  if (topPosition.value) {
+    changeActiveSearching(true);
+    searchWord('приглашение', true);
+  } else {
+    changeActiveSearching(false);
+  }
 })
 </script>
 
