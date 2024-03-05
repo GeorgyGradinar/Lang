@@ -37,7 +37,8 @@ const props = defineProps({
   flex-direction: column;
   gap: 15px;
   width: 400px;
-  padding: 25px 30px;
+  padding: 10px 30px;
+  margin-top: 25px;
   border-radius: 10px;
   color: var(--light-yellow);
   border: 2px solid var(--dark);
@@ -220,6 +221,38 @@ const props = defineProps({
 
     .price__tariff-descr {
       color: var(--dark);
+    }
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .price__tariff {
+    width: 30%;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .price__tariff {
+    width: 40%;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .price__tariff {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .price__tariff {
+    width: 100%;
+
+    .robot {
+      width: 120px;
+    }
+
+    .price__tariff-title {
+      font-size: 35px;
     }
   }
 }

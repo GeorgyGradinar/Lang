@@ -20,7 +20,7 @@
                   @input="autoGrow"
                   ref="textarea"
                   placeholder="Ваш ответ">
-      </textarea>
+        </textarea>
         <button @click="submitResult">Отправить</button>
       </div>
     </div>
@@ -196,5 +196,99 @@ function goBack() {
   position: absolute;
   width: 100vw;
   height: 100vh;
+}
+
+@media screen and (max-width: 1100px) {
+  .wrapper-task-and-answer {
+    padding: 15px;
+
+    h3 {
+
+    }
+
+    .task {
+      margin-bottom: 10px;
+
+      .wrapper-theme,
+      .wrapper-task-description {
+        margin-bottom: 15px;
+
+        p:first-child {
+
+        }
+      }
+    }
+
+    .answer {
+      gap: 10px;
+
+      p {
+
+      }
+
+      textarea {
+
+      }
+
+      button {
+        padding: 7px;
+        font-size: 13px;
+      }
+    }
+
+    .wrapper-button-back {
+      button {
+
+        img {
+
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .wrapper-task-and-answer {
+    display: none;
+
+    h3 {
+
+    }
+
+    .task {
+
+      .wrapper-theme,
+      .wrapper-task-description {
+
+        p:first-child {
+
+        }
+      }
+    }
+
+    .answer {
+
+      p {
+
+      }
+
+      textarea {
+
+      }
+
+      button {
+
+      }
+    }
+
+    .wrapper-button-back {
+      button {
+
+        img {
+
+        }
+      }
+    }
+  }
 }
 </style>

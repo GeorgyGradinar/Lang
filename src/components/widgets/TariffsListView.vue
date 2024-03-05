@@ -21,13 +21,13 @@ const props = defineProps({
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 100px 50px;
+  padding: 50px 50px;
   gap: 50px;
 }
 
 @media screen and (max-width: 1000px){
   .price__tariffs-row {
-    padding: 50px 20px;
+    padding: 50px 25px;
   }
 }
 </style>

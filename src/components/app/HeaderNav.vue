@@ -164,7 +164,6 @@ header {
 
     .header__sign-wrap {
       position: relative;
-      width: 310px;
       height: 100%;
       display: -webkit-box;
       display: -ms-flexbox;
@@ -287,31 +286,125 @@ header {
 
     .header__burger-wrap {
       display: none;
+      width: 30px;
+      height: 30px;
 
       .header__burger {
+        display: none;
+        position: relative;
+        width: 30px;
+        height: 20px;
 
+        &-wrap {
+          margin-left: auto;
+        }
+
+        span {
+          content: '';
+          background-color: var(--dark-pink);
+          position: absolute;
+          width: 100%;
+          height: 2px;
+          left: 0;
+          top: 9px;
+          transition: all 0.3s ease 0s;
+        }
+
+        &:before,
+        &:after {
+          content: '';
+          background-color: var(--dark-pink);
+          position: absolute;
+          width: 100%;
+          height: 2px;
+          left: 0;
+          transition: all 0.3s ease 0s;
+        }
+
+        &.active:before {
+          transform: rotate(45deg);
+          top: 9px;
+        }
+
+        &.active:after {
+          transform: rotate(-45deg);
+          bottom: 9px;
+        }
+
+        &.active span {
+          transform: scale(0);
+        }
+
+        &:before {
+          top: 0
+        }
+
+        &:after {
+          bottom: 0;
+        }
+
+        cursor: pointer;
       }
     }
   }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (min-width: 2000px) {
+  header {
+    .header__container {
+      max-width: unset;
+      margin: 0 50px;
+
+      .header__logo {
+        font-size: 40px;
+      }
+
+      .header__menu {
+
+        a {
+          font-size: 20px;
+        }
+      }
+
+      .header__sign-wrap {
+
+        .header__sign-title {
+
+          button {
+            width: 300px;
+            height: 65%;
+
+            a {
+              font-size: 21px;
+            }
+          }
+        }
+
+        .header__sign-popup {
+          width: 300px;
+
+          a {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1150px) {
   header {
     .header__container {
 
-      a {
-        font-size: 13px;
-      }
-
       .header__logo {
-        a {
-        }
+        font-size: 20px;
       }
 
       .header__menu {
         gap: 20px;
 
         a {
+          font-size: 12px;
         }
       }
 
@@ -334,10 +427,11 @@ header {
   }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 850px) {
   header {
 
     .header__container {
+      margin: 0 20px;
 
       a {
       }
@@ -386,62 +480,9 @@ header {
 
       .header__burger-wrap {
         display: block;
-        width: 30px;
-        height: 30px;
 
         .header__burger {
           display: block;
-          position: relative;
-          width: 30px;
-          height: 20px;
-
-          &-wrap {
-            margin-left: auto;
-          }
-
-          span {
-            content: '';
-            background-color: #fff;
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            left: 0;
-            top: 9px;
-            transition: all 0.3s ease 0s;
-          }
-
-          &:before,
-          &:after {
-            content: '';
-            background-color: #fff;
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            left: 0;
-            transition: all 0.3s ease 0s;
-          }
-
-          &.active:before {
-            transform: rotate(45deg);
-            top: 9px;
-          }
-
-          &.active:after {
-            transform: rotate(-45deg);
-            bottom: 9px;
-          }
-
-          &.active span {
-            transform: scale(0);
-          }
-
-          &:before {
-            top: 0
-          }
-
-          &:after {
-            bottom: 0;
-          }
         }
 
         .header__menu {
@@ -449,7 +490,6 @@ header {
           width: 100%;
           left: 0;
           bottom: 100%;
-          background-color: red;
           overflow: auto;
           transition: all 0.3s ease 0s;
         }

@@ -19,5 +19,12 @@ import NewChat from "@/components/widgets/NewChat";
   height: calc(100vh - 82px);
   padding: 30px;
   background-color: var(--white);
+  overflow: hidden;
+}
+
+@media screen and (max-width: 800px){
+  .lesson--page {
+    padding: unset;
+  }
 }
 </style>

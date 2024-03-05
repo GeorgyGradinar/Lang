@@ -12,8 +12,11 @@ export default function dictionaryRequests() {
         changeIsSearch,
         changeGroups,
         changeGroupWords,
+        addWordsToGroupWords,
         toggleActiveLoader,
-        toggleActiveGroupWordsLoader
+        toggleActiveGroupWordsLoader,
+        changeAllPagesWordsInGroup,
+        changeCurrentPageWordsInGroup
     } = dictionary;
     const chat = chatStore();
     const {changeSearchWord, changeActiveSearching} = chat;
@@ -27,14 +30,21 @@ export default function dictionaryRequests() {
             })
     }
 
-    function getWordsFromGroup(id) {
+    function getWordsFromGroup(id, isPagination) {
         toggleActiveGroupWordsLoader(true);
-        axios.get(`${testUrl}/api/group/${id}`, {
+
+        const currentPage = isPagination ? dictionary.currentPageWordsInGroup + 1 : dictionary.currentPageWordsInGroup;
+
+        axios.get(`${testUrl}/api/group/${id}?page=${currentPage}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
+                isPagination ? addWordsToGroupWords(response.data.data.words.data) : changeGroupWords(response.data.data.words.data);
+
+                changeAllPagesWordsInGroup(response.data.data.words.last_page);
+                changeCurrentPageWordsInGroup(response.data.data.words.current_page);
+
                 setTimeout(() => {
-                    changeGroupWords(response.data.data.words);
                     toggleActiveGroupWordsLoader(false);
                 }, 1000)
             })

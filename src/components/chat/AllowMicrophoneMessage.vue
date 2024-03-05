@@ -17,8 +17,9 @@ const props = defineProps({
   position: absolute;
   top: 50%;
   left: calc(50% - 225px);
-  background-color: rgba(35, 35, 35, 0.6);
-  padding: 10px;
+  color: var(--light-yellow);
+  background-color: rgba(35, 35, 35, 0.8);
+  padding: 20px;
   border-radius: 10px;
   opacity: 0;
   z-index: -1;

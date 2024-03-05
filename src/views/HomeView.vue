@@ -74,8 +74,6 @@
     <!--Модальное окно словаря -->
     <words-list-dlg ref="wordslistdlg"/>
   </div>
-
-  <MiniChat></MiniChat>
 </template>
 
 <script>
@@ -89,12 +87,10 @@ import TabNav from '@/components/app/TabNav.vue';
 import MistakeView from '@/components/widgets/MistakeView.vue';
 import PromoView from '@/components/widgets/PromoView.vue';
 import ChartBlock from "@/components/widgets/NewChat";
-import MiniChat from "@/components/widgets/MiniChat";
 
 export default {
   name: 'HomeView',
   components: {
-    MiniChat,
     ChartBlock,
     WeekResults,
     // ChatView,

@@ -77,7 +77,7 @@ const leftBlock = [
 
     .look-robot {
       position: absolute;
-      top: 100px;
+      bottom: 70px;
       left: 0;
       width: 200px;
     }
@@ -124,29 +124,145 @@ const leftBlock = [
   }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1300px) {
   .price__upgrade {
 
     .price__upgrade-title {
 
+      img {
+
+      }
     }
 
     .price__upgrade-descr {
-      width: 90%;
+
+    }
+
+    .advantages-title {
+
     }
 
     .price__upgrade-list {
-      flex-direction: column;
-      gap: 15px;
-      padding: 0 30px;
+
+      .look-robot {
+        width: 130px;
+
+      }
+
+      .advantages-block {
+        width: 85%;
+
+        .advantage {
+
+          img {
+
+          }
+
+          &:last-child {
+
+          }
+
+          &:nth-child(7) {
+
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .price__upgrade {
+
+    .price__upgrade-title {
+
+      img {
+
+      }
+    }
+
+    .price__upgrade-descr {
+
+    }
+
+    .advantages-title {
+
+    }
+
+    .price__upgrade-list {
+      padding:  0 25px;
+
+      .look-robot {
+        display: none;
+
+      }
 
       .advantages-block {
         width: 100%;
 
-        .price__upgrade-row {
+        .advantage {
 
-          .wrapper-image {
+          img {
 
+          }
+
+          &:last-child {
+
+          }
+
+          &:nth-child(7) {
+
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .price__upgrade {
+
+    .price__upgrade-title {
+      font-size: 27px;
+
+      img {
+
+      }
+    }
+
+    .price__upgrade-descr {
+      width: 85%;
+    }
+
+    .advantages-title {
+
+    }
+
+    .price__upgrade-list {
+
+      .look-robot {
+
+      }
+
+      .advantages-block {
+        padding: 15px;
+
+        .advantage {
+          width: 100%;
+          padding: 15px 5px;
+
+          img {
+
+          }
+
+          &:last-child {
+            border-bottom: 2px solid rgba(255, 244, 204, 0.3);
+            margin-bottom: 10px;
+          }
+
+          &:nth-child(7) {
+            border-bottom: 2px solid rgba(255, 244, 204, 0.3);
+            margin-bottom: 10px;
           }
         }
       }

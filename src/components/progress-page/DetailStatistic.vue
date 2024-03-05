@@ -125,4 +125,90 @@
     }
   }
 }
+
+@media screen and (min-width: 2500px) {
+  .detail_statistic {
+
+    .lecture_statistic {
+
+      .lecture_statistic_header {
+
+        img {
+          width: 40px;
+          height: 40px;
+        }
+
+        p {
+          font-size: 25px;
+        }
+      }
+
+      .lecture_statistic_data {
+
+        .wrapper-data {
+          gap: 15px;
+
+          .current-data {
+              font-size: 40px;
+          }
+
+          .wrapper-titles {
+            font-size: 20px;
+
+            p:first-child {
+
+            }
+
+            p:last-child {
+
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .detail_statistic {
+
+    .lecture_statistic {
+
+      .lecture_statistic_header {
+
+        img {
+
+        }
+
+        p {
+
+        }
+      }
+
+      .lecture_statistic_data {
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        .wrapper-data {
+
+          .current-data {
+
+          }
+
+          .wrapper-titles {
+
+            p:first-child {
+
+            }
+
+            p:last-child {
+
+            }
+          }
+        }
+      }
+    }
+  }
+}
 </style>

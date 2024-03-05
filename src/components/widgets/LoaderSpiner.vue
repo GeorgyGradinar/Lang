@@ -1,9 +1,15 @@
 <template>
-  <div class="loader"></div>
+  <div class="loader" :class="{'mini-loader': isMiniLoader}"></div>
 </template>
 
 <script setup>
+import {toRefs} from "vue";
 
+// eslint-disable-next-line no-undef
+const props = defineProps({
+  isMiniLoader: Boolean
+})
+const {isMiniLoader} = toRefs(props);
 </script>
 
 <style scoped lang="scss">
@@ -36,6 +42,24 @@
     border-radius: 50%;
     animation: jump7456 0.6s linear infinite;
 
+  }
+}
+
+.mini-loader {
+  width: 20px;
+  height: 20px;
+  margin: 0 0 19px 0;
+
+  &:before {
+    content: '';
+    width: 20px;
+    height: 5px;
+    background: var(--dark-pink);
+    position: absolute;
+    top: 30px;
+    left: 0;
+    border-radius: 50%;
+    animation: shadow324 0.6s linear infinite;
   }
 }
 

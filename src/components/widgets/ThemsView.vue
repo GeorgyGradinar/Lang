@@ -13,12 +13,12 @@
       </div>
     </div>
 
-    <div class="words-3__list" >
-      <div v-for="them in groups" :key="them.id"
-           :class="{'selected': them.id === selectedGroupId}"
-           @click="selectGroup(them.id)">
-        <p> {{ them.title }}</p>
-        <p>{{ them.description }}</p>
+    <div class="words-3__list">
+      <div v-for="group in groups" :key="group.id"
+           :class="{'selected': group.id === selectedGroupWords?.id}"
+           @click="selectGroup(group)">
+        <h3> {{ group.title }}</h3>
+        <p>{{ group.description }}</p>
       </div>
     </div>
 
@@ -35,8 +35,8 @@ import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {ref} from "vue";
 
 const dictionary = dictionaryStore();
-const {changeGroupWords} = dictionary;
-const {groups} = storeToRefs(dictionary);
+const {changeGroupWords, changeSelectedGroup, clearPagination} = dictionary;
+const {groups, selectedGroupWords} = storeToRefs(dictionary);
 const {getWordsFromGroup} = dictionaryRequests();
 
 const textNav = ref([
@@ -44,14 +44,14 @@ const textNav = ref([
   {id: 1, title: 'по популярности'}
 ]);
 
-let selectedGroupId = ref(null);
+function selectGroup(group) {
+  clearPagination();
 
-function selectGroup(id) {
-  if (selectedGroupId.value === id) {
-    selectedGroupId.value = null;
+  if (selectedGroupWords.value?.id === group.id) {
+    changeSelectedGroup(null);
   } else {
-    selectedGroupId.value = id;
-    getWordsFromGroup(id);
+    changeSelectedGroup(group);
+    getWordsFromGroup(group.id);
   }
 
   changeGroupWords([]);
@@ -130,9 +130,8 @@ function selectGroup(id) {
       align-items: flex-start;
       flex-direction: column;
       width: 200px;
-      height: 80px;
       color: var(--light-yellow);
-      background-color: var(--pink);
+      background-color: var(--dark-pink);
       padding: 10px;
       border-radius: 10px;
       font-size: 15px;
@@ -143,17 +142,22 @@ function selectGroup(id) {
       transition: all 0.2s;
 
       &:hover {
-        background-color: var(--dark-pink);
+        background-color: var(--pink);
       }
 
       &:active {
         box-shadow: 0 0 1px var(--dark);
         transform: translateY(5px);
       }
+
+      h3 {
+        margin-bottom: 10px;
+        color: var(--yellow);
+      }
     }
 
     .selected {
-      background-color: var(--dark-pink);
+      background-color: var(--pink);
       box-shadow: 0 0 1px var(--dark);
       transform: translateY(5px);
     }

@@ -1,5 +1,6 @@
 <template>
-  <div class="price__faq" data-aos="fade-up"
+  <div class="price__faq"
+       data-aos="fade-up"
        :data-aos-delay="20"
        data-aos-duration="500"
        data-aos-once="true">
@@ -47,13 +48,9 @@ const props = defineProps({
   }
 }
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 850px) {
   .price__faq {
-    padding-top: 50px;
-
-    .price__faq-wrap {
-      padding: 30px 10px;
-    }
+    padding: 50px 20px;
   }
 }
 </style>
