@@ -28,8 +28,8 @@
              v-for="message in messages" :key="message?.id">
           <!--          <template v-if="message.isText">-->
           <div class="message animate__animated animate__fast"
-               :class="{'person_message animate__fadeInLeft': !message.is_bot,
-               'animate__fadeInRight': message.is_bot}">
+               :class="{'person_message animate__fadeInRight': !message.is_bot,
+               'animate__fadeInLeft ': message.is_bot}">
             <span v-for="word in message.message" :key="word?.id"
                   @click="openOptionBlock($event, word)" v-html="word">
             </span>
@@ -119,7 +119,7 @@ onMounted(() => {
 })
 
 onClickOutside(optionBlock, () => {
-  // closeOptionBlock();
+  closeOptionBlock();
 })
 
 watch(isTriggerScrollDown, () => {
