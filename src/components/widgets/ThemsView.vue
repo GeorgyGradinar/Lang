@@ -51,7 +51,7 @@ function selectGroup(group) {
     changeSelectedGroup(null);
   } else {
     changeSelectedGroup(group);
-    getWordsFromGroup(group.id);
+    getWordsFromGroup();
   }
 
   changeGroupWords([]);
@@ -72,6 +72,7 @@ function selectGroup(group) {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
 
     .words-3__title {
       font-size: 20px;
@@ -232,6 +233,20 @@ function selectGroup(group) {
 @media screen and (max-width: 1000px) {
   .words-3 {
     padding: 30px 10px;
+
+    .words-3__list {
+      justify-content: center;
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .words-3 {
+    .words-3__list {
+      div {
+        width: 100%;
+      }
+    }
   }
 }
 

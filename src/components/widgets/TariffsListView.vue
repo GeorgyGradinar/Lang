@@ -1,7 +1,7 @@
 <template>
   <div class="price__tariffs-row">
     <tariff-card-view
-        v-for="(tariff, index) in tariffs" :key="tariff.id"
+        v-for="(tariff, index) in plans" :key="tariff.id"
         :tariff="tariff" :index="index"
     />
   </div>
@@ -9,11 +9,12 @@
 
 <script setup>
 import TariffCardView from '@/components/widgets/TariffCardView.vue';
+import {mainStore} from "@/store/mainStore";
+import {storeToRefs} from "pinia/dist/pinia";
 
-// eslint-disable-next-line no-unused-vars,no-undef
-const props = defineProps({
-  tariffs : Array
-})
+const main = mainStore();
+const {plans} = storeToRefs(main);
+
 </script>
 
 <style scoped lang="scss">

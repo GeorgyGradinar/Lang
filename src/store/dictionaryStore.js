@@ -40,6 +40,11 @@ export const dictionaryStore = defineStore('dictionary', () => {
         words.value = newWords;
     }
 
+    function deleteWord(deleteId) {
+        const index = words.value.findIndex(word => word.id === deleteId);
+        words.value.splice(index, 1);
+    }
+
     function changeGroups(newGroups) {
         groups.value = newGroups;
     }
@@ -81,7 +86,7 @@ export const dictionaryStore = defineStore('dictionary', () => {
     }
 
     return {
-        words, changeWords,
+        words, changeWords, deleteWord,
         groups, changeGroups,
         groupWords, changeGroupWords, addWordsToGroupWords,
         selectedGroupWords, changeSelectedGroup,

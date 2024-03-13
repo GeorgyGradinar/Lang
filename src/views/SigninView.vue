@@ -1,7 +1,6 @@
 <template>
   <main class="signin-wrap">
     <div class="signin">
-
       <div class="content__signin" :class="{'show-login': isShowLoginBlock}">
         <RegistrationBlock @openLogin="changeMode"></RegistrationBlock>
         <LoginBlock @openRegistration="changeMode"></LoginBlock>
@@ -34,7 +33,7 @@ function changeMode(arg) {
 <style scoped lang="scss">
 .signin-wrap {
   width: 100vw;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 82px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,6 +61,40 @@ function changeMode(arg) {
       transform: rotateX(180deg);
       border: 2px solid var(--dark);
       box-shadow: 1px -4px 1px var(--dark);
+    }
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .signin-wrap {
+
+    .signin {
+      width: 700px;
+
+      .content__signin {
+
+      }
+
+      .show-login {
+
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .signin-wrap {
+
+    .signin {
+      width: 400px;
+
+      .content__signin {
+
+      }
+
+      .show-login {
+
+      }
     }
   }
 }

@@ -71,7 +71,6 @@ onMounted(() => {
 
   .words-2__nav {
     width: 100%;
-    height: 50px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -145,6 +144,39 @@ onMounted(() => {
 @media screen and (max-width: 1000px) {
   .words-2 {
     padding: 30px 10px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .words-2 {
+
+    .words-2__nav {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+
+      .wrapper-right-block {
+
+      }
+    }
+
+    .wrapper-types-view {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .words-2__list {
+
+    }
+
+    .message {
+
+    }
+
+    .list-show {
+
+    }
   }
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
-  <div class="tasks-card bg-base-red" @click="addTasksToUser">
+  <div class="tasks-card bg-base-red" @click="startTask">
     <div class="tasks-card__img">
       <img :src="card.img">
     </div>
-    <h3 class="tasks-card__title">{{ card.title }}</h3>
-    <p class="tasks-card__descr">{{ card.description }}</p>
+    <h3 class="tasks-card__title">{{ card.task.title }}</h3>
+    <p class="tasks-card__descr">{{ card.task.description }}</p>
     <!--    <div class="info">-->
     <!--      <div class="count_tasks">-->
     <!--        <img src="img/tasks/book.svg" alt="">-->
@@ -32,16 +32,16 @@
 </template>
 
 <script setup>
-import taskRequests from "@/mixins/requests/taskRequests";
+import {useRouter} from "vue-router/dist/vue-router";
 
-// eslint-disable-next-line no-undef,no-unused-vars
+// eslint-disable-next-line no-undef
 const props = defineProps({
   card: Object
 });
-const {taskStart} = taskRequests();
+const router = useRouter();
 
-function addTasksToUser() {
-  taskStart(props.card.id, false);
+function startTask() {
+  router.push({path: '/lesson', query: {id: props.card.id}});
 }
 </script>
 

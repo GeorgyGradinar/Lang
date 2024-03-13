@@ -7,18 +7,21 @@
          :data-aos-delay="(index+1) * 300"
          data-aos-duration="500"
          data-aos-once="true"
-         src="img/robots/робот-05.png" alt="">
-    <p class="price__tariff-title">{{ tariff.title }}</p>
-    <p class="price__tariff-text">{{ tariff.descrTop }}</p>
+         src="img/robots/робот-05.png" alt="robot">
+    <p class="price__tariff-title">{{ tariff.name }}</p>
+    <p class="price__tariff-text">Описание</p>
     <div class="wrapper-price">
-      <span class="price__tariff-price">{{ tariff.price }}</span>
-      <span class="price__tariff-price2">{{ tariff.priceCur }}</span>
-      {{ tariff.priceTitle }}
+      <span class="price__tariff-price">{{ tariff.price }} </span>
+      <span class="price__tariff-price2">₽</span>
+      /месяц
     </div>
     <div class="price__tariff-buy">
-      <button>{{ tariff.buttonTitle }}</button>
+      <button @click="buyTariff">Начать обучение</button>
     </div>
-    <div class="price__tariff-descr" v-html="tariff.descrBottom"></div>
+    <div class="price__tariff-descr">
+      <p>Сообщений в день - {{ tariff.count_daily_messages }}</p>
+      <p>Заданий в день - {{ tariff.count_daily_tasks }}</p>
+    </div>
   </div>
 </template>
 
@@ -27,7 +30,10 @@
 const props = defineProps({
   tariff: Object,
   index: Number
-})
+});
+
+function buyTariff() {
+}
 </script>
 
 <style scoped lang="scss">

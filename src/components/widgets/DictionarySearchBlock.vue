@@ -92,4 +92,21 @@ function clearSearchedWords() {
     }
   }
 }
+
+@media screen and (max-width: 650px) {
+  .wrapper-search-block {
+    width: 100%;
+    flex-direction: column;
+
+    .search-block {
+      width: 100%;
+      height: 51px;
+    }
+
+    button {
+      width: 150px;
+      height: 40px;
+    }
+  }
+}
 </style>

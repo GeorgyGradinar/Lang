@@ -195,4 +195,121 @@ function submitRegistration() {
     }
   }
 }
+
+@media screen and (max-width: 900px) {
+  .signin__form-wrap {
+
+    .signin__form {
+
+      .wrapper-title {
+
+        .signin__form-title {
+
+        }
+
+        .error-message {
+
+        }
+      }
+
+      form {
+
+        .wrapper-buttons {
+
+          .login_question {
+
+            button {
+
+              a {
+
+              }
+
+              &:hover {
+
+              }
+            }
+          }
+
+          button {
+
+
+            &:hover {
+
+            }
+
+            &:active {
+
+            }
+          }
+        }
+      }
+    }
+
+    .sign-promo {
+
+      img {
+        width: 300px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .signin__form-wrap {
+
+    .signin__form {
+
+      .wrapper-title {
+
+        .signin__form-title {
+
+        }
+
+        .error-message {
+
+        }
+      }
+
+      form {
+
+        .wrapper-buttons {
+
+          .login_question {
+
+            button {
+
+              a {
+
+              }
+
+              &:hover {
+
+              }
+            }
+          }
+
+          button {
+
+
+            &:hover {
+
+            }
+
+            &:active {
+
+            }
+          }
+        }
+      }
+    }
+
+    .sign-promo {
+      display: none;
+
+      img {
+
+      }
+    }
+  }
+}
 </style>

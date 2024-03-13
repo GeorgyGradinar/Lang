@@ -7,9 +7,19 @@
       </router-link>
 
       <div class="header__menu" :class="{active:mobileMenu}">
-        <router-link v-for="item in menu" :key="item.id"
-                     :to=item.path>{{ item.title }}
-        </router-link>
+        <button v-for="item in menu"
+                :key="item.id"
+                @click="routeTo(item.path)">
+          {{ item.title }}
+        </button>
+
+        <div class="wrapper-signin-buttons" v-if="!person?.id">
+          <button @click="routeTo('/auth', {type: 'signin'})">Войти</button>
+          <button @click="routeTo('/auth')">Регистрация</button>
+        </div>
+        <button class="logout" v-if="person?.id && mobileMenu" @click="prepareForLogout">Выйти</button>
+
+        <button @click="snack">test</button>
       </div>
 
       <div class="header__sign-wrap" v-if="person?.id" @click="popupMenu = !popupMenu">
@@ -20,20 +30,12 @@
           </button>
         </div>
         <div class="header__sign-popup" :class="{'open-popup': popupMenu}">
-          <router-link v-for="item in popupmenuList" :key="item.id"
-                       :to=item.path
-                       :class="{'red' : item.title === 'Выйти'}">
+          <button v-for="item in popupmenuList" :key="item.id"
+                  @click="routeTo(item.path)">
             {{ item.title }}
-          </router-link>
+          </button>
           <button @click="prepareForLogout">Выйти</button>
         </div>
-      </div>
-
-      <div class="wrapper-signin-buttons" v-if="!person?.id">
-        <button @click="routeTo('/auth', {type: 'signin'})">
-          Войти
-        </button>
-        <button @click="routeTo('/auth')">Регистрация</button>
       </div>
 
       <div class="header__burger-wrap">
@@ -52,11 +54,15 @@ import {useRouter} from "vue-router/dist/vue-router";
 import {storeToRefs} from "pinia/dist/pinia";
 import {mainStore} from "@/store/mainStore";
 import shared from "@/mixins/shared";
+import {notificationStore} from "@/store/notificationStore";
 
 const router = useRouter();
 const main = mainStore();
 const {person} = storeToRefs(main);
 const {prepareForLogout} = shared();
+
+const notifications = notificationStore();
+const {openSnackBarDone} = notifications;
 
 const menu = [
   {id: 0, path: '/', title: 'Главная'},
@@ -78,7 +84,17 @@ let mobileMenu = ref(false);
 let popupMenu = ref(false);
 
 function routeTo(path, query) {
-  router.push({path, query})
+  closeAllModal();
+  router.push({path, query});
+}
+
+function closeAllModal() {
+  mobileMenu.value = false;
+  popupMenu.value = false;
+}
+
+function snack() {
+  openSnackBarDone('qsss')
 }
 </script>
 
@@ -115,7 +131,7 @@ header {
       font-weight: 600;
       -webkit-transition: text-shadow .3s;
       transition: text-shadow .3s;
-      color: #fff;
+      color: var(--white);
       text-decoration: none;
 
       &:hover {
@@ -142,7 +158,9 @@ header {
       gap: 50px;
       margin: 0 10px;
 
-      a {
+      button {
+        display: flex;
+        justify-content: center;
         background-color: var(--dark-pink);
         padding: 7px;
         border-radius: 8px;
@@ -150,14 +168,44 @@ header {
         box-shadow: 1px 4px 1px var(--dark);
         transition: all 0.2s;
         font-weight: 700;
+        color: var(--white);
 
         &:hover {
           color: var(--dark);
+          background-color: var(--yellow);
         }
 
         &:active {
           box-shadow: 0 0 1px var(--dark);
           transform: translateY(5px);
+        }
+      }
+
+      &.active {
+        .wrapper-signin-buttons {
+          flex-direction: column;
+        }
+
+        button {
+          padding: 7px;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 20px;
+          color: var(--light-yellow);
+
+          &:hover {
+            color: var(--dark);
+            background-color: var(--yellow);
+          }
+
+          &:active {
+            box-shadow: 0 0 1px var(--dark);
+            transform: translateY(5px);
+          }
+        }
+
+        .logout {
+          background-color: var(--red);
         }
       }
     }
@@ -226,7 +274,7 @@ header {
         transition: all 0.2s;
         border: 1px solid var(--dark);
 
-        a {
+        button {
           color: #201f26;
           padding: 10px 20px;
           border-bottom: 1px solid #4f3dca45;

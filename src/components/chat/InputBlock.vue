@@ -39,6 +39,7 @@ import {chatStore} from "@/store/chatStore";
 import {storeToRefs} from "pinia/dist/pinia";
 import dialogsRequests from "@/mixins/requests/dialogsRequests";
 import AllowMicrophoneMessage from "@/components/chat/AllowMicrophoneMessage";
+import {useRouter} from "vue-router/dist/vue-router";
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['scrollDown']);
@@ -47,7 +48,8 @@ const {addNewMessage, changeActiveGeneration} = chat;
 const {
   isActiveGeneration,
 } = storeToRefs(chat);
-const {sendMessage} = dialogsRequests();
+const {sendMessage, sendMessageToTask} = dialogsRequests();
+const router = useRouter();
 
 let messageToBot = ref('');
 let timer = ref(0);
@@ -85,14 +87,17 @@ function getAllowForMicrophone(isStartRecord = false) {
 function sendMessageToNetwork() {
   if (!messageToBot.value.trim().length && !isActiveRecord.value) return;
   if (isActiveGeneration.value) return;
-  // deleteMessages()
-  // getMessageFormNetwork();
 
   if (isActiveRecord.value) {
     toggleActiveRecord();
   } else {
     addNewMessage(messageToBot.value, false, new Date);
-    sendMessage(messageToBot.value);
+    if (router.currentRoute.value.path === '/lesson') {
+      sendMessageToTask(messageToBot.value);
+    } else {
+      sendMessage(messageToBot.value);
+    }
+
     changeActiveGeneration(true);
   }
 
@@ -152,6 +157,7 @@ function deleteRecord() {
 }
 
 let activeTimeOut = ref(null);
+
 function activeMessageForMicrophone() {
   if (activeTimeOut.value) {
     clearTimeout(activeTimeOut.value);

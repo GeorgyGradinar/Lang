@@ -33,14 +33,13 @@ const {
   groupWords,
   isActiveGroupWordLoader,
   isShowWordsTypeList,
-  selectedGroupWords,
   currentPageWordsInGroup,
   allPagesWordInGroup
 } = storeToRefs(dictionary);
 const {getWordsFromGroup} = dictionaryRequests();
 
 function getMoreWords() {
-  getWordsFromGroup(selectedGroupWords.value.id, true);
+  getWordsFromGroup(true);
 }
 </script>
 

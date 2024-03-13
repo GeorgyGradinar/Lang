@@ -9,13 +9,18 @@ export default function dictionaryRequests() {
     const dictionary = dictionaryStore();
     const {
         changeWords,
+        deleteWord,
         changeIsSearch,
         changeGroups,
+        // eslint-disable-next-line no-unused-vars
         changeGroupWords,
+        // eslint-disable-next-line no-unused-vars
         addWordsToGroupWords,
         toggleActiveLoader,
         toggleActiveGroupWordsLoader,
+        // eslint-disable-next-line no-unused-vars
         changeAllPagesWordsInGroup,
+        // eslint-disable-next-line no-unused-vars
         changeCurrentPageWordsInGroup
     } = dictionary;
     const chat = chatStore();
@@ -30,19 +35,18 @@ export default function dictionaryRequests() {
             })
     }
 
-    function getWordsFromGroup(id, isPagination) {
+    function getWordsFromGroup(isPagination) {
         toggleActiveGroupWordsLoader(true);
 
         const currentPage = isPagination ? dictionary.currentPageWordsInGroup + 1 : dictionary.currentPageWordsInGroup;
 
-        axios.get(`${testUrl}/api/group/${id}?page=${currentPage}`, {
+        axios.get(`${testUrl}/api/group/show?id=${dictionary.selectedGroupWords.id}&page=${currentPage}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                isPagination ? addWordsToGroupWords(response.data.data.words.data) : changeGroupWords(response.data.data.words.data);
-
-                changeAllPagesWordsInGroup(response.data.data.words.last_page);
-                changeCurrentPageWordsInGroup(response.data.data.words.current_page);
+                isPagination ? addWordsToGroupWords(response.data.data.words.data) : changeGroupWords(response.data.data.words);
+                // changeAllPagesWordsInGroup(response.data.data.words.last_page);
+                // changeCurrentPageWordsInGroup(response.data.data.words.current_page);
 
                 setTimeout(() => {
                     toggleActiveGroupWordsLoader(false);
@@ -91,24 +95,23 @@ export default function dictionaryRequests() {
             })
     }
 
-    function addWords(idWord) {
+    function addWordsToUserDictionary(idWord) {
         axios.post(`${testUrl}/api/user/dictionary/words/add`, {id: idWord}, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
-            .then(response => {
-                console.log(response)
+            .then(() => {
+                getAllUsersWords();
+                getWordsFromGroup();
             })
     }
 
-    function deleteWord(idWord) {
-        axios.delete(`${testUrl}/api/user/dictionary/words/delete`, {
+    function requestToDeleteWord(idWord) {
+        axios.delete(`${testUrl}/api/user/dictionary/words/delete?id=${idWord}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization]),
-            data: {
-                id: idWord
-            }
         })
-            .then(response => {
-                console.log(response)
+            .then(() => {
+                deleteWord(idWord);
+                if (dictionary.selectedGroupWords?.id) getWordsFromGroup();
             })
     }
 
@@ -118,7 +121,7 @@ export default function dictionaryRequests() {
         getAllWords,
         getAllUsersWords,
         searchWord,
-        addWords,
-        deleteWord
+        addWordsToUserDictionary,
+        requestToDeleteWord
     }
 }

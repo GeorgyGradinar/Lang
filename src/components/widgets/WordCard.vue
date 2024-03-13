@@ -42,12 +42,12 @@
       </div>
 
 
-      <div v-if="isSearching" class="add-word" @click="addWordToAccount()">
+      <div v-if="!word?.in_dictionary" class="add-word" @click="addWordToAccount()">
         <img src="img/dictionary/add.svg">
         <v-tooltip activator="parent" location="bottom">Добавить в аккаунт</v-tooltip>
       </div>
 
-      <div v-if="!isSearching" class="delete-word" @click="deleteUserWord()">
+      <div v-if="word?.in_dictionary" class="delete-word" @click="deleteUserWord()">
         <img src="img/dictionary/trash.svg">
         <v-tooltip activator="parent" location="bottom">Удалить слово</v-tooltip>
       </div>
@@ -72,8 +72,9 @@ const props = defineProps({
   word: Object
 })
 const {word} = toRefs(props);
-const {addWords, deleteWord} = dictionaryRequests();
+const {addWordsToUserDictionary, requestToDeleteWord} = dictionaryRequests();
 const dictionary = dictionaryStore();
+// eslint-disable-next-line no-unused-vars
 const {isSearching, isShowWordsTypeList} = storeToRefs(dictionary);
 
 let isShowTranslate = ref(false);
@@ -83,17 +84,17 @@ watch(isShowWordsTypeList, () => {
 })
 
 function toggleIsShowTranslate() {
-  if (!isShowWordsTypeList.value){
+  if (!isShowWordsTypeList.value) {
     isShowTranslate.value = !isShowTranslate.value;
   }
 }
 
 function addWordToAccount() {
-  addWords(props.word.id);
+  addWordsToUserDictionary(word.value.id);
 }
 
 function deleteUserWord() {
-  deleteWord(word.value.id);
+  requestToDeleteWord(word.value.id);
 }
 </script>
 
@@ -368,23 +369,141 @@ function deleteUserWord() {
   .wrapper-word {
     width: 23%;
   }
+
+  .list-view {
+    width: 90%;
+
+    .word {
+
+      .scene {
+
+        .cube {
+
+          .side {
+
+            &.front {
+
+            }
+          }
+        }
+      }
+
+      .show-translate {
+
+      }
+    }
+
+    .actions {
+
+    }
+  }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1200px) {
   .wrapper-word {
     width: 32%;
   }
-}
 
-@media screen and (max-width: 750px) {
-  .wrapper-word {
-    width: 49%;
+  .list-view {
+    width: 100%;
+
+    .word {
+
+      .scene {
+
+        .cube {
+
+          .side {
+
+            &.front {
+
+            }
+          }
+        }
+      }
+
+      .show-translate {
+
+      }
+    }
+
+    .actions {
+
+    }
   }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 850px) {
   .wrapper-word {
-    width: 90%;
+    width: 49%;
+  }
+
+  .list-view {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+
+    .word {
+      width: 100%;
+
+      .scene {
+
+        .cube {
+
+          .side {
+
+            &.front {
+
+            }
+          }
+        }
+      }
+
+      .show-translate {
+
+      }
+    }
+
+    .actions {
+      width: 210px
+    }
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .wrapper-word {
+    width: 100%;
+  }
+
+  .list-view {
+
+    .word {
+      flex-direction: column;
+
+      .scene {
+        height: 45px;
+
+        .cube {
+
+          .side {
+
+            &.front {
+
+            }
+          }
+        }
+      }
+
+      .show-translate {
+
+      }
+    }
+
+    .actions {
+
+    }
   }
 }
 </style>

@@ -5,12 +5,14 @@
       <router-view/>
     </main>
   </div>
+  <NotificationModals></NotificationModals>
 </template>
 
 <script setup>
 import HeaderNav from '@/components/app/HeaderNav.vue';
 import {onMounted} from "vue";
 import authRequests from "@/mixins/requests/authRequests";
+import NotificationModals from "@/components/modals/NotificationModals";
 
 const {checkLocalStorage} = authRequests();
 

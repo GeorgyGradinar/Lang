@@ -2,7 +2,7 @@
   <div class="wrapper-chart" :class="{'animate__animated animate__bounceInRight': !(isMiniChat || isMainPageChat)}">
 
     <div class="mobile-nav-block">
-      <button>
+      <button @click="cancelTask">
         <img src="img/chart/redo.svg" alt="arrow">
         вернуться
       </button>
@@ -16,9 +16,10 @@
       <h3>ИИ-репетитор</h3>
 
       <img v-if="isMiniChat" src="img/chart/close.svg" alt="close" @click="emit('closeMini')">
-      <div class="wrapper-messages-counter" v-if="!isMiniChat">
+
+      <div class="wrapper-messages-counter" v-if="!isMiniChat && currentTask?.task?.message_limit">
         <p>Использованно сообщений</p>
-        <p> {{ messages.length }} / {{ allowCountMessages }}</p>
+        <p> {{ messages.length }} / {{ currentTask?.task?.message_limit }}</p>
       </div>
     </div>
 
@@ -83,7 +84,12 @@ import OptionWordBlock from "@/components/chat/OptionWordBlock";
 import {onClickOutside} from '@vueuse/core'
 import TypingLoader from "@/components/chat/TypingLoader";
 import InputBlock from "@/components/chat/InputBlock";
+import taskRequests from "@/mixins/requests/taskRequests";
+import {useRouter} from "vue-router/dist/vue-router";
+import {tasksStore} from "@/store/tasksStore";
+import {TASKS, LESSON} from "@/configuration/Routers";
 
+const router = useRouter();
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['closeMini']);
 // eslint-disable-next-line no-undef,no-unused-vars
@@ -92,7 +98,7 @@ const prop = defineProps({
   isMainPageChat: Boolean
 });
 const chat = chatStore();
-const {changeCurrentPage} = chat;
+const {changeCurrentPage, clearChatStore} = chat;
 const {
   messages,
   isTriggerScrollDown,
@@ -101,19 +107,26 @@ const {
   lastPage,
   triggerSaveScrollForPagination
 } = storeToRefs(chat);
+const taskStore = tasksStore();
+const {changeCurrentTask} = taskStore;
+const {currentTask} = storeToRefs(taskStore);
 const {getMessages} = dialogsRequests();
+const {taskStart} = taskRequests();
 
 let messagesBlock = ref(null);
 let top = ref(null);
 let left = ref(null);
-let allowCountMessages = ref(15);
 
 let currentWord = ref(null);
 let optionBlock = ref(null);
 let scrollPosition = ref(null);
 
 onMounted(() => {
-  getMessages();
+  if (router.currentRoute.value.query.id && router.currentRoute.value.path === LESSON) {
+    taskStart(router.currentRoute.value.query.id, true);
+  } else {
+    getMessages();
+  }
 
   messagesBlock.value.addEventListener('scroll', handelScrollForPagination);
 })
@@ -130,6 +143,10 @@ watch(triggerSaveScrollForPagination, () => {
   messagesBlock.value.scrollTop = scrollPosition.value;
   scrollPosition.value = null;
 })
+
+function cancelTask() {
+  router.push({path: TASKS});
+}
 
 function handelScrollForPagination() {
   if (!messagesBlock.value.scrollTop) {
@@ -168,6 +185,8 @@ onBeforeUnmount(() => {
 
 onUnmounted(() => {
   closeOptionBlock();
+  clearChatStore();
+  changeCurrentTask(null);
 })
 </script>
 

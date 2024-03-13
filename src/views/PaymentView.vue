@@ -1,22 +1,13 @@
 <template>
   <div class="wrapper-payment-page">
-    <message-view
-        :messageText="messageText"
-    />
+    <message-view :messageText="messageText"/>
     <div class="payment-page">
       <div class="wrapper-details">
-        <payment-state-view
-            :state="paymentState"
-            @cancelSubscr="toggleDialogSubscription(true)"
-        />
-        <payment-method-view
-            :state="paymentMethod"
-        />
+        <payment-state-view :state="paymentState" @cancelSubscr="toggleDialogSubscription(true)"/>
+        <payment-method-view :state="paymentMethod"/>
       </div>
 
-      <payment-list-view
-          :payments="payments"
-      />
+      <payment-list-view :payments="payments"/>
     </div>
   </div>
   <cancel-subscription-dlg :isShow="isOpenCancelDialog" @close="toggleDialogSubscription"/>
@@ -121,6 +112,26 @@ function toggleDialogSubscription(isOpen) {
       flex-direction: column;
       gap: 20px;
       width: 40%;
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .wrapper-payment-page {
+    .payment-page {
+      flex-direction: column;
+
+      .wrapper-details {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrapper-payment-page {
+    .payment-page {
+      padding: 30px 10px;
     }
   }
 }

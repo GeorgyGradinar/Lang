@@ -174,4 +174,100 @@ function submitLogin() {
     }
   }
 }
+
+@media screen and (max-width: 900px) {
+  .login-block {
+
+
+    .login__form {
+
+      .wrapper-title {
+
+        .login__form-title {
+
+        }
+
+        .error-message {
+
+        }
+      }
+
+      form {
+
+        .wrapper-buttons {
+
+          .login_question {
+
+            button {
+
+              a {
+
+              }
+            }
+          }
+
+          button {
+
+          }
+        }
+      }
+    }
+
+    .sign-promo {
+
+      img {
+        width: 300px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .login-block {
+    padding: 15px;
+
+    .login__form {
+      width: 100%;
+
+      .wrapper-title {
+
+        .login__form-title {
+
+        }
+
+        .error-message {
+
+        }
+      }
+
+      form {
+
+        .wrapper-buttons {
+
+          .login_question {
+
+            button {
+
+              a {
+
+              }
+            }
+          }
+
+          button {
+
+          }
+        }
+      }
+    }
+
+    .sign-promo {
+      display: none;
+
+      img {
+
+      }
+    }
+  }
+}
 </style>

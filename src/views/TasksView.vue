@@ -3,25 +3,39 @@
 
   <cards-slider-view
       :bgclass="'bg-white'"
-      :title="'Ролевые игры'"
-      :cards="roleGames"
-  />
-  <cards-slider-view
-      :bgclass="'bg-white'"
-      :title="'Лексика'"
-      :cards="vocabulary"
-  />
-  <cards-slider-view
-      :bgclass="'bg-white'"
-      :title="'Граматика'"
-      :cards="grammar"
+      :title="'Задания'"
+      :cards="allTasks"
+      :isUserTasks="false"
   />
 
   <cards-slider-view
       :bgclass="'bg-white'"
-      :title="'Выполненно'"
-      :cards="doneTasks"
+      :title="'Ваши задания'"
+      :cards="userTasks"
+      :isUserTasks="true"
   />
+
+<!--  <cards-slider-view-->
+<!--      :bgclass="'bg-white'"-->
+<!--      :title="'Ролевые игры'"-->
+<!--      :cards="roleGames"-->
+<!--  />-->
+<!--  <cards-slider-view-->
+<!--      :bgclass="'bg-white'"-->
+<!--      :title="'Лексика'"-->
+<!--      :cards="vocabulary"-->
+<!--  />-->
+<!--  <cards-slider-view-->
+<!--      :bgclass="'bg-white'"-->
+<!--      :title="'Граматика'"-->
+<!--      :cards="grammar"-->
+<!--  />-->
+
+<!--  <cards-slider-view-->
+<!--      :bgclass="'bg-white'"-->
+<!--      :title="'Выполненно'"-->
+<!--      :cards="doneTasks"-->
+<!--  />-->
 
   <MiniChat></MiniChat>
 </template>
@@ -32,8 +46,12 @@ import CardsSliderView from "@/components/widgets/CardsSliderView.vue";
 import MiniChat from "@/components/widgets/MiniChat";
 import {onMounted, ref} from "vue";
 import taskRequests from "@/mixins/requests/taskRequests";
+import {tasksStore} from "@/store/tasksStore";
+import {storeToRefs} from "pinia/dist/pinia";
 
-const {getAllTasks, getTaskInformation} = taskRequests();
+const {getAllTasks, getAllUsersTasks, getTaskInformation} = taskRequests();
+const taskStore = tasksStore();
+const {allTasks, userTasks} = storeToRefs(taskStore);
 
 let roleGames = ref([]);
 let vocabulary = ref([]);
@@ -42,7 +60,9 @@ let doneTasks = ref([]);
 
 onMounted(() => {
   getAllTasks();
+  getAllUsersTasks()
   getTaskInformation();
+
   roleGames.value = [
     {
       id: 0,

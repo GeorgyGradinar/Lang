@@ -38,7 +38,7 @@ onMounted(() => {
   font-size: 13px;
   font-weight: 600;
   border: 2px solid var(--dark);
-  margin-bottom: 20px;
+  //margin-bottom: 20px;
 
   &:after {
     content: '';

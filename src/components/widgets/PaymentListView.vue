@@ -83,4 +83,34 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 1000px) {
+  .wrapper-history {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrapper-history {
+    table {
+      font-size: 0.8em;
+
+      thead {
+        tr {
+          th {
+            padding: 0.7em 1em;
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          td {
+            padding: 0.5em 1em;
+          }
+        }
+      }
+    }
+  }
+}
 </style>

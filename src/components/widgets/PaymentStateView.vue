@@ -37,6 +37,7 @@ export default {
   border-radius: 10px;
   border: 1px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
+  color: var(--light-green);
   background-color: var(--red);
 
   h2 {
@@ -57,9 +58,23 @@ export default {
       box-shadow: 1px 4px 1px var(--dark);
       transition: all 0.2s;
 
+      &:hover {
+        background-color: var(--light-green);
+      }
+
       &:active {
         box-shadow: 0 0 1px var(--dark);
         transform: translateY(5px);
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrapper-state {
+    .wrapper-buttons {
+      button {
+        font-size: 0.8em;
       }
     }
   }

@@ -15,7 +15,6 @@ import {onMounted, ref} from "vue";
 const props = defineProps({
   tabs: Array
 })
-
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['selected']);
 
@@ -38,8 +37,6 @@ onMounted(() => {
   font-size: 18px;
   font-weight: 600;
   border: 2px solid var(--dark);
-  margin-bottom: 20px;
-
 
   &:after {
     content: '';
@@ -85,11 +82,10 @@ onMounted(() => {
   .words-2__nav1 {
     line-height: 40px;
     font-size: 12px;
-    margin-bottom: 20px;
 
     &:after {
-      left: calc(100% - 190px);
-      width: 190px;
+      left: calc(100% - 180px);
+      width: 180px;
     }
   }
 
