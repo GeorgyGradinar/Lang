@@ -50,10 +50,9 @@ export const chatStore = defineStore('chat', () => {
     }
 
     function addNewMessage(newMessage, isBot, timestamp) {
-        const changedMessage = newMessage.split(' ');
         const completedMessageData = {
             is_bot: isBot,
-            message: changedMessage,
+            message: handleMessage(newMessage),
             timestamp
         }
         messages.value.push(completedMessageData);

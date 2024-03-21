@@ -1,16 +1,7 @@
 <template>
   <div class="words-3 bg-base-1">
     <div class="words-2__nav">
-      <p class="words-3__title">
-        Группы слов по темам
-      </p>
-      <div class="wrapper-right-block">
-        <TextNav :tabs="textNav"/>
-        <!--        <button class="add-new-word" @click="openDialogNewGroup">-->
-        <!--          <img src="img/dictionary/plus.svg" alt="plus">-->
-        <!--          Добавить словарь-->
-        <!--        </button>-->
-      </div>
+      <p class="words-3__title">Группы слов по темам</p>
     </div>
 
     <div class="words-3__list">
@@ -28,21 +19,14 @@
 
 <script setup>
 import {dictionaryStore} from "@/store/dictionaryStore";
-import TextNav from '@/components/app/TextNav.vue';
 import GroupWordsBlock from "@/components/widgets/GroupWordsBlock";
 import {storeToRefs} from "pinia/dist/pinia";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
-import {ref} from "vue";
 
 const dictionary = dictionaryStore();
 const {changeGroupWords, changeSelectedGroup, clearPagination} = dictionary;
 const {groups, selectedGroupWords} = storeToRefs(dictionary);
 const {getWordsFromGroup} = dictionaryRequests();
-
-const textNav = ref([
-  {id: 0, title: 'по алфавиту'},
-  {id: 1, title: 'по популярности'}
-]);
 
 function selectGroup(group) {
   clearPagination();

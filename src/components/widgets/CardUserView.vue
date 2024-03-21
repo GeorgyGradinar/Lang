@@ -3,7 +3,8 @@
     <div class="tasks-card__img">
       <img :src="card.img">
     </div>
-    <h3 class="tasks-card__title">{{ card.task.title }}</h3>
+    <h3 class="tasks-card-type">{{ card.task.type.title }} №{{ card.id }}</h3>
+    <h4 class="tasks-card__title">{{ card.task.title }}</h4>
     <p class="tasks-card__descr">{{ card.task.description }}</p>
     <!--    <div class="info">-->
     <!--      <div class="count_tasks">-->
@@ -16,18 +17,18 @@
     <!--      </div>-->
     <!--    </div>-->
 
-    <!--    <div class="progress" v-if="card?.progress !== 100">-->
-    <!--      <div class="load_line">-->
-    <!--        <div class="done_progress" :style="{'width': `${card?.progress}%`} "></div>-->
-    <!--      </div>-->
-    <!--      <p>{{ card?.progress }}%</p>-->
-    <!--    </div>-->
-    <!--    <div class="progress_done" v-else>-->
-    <!--      <div class="done">-->
-    <!--        <img src="img/done.svg" alt="">-->
-    <!--      </div>-->
-    <!--      <p>Выполненно!</p>-->
-    <!--    </div>-->
+    <div class="progress" v-if="card?.progress !== 100">
+      <div class="load_line">
+        <div class="done_progress" :style="{'width': `${card?.progress}%`} "></div>
+      </div>
+      <p>{{ card?.progress }}%</p>
+    </div>
+    <div class="progress_done" v-else>
+      <div class="done">
+        <img src="img/done.svg" alt="">
+      </div>
+      <p>Выполненно!</p>
+    </div>
   </div>
 </template>
 
@@ -69,8 +70,15 @@ function startTask() {
     transform: scale(1.05);
   }
 
-  .tasks-card__title {
+  .tasks-card-type {
     font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--dark-pink);
+  }
+
+  .tasks-card__title {
+    font-size: 15px;
     font-weight: 800;
     margin-bottom: 20px;
     color: var(--white);
@@ -79,11 +87,10 @@ function startTask() {
   .tasks-card__img {
     width: 40px;
     height: 40px;
-
   }
 
   .tasks-card__descr {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
   }
 

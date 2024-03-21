@@ -18,7 +18,7 @@
 
     <div class="words-2__list" v-if="words.length" :class="{'list-show': isShowWordsTypeList}">
       <WordCard v-for="word in words" :key="word.id"
-                :word="word">
+                :wordData="word.word">
       </WordCard>
     </div>
 
@@ -33,7 +33,6 @@
 import WordCard from "@/components/widgets/WordCard";
 import {dictionaryStore} from "@/store/dictionaryStore";
 import {storeToRefs} from "pinia/dist/pinia";
-import {onMounted, ref} from "vue";
 import LoaderSpiner from "@/components/widgets/LoaderSpiner";
 import BorderNav from '@/components/app/BorderNav.vue';
 import TextNav from '@/components/app/TextNav.vue';
@@ -43,20 +42,14 @@ import ToggleShowWordsListOrBlock from "@/components/widgets/ToggleShowWordsList
 const dictionary = dictionaryStore();
 const {words, isSearching, isActiveLoading, isShowWordsTypeList} = storeToRefs(dictionary);
 
-let wordNav = ref([]);
-let textNav = ref([]);
-
-onMounted(() => {
-  wordNav.value = [
-    {id: 0, title: 'Список слов'},
-    {id: 1, title: 'Отработанные слова'}
-  ];
-
-  textNav.value = [
-    {id: 0, title: 'по алфавиту'},
-    {id: 1, title: 'по популярности'}
-  ];
-})
+const wordNav = [
+  {id: 0, title: 'Список слов'},
+  {id: 1, title: 'Отработанные слова'}
+];
+const textNav = [
+  {id: 0, title: 'по алфавиту'},
+  {id: 1, title: 'по прогрессу'}
+];
 </script>
 
 <style scoped lang="scss">

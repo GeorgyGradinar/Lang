@@ -2,8 +2,6 @@ import {defineStore} from "pinia/dist/pinia";
 import {ref} from "vue";
 
 export const notificationStore = defineStore('notifications', () => {
-    const timeout = 2000;
-
     let isOpenSnackBarDone = ref(false);
     let textForSnackBarDone = ref(null);
 
@@ -29,7 +27,6 @@ export const notificationStore = defineStore('notifications', () => {
     }
 
     return {
-        timeout,
         isOpenSnackBarDone, openSnackBarDone,
         textForSnackBarDone, changeTextForSnackBarDone,
         isOpenSnackBarReject, openSnackBarReject,

@@ -7,7 +7,7 @@
         вернуться
       </button>
 
-      <button>
+      <button @click="openMoreInformationBlock(true)">
         Информация
       </button>
     </div>
@@ -19,7 +19,7 @@
 
       <div class="wrapper-messages-counter" v-if="!isMiniChat && currentTask?.task?.message_limit">
         <p>Использованно сообщений</p>
-        <p> {{ messages.length }} / {{ currentTask?.task?.message_limit }}</p>
+        <p> {{ getCountUserMessages(messages) }} / {{ currentTask?.task?.message_limit }}</p>
       </div>
     </div>
 
@@ -71,6 +71,16 @@
                    :leftPosition="left"
                    :word="currentWord?.innerHTML">
   </OptionWordBlock>
+
+  <Transition name="slide-fade">
+    <div v-if="isOpenMoreInformationBlock" class="wrapper-mobile-detail-block">
+      <TaskAndAnswer
+          :isMobileBlock="true"
+          @hiddenBlock="openMoreInformationBlock(false)">
+      </TaskAndAnswer>
+    </div>
+  </Transition>
+
 </template>
 
 <script setup>
@@ -81,13 +91,14 @@ import {storeToRefs} from "pinia/dist/pinia";
 import Vue3WaveAudioPlayer from 'vue3-wave-audio-player';
 import dialogsRequests from "@/mixins/requests/dialogsRequests";
 import OptionWordBlock from "@/components/chat/OptionWordBlock";
-import {onClickOutside} from '@vueuse/core'
+import {onClickOutside} from '@vueuse/core';
 import TypingLoader from "@/components/chat/TypingLoader";
 import InputBlock from "@/components/chat/InputBlock";
 import taskRequests from "@/mixins/requests/taskRequests";
 import {useRouter} from "vue-router/dist/vue-router";
 import {tasksStore} from "@/store/tasksStore";
 import {TASKS, LESSON} from "@/configuration/Routers";
+import TaskAndAnswer from "@/components/widgets/TaskAndAnswer";
 
 const router = useRouter();
 // eslint-disable-next-line no-undef
@@ -111,7 +122,7 @@ const taskStore = tasksStore();
 const {changeCurrentTask} = taskStore;
 const {currentTask} = storeToRefs(taskStore);
 const {getMessages} = dialogsRequests();
-const {taskStart} = taskRequests();
+const {taskShow} = taskRequests();
 
 let messagesBlock = ref(null);
 let top = ref(null);
@@ -120,10 +131,11 @@ let left = ref(null);
 let currentWord = ref(null);
 let optionBlock = ref(null);
 let scrollPosition = ref(null);
+let isOpenMoreInformationBlock = ref(false);
 
 onMounted(() => {
   if (router.currentRoute.value.query.id && router.currentRoute.value.path === LESSON) {
-    taskStart(router.currentRoute.value.query.id, true);
+    taskShow(router.currentRoute.value.query.id);
   } else {
     getMessages();
   }
@@ -170,13 +182,22 @@ function closeOptionBlock() {
   currentWord.value = null;
 }
 
+function openMoreInformationBlock(isOpen) {
+  isOpenMoreInformationBlock.value = isOpen;
+}
+
 function scrollDown() {
+  console.log(messagesBlock.value)
   setTimeout(() => {
     messagesBlock.value.scrollTo({
       top: messagesBlock.value.scrollHeight,
       behavior: "smooth"
     });
   }, 0)
+}
+
+function getCountUserMessages(messages) {
+  return messages.filter(item => !item.is_bot).length;
 }
 
 onBeforeUnmount(() => {
@@ -191,6 +212,28 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(-150vw);
+}
+
+.wrapper-mobile-detail-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .wrapper-chart {
   display: flex;
   flex-direction: column;
@@ -512,7 +555,6 @@ onUnmounted(() => {
   .wrapper-chart {
     border-radius: unset;
     border: unset;
-    margin-right: 10px;
 
     .mobile-nav-block {
       display: flex;
@@ -535,6 +577,125 @@ onUnmounted(() => {
 
         p {
 
+        }
+      }
+    }
+
+    .chat {
+
+      .wrapper-messages {
+
+        .wrapper-message {
+
+          .message {
+
+            span {
+
+              span.kuku:hover {
+
+              }
+            }
+          }
+
+          :deep(.animate__fast) {
+
+          }
+
+          .sound-message {
+
+          }
+
+          .error-message,
+          .done-message {
+
+          }
+
+          .done-message {
+
+          }
+
+          .person_message {
+
+          }
+
+          :deep(.player) {
+            #duration,
+            #current-time {
+
+            }
+
+            #play {
+
+              svg {
+
+              }
+            }
+
+            #slider {
+              svg {
+                #path1 {
+
+                }
+
+                #path2 {
+
+                }
+              }
+            }
+
+            #seek-slider::-webkit-slider-thumb {
+
+            }
+          }
+        }
+      }
+    }
+
+    .size-mini {
+
+      .wrapper-messages {
+        .wrapper-message {
+          :deep(.player) {
+            #slider {
+              svg {
+
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .wrapper-chart {
+
+    .mobile-nav-block {
+      button {
+        font-size: 12px;
+      }
+    }
+
+    .title-chat {
+
+      h3 {
+        font-size: 13px;
+      }
+
+      img {
+
+        &:hover {
+
+        }
+      }
+
+      .wrapper-messages-counter {
+
+        p {
+          display: flex;
+          align-items: center;
+          font-size: 11px;
         }
       }
     }

@@ -89,10 +89,10 @@ function submitRegistration() {
   if (!vRegistration$.value.$error) {
     registration(registrationData.value)
         .then(response => {
-          if (response.data) {
+          if (response?.data?.status === "success") {
             router.push({path: '/'})
           } else {
-            errorMessage.value = response.response.data.message;
+            errorMessage.value = response.response.data.errors_validation.email[0];
           }
         })
   }
@@ -114,19 +114,19 @@ function submitRegistration() {
 
     .wrapper-title {
       display: flex;
-      align-items: center;
-      gap: 20px;
+      align-items: flex-start;
+      flex-direction: column;
       margin-bottom: 10px;
 
       .signin__form-title {
         font-size: 18px;
         font-weight: 700;
-
         color: var(--dark);
       }
 
       .error-message {
         color: var(--red);
+        font-size: 14px;
       }
     }
 

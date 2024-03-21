@@ -41,7 +41,7 @@ const props = defineProps({
 const {taskStart} = taskRequests();
 
 function addTasksToUser() {
-  taskStart(props.card.id, false);
+  taskStart(props.card.id);
 }
 </script>
 
@@ -68,6 +68,7 @@ function addTasksToUser() {
   &:hover {
     transform: scale(1.05);
   }
+
 
   .tasks-card__title {
     font-size: 16px;

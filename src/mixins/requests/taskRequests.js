@@ -3,11 +3,13 @@ import {HEADER_PARAMETERS, testUrl} from "../../../config";
 import requestOptions from "@/mixins/prepare-requests/requestOptions";
 import dialogsRequests from "@/mixins/requests/dialogsRequests";
 import {tasksStore} from "@/store/tasksStore";
+import {useRouter} from "vue-router/dist/vue-router";
 
 export default function taskRequests() {
     const taskStore = tasksStore();
     const {changeTasks, changeUserPasts, changeCurrentTask} = taskStore;
     const {getAllMessagesInTask} = dialogsRequests();
+    const router = useRouter();
 
     function getAllTasks() {
         axios.get(`${testUrl}/api/task`, {
@@ -16,6 +18,7 @@ export default function taskRequests() {
             .then(response => {
                 changeTasks(response.data.data)
             })
+
     }
 
     function getAllUsersTasks() {
@@ -25,6 +28,7 @@ export default function taskRequests() {
             .then(response => {
                 changeUserPasts(response.data.data)
             })
+            .catch(error => handleError(error))
     }
 
     function getTaskInformation() {
@@ -36,18 +40,27 @@ export default function taskRequests() {
         //     })
     }
 
-    function taskStart(id, isUserTask) {
-        axios.post(`${testUrl}/api/task/start?task_id=${id}`, {id: 1}, {
+    function taskShow(id) {
+        axios.get(`${testUrl}/api/user/tasks/show?id=${id}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                if (isUserTask) {
-                    changeCurrentTask(response.data.data);
-                    getAllMessagesInTask(response.data.data.task.id);
-                } else {
-                    getAllUsersTasks();
-                }
+                changeCurrentTask(response.data.data);
+                getAllMessagesInTask(response.data.data.id, false);
             })
+            .catch(error => handleError(error))
+    }
+
+    function taskStart(id) {
+        axios.post(`${testUrl}/api/task/start?task_id=${id}`, {}, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
+        })
+            .then(response => {
+                router.push({path: '/lesson', query: {id: response.data.data.id}});
+                // changeCurrentTask(response.data.data);
+                // getAllMessagesInTask(response.data.data.id, response.data.data.task.id);
+            })
+            .catch(error => handleError(error))
     }
 
     function taskRestart(id) {
@@ -55,10 +68,10 @@ export default function taskRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                console.log(response)
                 changeCurrentTask(response.data.data.task);
-                getAllMessagesInTask(response.data.data.task.id);
+                getAllMessagesInTask(response.data.data.id, false);
             })
+            .catch(error => handleError(error))
     }
 
     function taskCancel(id) {
@@ -68,12 +81,18 @@ export default function taskRequests() {
             .then(response => {
                 console.log(response)
             })
+            .catch(error => handleError(error))
+    }
+
+    function handleError(error) {
+        console.log(error)
     }
 
     return {
         getAllTasks,
         getAllUsersTasks,
         getTaskInformation,
+        taskShow,
         taskStart,
         taskRestart,
         taskCancel

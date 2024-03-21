@@ -11,6 +11,17 @@ export const dictionaryStore = defineStore('dictionary', () => {
     let isActiveGroupWordLoader = ref(false);
     let isShowWordsTypeList = ref(false);
 
+    //sort
+    const ALFABET_SORT = {
+        title: 'по алфавиту',
+        type: 'word'
+    };
+    const PROGRESS_SORT = {
+        title: 'по прогрессу',
+        type: 'translation'
+    };
+    let sortUserWords = ref(ALFABET_SORT);
+
     //pagination
     let allPagesWordInGroup = ref(null);
     let currentPageWordsInGroup = ref(1);
@@ -41,7 +52,7 @@ export const dictionaryStore = defineStore('dictionary', () => {
     }
 
     function deleteWord(deleteId) {
-        const index = words.value.findIndex(word => word.id === deleteId);
+        const index = words.value.findIndex(data => data.word.id === deleteId);
         words.value.splice(index, 1);
     }
 
@@ -59,6 +70,10 @@ export const dictionaryStore = defineStore('dictionary', () => {
 
     function changeSelectedGroup(group) {
         selectedGroupWords.value = group;
+    }
+
+    function changeSortTypeUserWords(type) {
+        sortUserWords.value = type;
     }
 
     function changeAllPagesWordsInGroup(allPages) {
@@ -90,6 +105,7 @@ export const dictionaryStore = defineStore('dictionary', () => {
         groups, changeGroups,
         groupWords, changeGroupWords, addWordsToGroupWords,
         selectedGroupWords, changeSelectedGroup,
+        PROGRESS_SORT, ALFABET_SORT, sortUserWords, changeSortTypeUserWords,
         allPagesWordInGroup, changeAllPagesWordsInGroup,
         currentPageWordsInGroup, changeCurrentPageWordsInGroup,
         isSearching, changeIsSearch,

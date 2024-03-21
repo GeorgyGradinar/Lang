@@ -3,15 +3,15 @@
     <div class="word">
       <div class="scene">
         <div class="cube" :class="{'show_translate': isShowTranslate}">
-          <p class="side top" @click="toggleIsShowTranslate">{{ word?.translation }}</p>
+          <p class="side top" @click="toggleIsShowTranslate">{{ wordData?.translation }}</p>
           <p class="side front" @click="toggleIsShowTranslate">
-            {{ word?.word }}
+            {{ wordData?.word }}
           </p>
         </div>
       </div>
 
       <p class="translate show-translate" v-if="isShowWordsTypeList">
-        {{ word?.translation }}
+        {{ wordData?.translation }}
       </p>
     </div>
 
@@ -26,7 +26,7 @@
         <v-tooltip activator="parent" location="bottom">Перевести</v-tooltip>
       </div>
 
-      <div class="volume">
+      <div class="volume" @click="playPronunciation">
         <img src="img/icon/bxs-volume-low.svg">
         <v-tooltip activator="parent" location="bottom">Озвучить</v-tooltip>
       </div>
@@ -42,19 +42,19 @@
       </div>
 
 
-      <div v-if="!word?.in_dictionary" class="add-word" @click="addWordToAccount()">
+      <div v-if="!wordData?.in_dictionary" class="add-word" @click="addWordToAccount()">
         <img src="img/dictionary/add.svg">
         <v-tooltip activator="parent" location="bottom">Добавить в аккаунт</v-tooltip>
       </div>
 
-      <div v-if="word?.in_dictionary" class="delete-word" @click="deleteUserWord()">
+      <div v-if="wordData?.in_dictionary" class="delete-word" @click="deleteUserWord()">
         <img src="img/dictionary/trash.svg">
         <v-tooltip activator="parent" location="bottom">Удалить слово</v-tooltip>
       </div>
 
-      <div class="learned" v-if="word.count > 0 || word.done">
-        <p v-if="word.count > 0"><img src="img/icon/fluent_hat-graduation-24-regular.svg">2</p>
-        <p v-if="word.done"><img src="img/icon/lean.png"></p>
+      <div class="learned" v-if="wordData?.count > 0 || wordData?.done">
+        <p v-if="wordData?.count > 0"><img src="img/icon/fluent_hat-graduation-24-regular.svg">2</p>
+        <p v-if="wordData?.done"><img src="img/icon/lean.png"></p>
         <v-tooltip activator="parent" location="bottom">Отработанно</v-tooltip>
       </div>
     </div>
@@ -62,22 +62,26 @@
 </template>
 
 <script setup>
-import {ref, toRefs, watch} from "vue";
+import {onMounted, ref, toRefs, watch} from "vue";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {storeToRefs} from "pinia/dist/pinia";
 import {dictionaryStore} from "@/store/dictionaryStore";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
-  word: Object
+  wordData: Object
 })
-const {word} = toRefs(props);
+const {wordData} = toRefs(props);
 const {addWordsToUserDictionary, requestToDeleteWord} = dictionaryRequests();
 const dictionary = dictionaryStore();
 // eslint-disable-next-line no-unused-vars
 const {isSearching, isShowWordsTypeList} = storeToRefs(dictionary);
 
 let isShowTranslate = ref(false);
+
+onMounted(() => {
+  console.log(wordData.value)
+})
 
 watch(isShowWordsTypeList, () => {
   isShowTranslate.value = false;
@@ -90,11 +94,20 @@ function toggleIsShowTranslate() {
 }
 
 function addWordToAccount() {
-  addWordsToUserDictionary(word.value.id);
+  addWordsToUserDictionary(wordData.value.id);
 }
 
 function deleteUserWord() {
-  requestToDeleteWord(word.value.id);
+  requestToDeleteWord(wordData.value.id);
+}
+
+function playPronunciation() {
+  console.log(wordData.value.pronunciations)
+  if (wordData.value.pronunciations.us) {
+    new Audio(wordData.value.pronunciations.us).play();
+  } else if (wordData.value.pronunciations.uk) {
+    new Audio(wordData.value.pronunciations.uk).play();
+  }
 }
 </script>
 

@@ -1,10 +1,10 @@
 <template>
   <div class="price__tariff" data-aos="fade-up"
-       :data-aos-delay="(index+1) * 200"
+       :data-aos-delay="getTimeDelay()"
        data-aos-duration="500"
        data-aos-once="true">
     <img class="robot" data-aos="fade-down"
-         :data-aos-delay="(index+1) * 300"
+         :data-aos-delay="(index+1) * 150"
          data-aos-duration="500"
          data-aos-once="true"
          src="img/robots/робот-05.png" alt="robot">
@@ -26,13 +26,28 @@
 </template>
 
 <script setup>
+import userRequests from "@/mixins/requests/userRequesrs";
+
 // eslint-disable-next-line no-unused-vars,no-undef
 const props = defineProps({
   tariff: Object,
   index: Number
 });
+// eslint-disable-next-line no-unused-vars
+const {getPaymentLink} = userRequests();
 
 function buyTariff() {
+  getPaymentLink(props.tariff.id);
+}
+
+function getTimeDelay() {
+  if ((props.index + 1) % 2 === 0) {
+    return 200
+  } else if ((props.index + 1) % 3 === 0) {
+    return 300
+  } else {
+    return 100
+  }
 }
 </script>
 
@@ -112,7 +127,6 @@ function buyTariff() {
     text-align: center;
     font-size: 15px;
     font-weight: 700;
-    color: var(--light-yellow);
   }
 
   &:first-child {
@@ -149,12 +163,26 @@ function buyTariff() {
 
     .price__tariff-descr {
       color: var(--dark);
+
+
+      button {
+        background-color: var(--blue);
+
+        &:hover {
+          background-color: var(--light-green);
+          color: var(--dark);
+        }
+
+        &:active {
+
+        }
+      }
     }
   }
 
-  &:nth-child(2) {
-    color: var(--light-green);
-    background-color: var(--red);
+  &:nth-child(odd) {
+    color: var(--dark);
+    background-color: var(--yellow);
 
     .wrapper-price {
       color: var(--purple);
@@ -174,8 +202,8 @@ function buyTariff() {
         background-color: var(--blue);
 
         &:hover {
-          background-color: var(--red);
-          color: var(--light-green);
+          background-color: var(--yellow);
+          color: var(--dark);
         }
 
         &:active {
@@ -183,11 +211,77 @@ function buyTariff() {
         }
       }
     }
+  }
 
-    .price__tariff-descr {
-      color: var(--light-green);
+  &:nth-child(even) {
+    color: var(--dark);
+    background-color: var(--light-green);
+
+    .wrapper-price {
+      color: var(--purple);
+
+      .price__tariff-price {
+        color: var(--blue);
+      }
+
+      .price__tariff-price2 {
+        color: var(--blue);
+      }
+    }
+
+    .price__tariff-buy {
+
+      button {
+        background-color: var(--blue);
+
+        &:hover {
+          background-color: var(--light-green);
+          color: var(--dark);
+        }
+
+        &:active {
+
+        }
+      }
     }
   }
+
+  //&:nth-child(2) {
+  //  color: var(--light-green);
+  //  background-color: var(--red);
+  //
+  //  .wrapper-price {
+  //    color: var(--purple);
+  //
+  //    .price__tariff-price {
+  //      color: var(--blue);
+  //    }
+  //
+  //    .price__tariff-price2 {
+  //      color: var(--blue);
+  //    }
+  //  }
+  //
+  //  .price__tariff-buy {
+  //
+  //    button {
+  //      background-color: var(--blue);
+  //
+  //      &:hover {
+  //        background-color: var(--red);
+  //        color: var(--light-green);
+  //      }
+  //
+  //      &:active {
+  //
+  //      }
+  //    }
+  //  }
+  //
+  //  .price__tariff-descr {
+  //    color: var(--light-green);
+  //  }
+  //}
 
   &:last-child {
     color: var(--dark);

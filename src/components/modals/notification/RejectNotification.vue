@@ -1,6 +1,6 @@
 <template>
   <v-snackbar
-      :timeout="timeout"
+      :timeout="1500"
       v-model="isOpenSnackBarReject"
       :absolute="true"
   >
@@ -17,7 +17,7 @@ import {watch} from "vue";
 
 const notifications = notificationStore();
 const {changeTextForSnackBarReject} = notifications;
-const {timeout, isOpenSnackBarReject, textForSnackBarReject} = storeToRefs(notifications);
+const {isOpenSnackBarReject, textForSnackBarReject} = storeToRefs(notifications);
 
 watch(isOpenSnackBarReject, () => {
   if (!isOpenSnackBarReject.value){

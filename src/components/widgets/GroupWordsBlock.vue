@@ -3,7 +3,7 @@
     <h3>Слова из словаря </h3>
     <div class="wrapper-words" :class="{'list-show': isShowWordsTypeList}">
       <WordCard v-for="word in groupWords" :key="word.id"
-                :word="word">
+                :wordData="word">
       </WordCard>
     </div>
     <div class="wrapper-button-more-words">

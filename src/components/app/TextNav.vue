@@ -1,32 +1,32 @@
 <template>
-  <div class="words-2__nav2" :class="{'left' : tabs[0]?.id === tabID}">
-    <div
-        v-for="tab in tabs" :key="tab.id"
-        @click="() => {tabID = tab.id; emit('selected', tab)}"
-        :class="{'active': tab.id === tabID}">
-      {{ tab.title }}
+  <div class="words-2__nav2" :class="{'left' : ALFABET_SORT.type === sortUserWords?.type}">
+    <div @click="changeSort(ALFABET_SORT)"
+         :class="{'active': ALFABET_SORT.type === sortUserWords?.type}">
+      {{ ALFABET_SORT.title }}
+    </div>
+
+    <div @click="changeSort(PROGRESS_SORT)"
+         :class="{'active': PROGRESS_SORT.type === sortUserWords?.type}">
+      {{ PROGRESS_SORT.title }}
     </div>
   </div>
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {dictionaryStore} from "@/store/dictionaryStore";
+import {storeToRefs} from "pinia/dist/pinia";
+import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 
-// eslint-disable-next-line no-undef
-const props = defineProps({
-  tabs: Array
-})
+const {getAllUsersWords} = dictionaryRequests();
+const dictionary = dictionaryStore();
+const {clearForSearching, changeSortTypeUserWords, PROGRESS_SORT, ALFABET_SORT} = dictionary;
+const {sortUserWords} = storeToRefs(dictionary);
 
-// eslint-disable-next-line no-undef
-const emit = defineEmits(['selected']);
-
-let tabID = ref(0);
-
-onMounted(() => {
-  if (props.tabs.length > 0) {
-    tabID.value = props.tabs[0].id;
-  }
-})
+function changeSort(type) {
+  changeSortTypeUserWords(type);
+  clearForSearching();
+  getAllUsersWords();
+}
 </script>
 
 <style scoped lang="scss">
@@ -38,14 +38,13 @@ onMounted(() => {
   font-size: 13px;
   font-weight: 600;
   border: 2px solid var(--dark);
-  //margin-bottom: 20px;
 
   &:after {
     content: '';
     position: absolute;
     top: -2px;
-    left: calc(100% - 129px);
-    width: 130px;
+    left: calc(100% - 104px);
+    width: 105px;
     height: 100%;
     border-radius: 8px;
     background-color: var(--dark-pink);

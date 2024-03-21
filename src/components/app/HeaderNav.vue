@@ -18,8 +18,6 @@
           <button @click="routeTo('/auth')">Регистрация</button>
         </div>
         <button class="logout" v-if="person?.id && mobileMenu" @click="prepareForLogout">Выйти</button>
-
-        <button @click="snack">test</button>
       </div>
 
       <div class="header__sign-wrap" v-if="person?.id" @click="popupMenu = !popupMenu">
@@ -54,15 +52,11 @@ import {useRouter} from "vue-router/dist/vue-router";
 import {storeToRefs} from "pinia/dist/pinia";
 import {mainStore} from "@/store/mainStore";
 import shared from "@/mixins/shared";
-import {notificationStore} from "@/store/notificationStore";
 
 const router = useRouter();
 const main = mainStore();
 const {person} = storeToRefs(main);
 const {prepareForLogout} = shared();
-
-const notifications = notificationStore();
-const {openSnackBarDone} = notifications;
 
 const menu = [
   {id: 0, path: '/', title: 'Главная'},
@@ -91,10 +85,6 @@ function routeTo(path, query) {
 function closeAllModal() {
   mobileMenu.value = false;
   popupMenu.value = false;
-}
-
-function snack() {
-  openSnackBarDone('qsss')
 }
 </script>
 

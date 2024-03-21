@@ -11,21 +11,26 @@
       </div>
 
       <div class="wrapper-buttons">
-        <button class="trash" @click="deleteRecord" :class="{'show': isActiveRecord}">
-          <img src="img/chart/trash.svg" alt="">
-        </button>
+<!--        <button class="trash" @click="deleteRecord" :class="{'show': isActiveRecord}">-->
+<!--          <img src="img/chart/trash.svg" alt="trash">-->
+<!--        </button>-->
 
-        <button class="sendMessage"
-                :class="{'show': isActiveRecord || !!messageToBot}"
+        <button class="sendMessage show"
                 @click="sendMessageToNetwork">
-          <img src="img/chart/send.svg" alt="">
+          <img src="img/chart/send.svg" alt="send">
         </button>
 
-        <button class="micro"
-                :class="{ 'show': !messageToBot && !isActiveRecord}"
-                @click="toggleActiveRecord">
-          <img src="img/chart/mic.svg" alt="">
-        </button>
+<!--        <button class="sendMessage"-->
+<!--                :class="{'show': isActiveRecord || !!messageToBot}"-->
+<!--                @click="sendMessageToNetwork">-->
+<!--          <img src="img/chart/send.svg" alt="send">-->
+<!--        </button>-->
+
+<!--        <button class="micro"-->
+<!--                :class="{ 'show': !messageToBot && !isActiveRecord}"-->
+<!--                @click="toggleActiveRecord">-->
+<!--          <img src="img/chart/mic.svg" alt="micro">-->
+<!--        </button>-->
       </div>
     </div>
   </div>
@@ -97,7 +102,6 @@ function sendMessageToNetwork() {
     } else {
       sendMessage(messageToBot.value);
     }
-
     changeActiveGeneration(true);
   }
 
@@ -151,6 +155,7 @@ function toggleActiveRecord() {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function deleteRecord() {
   isDeleteRecord.value = true;
   toggleActiveRecord();
