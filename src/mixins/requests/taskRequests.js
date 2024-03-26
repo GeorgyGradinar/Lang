@@ -57,8 +57,6 @@ export default function taskRequests() {
         })
             .then(response => {
                 router.push({path: '/lesson', query: {id: response.data.data.id}});
-                // changeCurrentTask(response.data.data);
-                // getAllMessagesInTask(response.data.data.id, response.data.data.task.id);
             })
             .catch(error => handleError(error))
     }

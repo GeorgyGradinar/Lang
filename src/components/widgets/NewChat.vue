@@ -28,12 +28,31 @@
         <div class="wrapper-message"
              v-for="message in messages" :key="message?.id">
           <!--          <template v-if="message.isText">-->
-          <div class="message animate__animated animate__fast"
-               :class="{'person_message animate__fadeInRight': !message.is_bot,
-               'animate__fadeInLeft ': message.is_bot}">
-            <span v-for="word in message.message" :key="word?.id"
-                  @click="openOptionBlock($event, word)" v-html="word">
-            </span>
+
+          <div v-if="message.is_bot" class="bot-message animate__animated animate__fast animate__fadeInLeft">
+            <div class="icon-bot">
+              <img src="img/robots/робот-01.png">
+            </div>
+            <div class="message">
+              <span class="message-in-main-page" v-if="router.currentRoute.value.path === '/'"
+                    v-html="message.message"></span>
+
+              <span v-else v-for="word in message.message" :key="word?.id"
+                    @click="openOptionBlock($event, word)" v-html="word">
+              </span>
+            </div>
+          </div>
+
+          <div v-else class="person_message animate__animated animate__fast animate__fadeInRight">
+
+            <div class="message">
+              <p>{{ message.message }}</p>
+            </div>
+
+            <p class="comment animate__animated animate__fast animate__fadeInRight"
+               v-if="message?.spelling_comment">
+              {{ message.spelling_comment }}
+            </p>
           </div>
 
 
@@ -58,8 +77,10 @@
           <!--          </template>-->
         </div>
         <div class="wrapper-message" v-if="isActiveGeneration">
-          <div class="message animate__animated animate__fast animate__fadeInLeftBig">
-            <TypingLoader></TypingLoader>
+          <div class="typing-message">
+            <div class="message animate__animated animate__fast animate__fadeInLeftBig">
+              <TypingLoader></TypingLoader>
+            </div>
           </div>
         </div>
       </div>
@@ -139,7 +160,7 @@ onMounted(() => {
   } else {
     getMessages();
   }
-
+  console.log(new Date())
   messagesBlock.value.addEventListener('scroll', handelScrollForPagination);
 })
 
@@ -171,6 +192,10 @@ function handelScrollForPagination() {
 }
 
 function openOptionBlock(event) {
+  if (!event?.target?.className?.includes('english-word')) {
+    return;
+  }
+
   top.value = event.y - 150 + event.view.scrollY;
   left.value = event.x - 150;
   currentWord.value = event.target;
@@ -187,7 +212,6 @@ function openMoreInformationBlock(isOpen) {
 }
 
 function scrollDown() {
-  console.log(messagesBlock.value)
   setTimeout(() => {
     messagesBlock.value.scrollTo({
       top: messagesBlock.value.scrollHeight,
@@ -331,14 +355,53 @@ onUnmounted(() => {
       .wrapper-message {
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
         width: 100%;
         margin-bottom: 10px;
+
+        .bot-message {
+          display: flex;
+          align-items: flex-end;
+          gap: 5px;
+
+          .icon-bot {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            border: 3px solid var(--dark-pink);
+            padding: 3px;
+
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+        }
+
+        .person_message {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          width: 100%;
+
+          .comment {
+            display: flex;
+            flex-wrap: wrap;
+            color: var(--red);
+            margin-top: 5px;
+            max-width: 60%;
+          }
+        }
+
+        .typing-message {
+          display: flex;
+        }
 
         .message {
           display: flex;
           flex-wrap: wrap;
-          align-self: flex-start;
           border-radius: 20px;
           padding: 5px 10px;
           border: 2px solid var(--dark);
@@ -351,11 +414,16 @@ onUnmounted(() => {
             cursor: pointer;
             transition: all 0.2s;
 
-            span.kuku:hover {
+            span.english-word:hover {
               color: var(--red);
             }
           }
+
+          .message-in-main-page {
+            white-space: pre-wrap;
+          }
         }
+
 
         :deep(.animate__fast) {
           --animate-duration: 0.3s;
@@ -374,10 +442,6 @@ onUnmounted(() => {
 
         .done-message {
           color: #67f967;
-        }
-
-        .person_message {
-          align-self: flex-end;
         }
 
         :deep(.player) {

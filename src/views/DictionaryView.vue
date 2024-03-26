@@ -13,7 +13,6 @@ import MiniChat from "@/components/widgets/MiniChat";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {onMounted} from "vue";
 
-// eslint-disable-next-line no-unused-vars
 const {getGroups, getAllWords, getAllUsersWords} = dictionaryRequests();
 
 onMounted(() => {

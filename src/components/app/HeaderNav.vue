@@ -9,6 +9,7 @@
       <div class="header__menu" :class="{active:mobileMenu}">
         <button v-for="item in menu"
                 :key="item.id"
+                :class="{'selected-page': router.currentRoute.value.path === item.path}"
                 @click="routeTo(item.path)">
           {{ item.title }}
         </button>
@@ -67,9 +68,6 @@ const menu = [
 ];
 
 const popupmenuList = [
-  {id: 0, path: '/progress', title: 'Прогресс'},
-  {id: 1, path: '/tariff', title: 'Тириф'},
-  {id: 2, path: '/dictionary', title: 'Словарь'},
   {id: 3, path: '/payment', title: 'Платежи'},
   {id: 4, path: '/callback', title: 'Обратная связь'}
 ];
@@ -164,11 +162,13 @@ header {
           color: var(--dark);
           background-color: var(--yellow);
         }
+      }
 
-        &:active {
-          box-shadow: 0 0 1px var(--dark);
-          transform: translateY(5px);
-        }
+      .selected-page {
+        box-shadow: 0 0 1px var(--dark);
+        transform: translateY(5px);
+        background-color: var(--yellow);
+        color: var(--dark);
       }
 
       &.active {

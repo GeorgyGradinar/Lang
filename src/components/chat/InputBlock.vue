@@ -11,26 +11,26 @@
       </div>
 
       <div class="wrapper-buttons">
-<!--        <button class="trash" @click="deleteRecord" :class="{'show': isActiveRecord}">-->
-<!--          <img src="img/chart/trash.svg" alt="trash">-->
-<!--        </button>-->
+        <!--        <button class="trash" @click="deleteRecord" :class="{'show': isActiveRecord}">-->
+        <!--          <img src="img/chart/trash.svg" alt="trash">-->
+        <!--        </button>-->
 
         <button class="sendMessage show"
                 @click="sendMessageToNetwork">
           <img src="img/chart/send.svg" alt="send">
         </button>
 
-<!--        <button class="sendMessage"-->
-<!--                :class="{'show': isActiveRecord || !!messageToBot}"-->
-<!--                @click="sendMessageToNetwork">-->
-<!--          <img src="img/chart/send.svg" alt="send">-->
-<!--        </button>-->
+        <!--        <button class="sendMessage"-->
+        <!--                :class="{'show': isActiveRecord || !!messageToBot}"-->
+        <!--                @click="sendMessageToNetwork">-->
+        <!--          <img src="img/chart/send.svg" alt="send">-->
+        <!--        </button>-->
 
-<!--        <button class="micro"-->
-<!--                :class="{ 'show': !messageToBot && !isActiveRecord}"-->
-<!--                @click="toggleActiveRecord">-->
-<!--          <img src="img/chart/mic.svg" alt="micro">-->
-<!--        </button>-->
+        <!--        <button class="micro"-->
+        <!--                :class="{ 'show': !messageToBot && !isActiveRecord}"-->
+        <!--                @click="toggleActiveRecord">-->
+        <!--          <img src="img/chart/mic.svg" alt="micro">-->
+        <!--        </button>-->
       </div>
     </div>
   </div>
@@ -41,10 +41,12 @@
 <script setup>
 import {ref} from "vue";
 import {chatStore} from "@/store/chatStore";
+import {tasksStore} from "@/store/tasksStore";
 import {storeToRefs} from "pinia/dist/pinia";
 import dialogsRequests from "@/mixins/requests/dialogsRequests";
 import AllowMicrophoneMessage from "@/components/chat/AllowMicrophoneMessage";
 import {useRouter} from "vue-router/dist/vue-router";
+import {notificationStore} from "@/store/notificationStore";
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['scrollDown']);
@@ -53,6 +55,10 @@ const {addNewMessage, changeActiveGeneration} = chat;
 const {
   isActiveGeneration,
 } = storeToRefs(chat);
+const taskStore = tasksStore();
+const {currentTask} = storeToRefs(taskStore);
+const notifications = notificationStore();
+const {openSnackBarReject} = notifications;
 const {sendMessage, sendMessageToTask} = dialogsRequests();
 const router = useRouter();
 
@@ -90,13 +96,18 @@ function getAllowForMicrophone(isStartRecord = false) {
 }
 
 function sendMessageToNetwork() {
+
+  if (currentTask.value?.status === "success") {
+    openSnackBarReject('Задание уже выполнено');
+    return;
+  }
   if (!messageToBot.value.trim().length && !isActiveRecord.value) return;
   if (isActiveGeneration.value) return;
 
   if (isActiveRecord.value) {
     toggleActiveRecord();
   } else {
-    addNewMessage(messageToBot.value, false, new Date);
+    addNewMessage(messageToBot.value, false, new Date, false);
     if (router.currentRoute.value.path === '/lesson') {
       sendMessageToTask(messageToBot.value);
     } else {

@@ -4,22 +4,21 @@
     <div class="wrapper-option-word">
       <SoundComponent :word="sound"></SoundComponent>
       <p class="find-word">{{ word }}</p>
+      <div class="add-word">
+        <img src="img/dictionary/add.svg">
+        <v-tooltip activator="parent" location="bottom">Добавить в аккаунт</v-tooltip>
+      </div>
     </div>
 
     <p>Перевод</p>
     <div class="wrapper-option-word">
       <template v-if="!isActiveSearching">
         <SoundComponent :word="sound"></SoundComponent>
-        <p>{{ foundWord }}</p>
-        <div class="add-word">
-          <img src="img/dictionary/add.svg">
-          <v-tooltip activator="parent" location="bottom">Добавить в аккаунт</v-tooltip>
-        </div>
+        <p>{{ getFirstTranslation(foundWord.translation) }}</p>
+        <div></div>
       </template>
       <LoaderCircle v-else></LoaderCircle>
     </div>
-
-
   </div>
 </template>
 
@@ -38,22 +37,21 @@ const props = defineProps({
   word: String
 })
 const {topPosition, leftPosition, word} = toRefs(props);
-// eslint-disable-next-line no-unused-vars
-const {searchWord} = dictionaryRequests();
+const {searchFromAllWords} = dictionaryRequests();
 const chat = chatStore();
-const {changeActiveSearching} = chat;
 const {foundWord, isActiveSearching} = storeToRefs(chat);
 
 const sound = {id: 0, title: 'Cloud', hint: 'подсказка1', sound: 'sound/black.mp3', path: '/lesson'};
 
 watch(topPosition, () => {
   if (topPosition.value) {
-    changeActiveSearching(true);
-    // searchWord('приглашение', true);
-  } else {
-    changeActiveSearching(false);
+    searchFromAllWords(word.value);
   }
 })
+
+function getFirstTranslation(translations) {
+  return translations.split(',')[0]
+}
 </script>
 
 <style scoped lang="scss">

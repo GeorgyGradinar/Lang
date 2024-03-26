@@ -1,9 +1,9 @@
 <template>
   <popup-modal ref="popup" @onEsc="_cancel()">
     <div class="words-wrap">
-      <p class="words__title">Группа слов <span>{{ group.title }}</span></p>
+      <p class="words__title">Группа слов {{ selectedGroupWords.title }}</p>
       <wordlist-view
-          :words="words"
+          :words="groupWords"
           :columns="3"
           :is-popup="true"
       />
@@ -19,44 +19,37 @@
   </popup-modal>
 </template>
 
-<script>
+<script setup>
 import PopupModal from '@/components/app/PopupModal.vue';
 import WordlistView from '@/components/widgets/WordlistView.vue';
+import {ref, toRefs, watch} from "vue";
+import {dictionaryStore} from "@/store/dictionaryStore";
+import {storeToRefs} from "pinia/dist/pinia";
 
-export default {
-  name: 'WordsListDlg',
-  components: {
-    PopupModal, WordlistView
-  },
+const dictionary = dictionaryStore();
+const {changeGroupWords, changeSelectedGroup} = dictionary;
+const {groupWords, selectedGroupWords} = storeToRefs(dictionary);
+// eslint-disable-next-line no-undef
+const props = defineProps({
+  triggerOpen: Boolean,
+  groupName: String
+})
+const {triggerOpen} = toRefs(props);
 
-  data: () => ({
-    group: {
-      id: 0,
-      title: ''
-    },
-    words: [],
-    // Private variables
-    resolvePromise: undefined,
-    rejectPromise: undefined,
-  }),
+let popup = ref(null);
 
-  methods: {
-    show(opts = {}) {
-      this.group = opts.group;
-      this.words = opts.words;
-      this.$refs.popup.open();
-      // Return promise so the caller can get results
-      // return new Promise((resolve, reject) => {
-      //     this.resolvePromise = resolve
-      //     this.rejectPromise = reject
-      // })
-    },
+watch(triggerOpen, () => {
+  show();
+})
 
-    _cancel() {
-      this.$refs.popup.close();
-      // this.resolvePromise({accept : false})
-    }
-  }
+function show() {
+  popup.value.open();
+}
+
+function _cancel() {
+  popup.value.close();
+  changeGroupWords([]);
+  changeSelectedGroup(null);
 }
 </script>
 

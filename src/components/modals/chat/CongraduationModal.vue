@@ -12,7 +12,7 @@
           </div>
           <div class="wrapper-buttons">
             <button @click="exit">Выйти</button>
-            <button @click="nextLesson">Следующее задание</button>
+<!--            <button @click="nextLesson">Следующее задание</button>-->
           </div>
           <ConfettiAnimation :activeConfetti="isSubmit"></ConfettiAnimation>
         </div>
@@ -68,9 +68,9 @@ function exit() {
   emit('closeDialog');
 }
 
-function nextLesson() {
-  emit('closeDialog');
-}
+// function nextLesson() {
+//   emit('closeDialog');
+// }
 
 </script>
 

@@ -21,15 +21,15 @@
         </div>
       </div>
 
-<!--      <div class="answer">-->
-<!--        <p>Введите ваш ответ:</p>-->
-<!--        <textarea v-model="answer"-->
-<!--                  @input="autoGrow"-->
-<!--                  ref="textarea"-->
-<!--                  placeholder="Ваш ответ">-->
-<!--        </textarea>-->
-<!--        <button @click="submitResult">Отправить</button>-->
-<!--      </div>-->
+      <!--      <div class="answer">-->
+      <!--        <p>Введите ваш ответ:</p>-->
+      <!--        <textarea v-model="answer"-->
+      <!--                  @input="autoGrow"-->
+      <!--                  ref="textarea"-->
+      <!--                  placeholder="Ваш ответ">-->
+      <!--        </textarea>-->
+      <!--        <button @click="submitResult">Отправить</button>-->
+      <!--      </div>-->
     </div>
 
     <div class="wrapper-button-back">
@@ -61,13 +61,12 @@ const props = defineProps({
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['hiddenBlock']);
 const taskStore = tasksStore();
-const {currentTask} = storeToRefs(taskStore);
+const {changeIsOpenDialog} = taskStore;
+const {currentTask, isOpenFinalModal} = storeToRefs(taskStore);
 
 let textarea = ref(null);
 // eslint-disable-next-line no-unused-vars
 let answer = ref('');
-
-let isOpenFinalModal = ref(false);
 
 // eslint-disable-next-line no-unused-vars
 function autoGrow() {
@@ -78,12 +77,13 @@ function autoGrow() {
 // eslint-disable-next-line no-unused-vars
 function submitResult() {
   setTimeout(() => {
-    isOpenFinalModal.value = true;
+    changeIsOpenDialog(true)
   }, 1000)
 }
 
 function closeFinalModal() {
-  isOpenFinalModal.value = false
+  changeIsOpenDialog(false);
+  goBack();
 }
 
 function goBack() {

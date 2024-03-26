@@ -3,25 +3,25 @@
   <div class="question" :title="word.hint">
     <img src="img/icon/question.svg" alt="question">
   </div>
-  <p>{{ word.title }}</p>
+  <p>{{ word.word }}</p>
   <div class="puzzle " @click="$router.push(word.path)">
-    <div class="tasks">
-      <img class="task" src="img/icon/book.svg">
-      <v-tooltip activator="parent" location="bottom">Задачи</v-tooltip>
-    </div>
+<!--    <div class="tasks">-->
+<!--      <img class="task" src="img/icon/book.svg">-->
+<!--      <v-tooltip activator="parent" location="bottom">Задачи</v-tooltip>-->
+<!--    </div>-->
   </div>
 
 </template>
 
 <script setup>
 import SoundComponent from "@/components/widgets/SoundComponent";
+import {toRefs} from "vue";
 
 // eslint-disable-next-line no-unused-vars,no-undef
 const props = defineProps({
   word: Object
 })
-
-
+const {word} = toRefs(props);
 </script>
 
 <style scoped lang="scss">

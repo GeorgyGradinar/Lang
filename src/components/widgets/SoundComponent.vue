@@ -7,12 +7,13 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, toRefs} from "vue";
 
 // eslint-disable-next-line no-unused-vars,no-undef
 const props = defineProps({
   word: Object
 });
+const {word} = toRefs(props);
 
 const soundTypes = {
   mute: 'mute',
@@ -22,10 +23,17 @@ const soundTypes = {
 
 let currentSoundType = ref(soundTypes.mute);
 
-function play(word) {
-  const myAudio = new Audio(word.sound);
-  myAudio.play();
+function play() {
+  if (word.value.pronunciations.us) {
+    new Audio(word.value.pronunciations.us).play();
+  } else if (word.value.pronunciations.uk) {
+    new Audio(word.value.pronunciations.uk).play();
+  }
 
+  animateSoundIcon();
+}
+
+function animateSoundIcon() {
   currentSoundType.value = soundTypes.low;
 
   setTimeout(() => {

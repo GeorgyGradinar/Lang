@@ -22,13 +22,23 @@ export const chatStore = defineStore('chat', () => {
         triggerSaveScrollForPagination.value = false;
     }
 
-    function changeMessages(allMessages) {
-        messages.value = allMessages.map(data => {
-            return {
-                ...data,
-                message: handleMessage(data.message)
-            }
-        })
+    function changeMessages(allMessages, isSeparateBotMessage = false) {
+        if (isSeparateBotMessage) {
+            messages.value = allMessages.map(data => {
+                if (data.is_bot) {
+                    return {
+                        ...data,
+                        message: handleMessage(data.message)
+                    }
+                } else {
+                    return data
+                }
+
+            })
+        } else {
+            messages.value = allMessages
+        }
+
         triggerScrollDown();
     }
 
@@ -46,17 +56,37 @@ export const chatStore = defineStore('chat', () => {
     }
 
     function handleMessage(message) {
-        return message.replaceAll(/([\wа-яА-Я-']+)/ig, (substr) => `|divider|<span class="kuku">${substr}</span>|divider|`).split('|divider|')
+        return message.replaceAll(/([\w']+)/ig, (substr) => `|divider|<span class="english-word">${substr}</span>|divider|`).replaceAll(' |divider|', '&nbsp;|divider|').split('|divider|');
     }
 
-    function addNewMessage(newMessage, isBot, timestamp) {
-        const completedMessageData = {
-            is_bot: isBot,
-            message: handleMessage(newMessage),
-            timestamp
+    function addNewMessage(newMessage, isBot, timestamp, isSeparateMessage) {
+        let completedMessageData
+        if (isSeparateMessage) {
+            completedMessageData = {
+                is_bot: isBot,
+                message: handleMessage(newMessage),
+                timestamp
+            }
+        } else {
+            completedMessageData = {
+                is_bot: isBot,
+                message: newMessage,
+                timestamp
+            }
         }
+
         messages.value.push(completedMessageData);
         triggerScrollDown();
+    }
+
+    function addCommentToLastPersonMessage(comments) {
+        let lastMessage
+        messages.value.forEach(message => {
+            if (!message.is_bot) {
+                lastMessage = message
+            }
+        })
+        lastMessage.spelling_comment = comments;
     }
 
     function triggerScrollDown() {
@@ -84,7 +114,7 @@ export const chatStore = defineStore('chat', () => {
     }
 
     return {
-        messages, changeMessages, addNextPageMessages, addNewMessage,
+        messages, changeMessages, addNextPageMessages, addNewMessage, addCommentToLastPersonMessage,
         isTriggerScrollDown, triggerScrollDown,
         isActiveGeneration, changeActiveGeneration,
         currentPage, changeCurrentPage,

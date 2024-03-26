@@ -14,35 +14,20 @@
         <div class="wrapper-chat">
           <ChartBlock :isMainPageChat="true"></ChartBlock>
         </div>
-        <div class="words-wrap">
-          <p class="words__title">Новые добавленные слова</p>
-          <wordlist-view
-              :words="newWords"
-              :columns="2"
-          />
-
-          <router-link to="/dictionary" class="secondary-button">
-            Перейти в словарь
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-              <path d="m700-300-57-56 84-84H120v-80h607l-83-84 57-56 179 180-180 180Z"/>
-            </svg>
-          </router-link>
-        </div>
+        <NewAddedWordBlock></NewAddedWordBlock>
       </div>
     </div>
 
     <div class="wrapper-word-chat">
       <div class="words">
-        <div class="wrapper-words-theme">
-          <p class="words__title">Группы слов по темам</p>
-          <words-group-list
-              :groups="wordGroups"
-              @selected="selectGroup"
-          />
-        </div>
-        <slider-view :feed="sliderFeed1"/>
-        <slider-view :feed="sliderFeed2"/>
+        <words-group-list
+            :groups="wordGroups"
+            @selected="selectGroup"
+        />
+        <!--        <slider-view :feed="sliderFeed1"/>-->
+        <!--        <slider-view :feed="sliderFeed2"/>-->
 
+        <TasksList></TasksList>
       </div>
     </div>
 
@@ -71,30 +56,31 @@
           :data="footerRight"
       />
     </div>
-    <!--Модальное окно словаря -->
-    <words-list-dlg ref="wordslistdlg"/>
   </div>
 </template>
 
 <script>
 import WeekResults from '@/components/widgets/WeekResults.vue';
 // import ChatView from '@/components/widgets/ChatView.vue';
-import SliderView from '@/components/widgets/SliderView.vue';
-import WordlistView from '@/components/widgets/WordlistView.vue';
+// import SliderView from '@/components/widgets/SliderView.vue';
 import WordsGroupList from '@/components/widgets/WordsGroupList.vue';
-import WordsListDlg from '@/components/modals/WordsListDlg.vue';
 import TabNav from '@/components/app/TabNav.vue';
 import MistakeView from '@/components/widgets/MistakeView.vue';
 import PromoView from '@/components/widgets/PromoView.vue';
 import ChartBlock from "@/components/widgets/NewChat";
+import NewAddedWordBlock from "@/components/widgets/NewAddedWordBlock";
+import TasksList from "@/components/widgets/TasksList";
 
 export default {
   name: 'HomeView',
   components: {
+    TasksList,
+    NewAddedWordBlock,
     ChartBlock,
     WeekResults,
     // ChatView,
-    SliderView, WordlistView, WordsGroupList, WordsListDlg, TabNav, MistakeView, PromoView
+    // SliderView,
+    WordsGroupList, TabNav, MistakeView, PromoView
   },
   data: () => ({
     sliderFeed1: [],
@@ -169,35 +155,6 @@ export default {
         description: 'О местоимениях в английском, группы местоимений'
       },
     ]
-    // Новые слова
-    this.newWords = [
-      {id: 0, title: 'Cloud', hint: 'подсказка1', sound: 'sound/black.mp3', path: '/lesson'},
-      {id: 1, title: 'Adventure', hint: 'подсказка2', sound: 'sound/blue.mp3', path: '/lesson'},
-      {id: 2, title: 'Family', hint: 'подсказка3', sound: 'sound/brown.mp3', path: '/lesson'},
-      {id: 3, title: 'Squirrel', hint: 'подсказка4', sound: 'sound/green.mp3', path: '/lesson'},
-      {id: 4, title: 'Delicious', hint: 'подсказка5', sound: 'sound/red.mp3', path: '/lesson'},
-      {id: 5, title: 'Person', hint: 'подсказка6', sound: 'sound/red.mp3', path: '/lesson'},
-      {id: 6, title: 'Rainbow', hint: 'подсказка7', sound: 'sound/yellow.mp3', path: '/lesson'},
-      {id: 7, title: 'Sister', hint: 'подсказка8', sound: 'sound/blue.mp3', path: '/lesson'},
-      {id: 8, title: 'Autumn', hint: 'подсказка9', sound: 'sound/brown.mp3', path: '/lesson'},
-      {id: 9, title: 'Mist', hint: 'подсказка10', sound: 'sound/green.mp3', path: '/lesson'},
-    ]
-    // Группы слов
-    this.wordGroups = [
-      {id: 0, title: 'Магазин'},
-      {id: 1, title: 'Путешествие'},
-      {id: 2, title: 'Школа'},
-      {id: 3, title: 'Аэропорт'},
-      {id: 4, title: 'Самолет'},
-      {id: 5, title: 'Гостиница'},
-      {id: 6, title: 'Кафе'},
-      {id: 7, title: 'Рождество'},
-      {id: 8, title: 'Погода'},
-      {id: 9, title: 'Мероприятия'},
-      {id: 10, title: 'Здоровье'},
-      {id: 11, title: 'Спорт'},
-    ]
-
     // Навигация в ошибках
     this.mistakeTabs = [
       {id: 0, title: 'Словарь'},
@@ -312,29 +269,6 @@ export default {
   },
 
   methods: {
-    async selectGroup(group) {
-      const words = [
-        {id: 0, title: 'Shop'},
-        {id: 1, title: 'Customer'},
-        {id: 2, title: 'Store'},
-        {id: 3, title: 'Cashier'},
-        {id: 4, title: 'Salesperson'},
-        {id: 5, title: 'Retail'},
-        {id: 6, title: 'Discount'},
-        {id: 7, title: 'Shopping'},
-        {id: 8, title: 'Purchase'},
-        {id: 9, title: 'Grocery'},
-        {id: 10, title: 'Shopping cart'},
-        {id: 11, title: 'Shelf'},
-        {id: 12, title: 'Department'},
-        {id: 13, title: 'Return'},
-        {id: 14, title: 'Cash register'},
-
-      ]
-      //const ok = await this.$refs.wordslistdlg.show({group, words})
-      this.$refs.wordslistdlg.show({group, words})
-    },
-
     selectMistakeTab(tab) {
       const page = this.mistakesArray.find(val => val.id === tab.id)
       this.currentMistakes = (page) ? page.data : {mode: 33, title: [], rows: []}
@@ -370,48 +304,6 @@ export default {
         width: 55%;
         height: 500px;
       }
-
-      .words-wrap {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        padding: 20px;
-        border-radius: 10px;
-        border: 2px solid var(--dark);
-        box-shadow: 1px 4px 1px var(--dark);
-        background-color: var(--yellow);
-
-        a {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          text-decoration: none;
-          color: var(--light-gray);
-        }
-
-        .words__title {
-          font-size: 26px;
-          color: var(--dark-pink);
-        }
-
-        .secondary-button {
-          width: 230px;
-          align-self: flex-end;
-          border: 2px solid var(--dark);
-          background-color: var(--pink);
-
-          svg {
-            fill: var(--white);
-            transition: fill 0.2s;
-          }
-
-          &:hover {
-            svg {
-              fill: var(--dark);
-            }
-          }
-        }
-      }
     }
   }
 
@@ -425,7 +317,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 20px;
+      gap: 25px;
       width: 100%;
       max-width: 1440px;
       padding: 15px 0 90px 0;
@@ -433,25 +325,6 @@ export default {
       font-size: 15px;
       font-weight: 700;
       color: var(--white);
-
-      .wrapper-words-theme {
-        display: flex;
-        flex-direction: column;
-        width: 55%;
-        height: 100%;
-        padding: 30px 20px 40px;
-        border-radius: 10px;
-        border: 2px solid var(--dark);
-        box-shadow: 1px 4px 1px var(--dark);
-        background-color: var(--red);
-
-        .words__title {
-          font-size: 26px;
-          margin-bottom: 20px;
-        }
-      }
-
-
     }
   }
 
@@ -513,22 +386,6 @@ export default {
       align-items: center;
       padding: 90px 20px;
 
-      .words-wrap {
-
-        .secondary-button {
-
-          svg {
-
-          }
-
-          &:hover {
-            svg {
-
-            }
-          }
-        }
-      }
-
       .bg-purple {
 
       }
@@ -562,22 +419,6 @@ export default {
     }
 
     .words {
-
-      .words-wrap {
-
-        .secondary-button {
-
-          svg {
-
-          }
-
-          &:hover {
-            svg {
-
-            }
-          }
-        }
-      }
 
       .bg-purple {
 

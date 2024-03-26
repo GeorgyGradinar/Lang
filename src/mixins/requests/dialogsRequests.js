@@ -7,8 +7,16 @@ import shared from "@/mixins/shared";
 
 export default function dialogsRequests() {
     const chat = chatStore()
-    const {changeMessages, addNewMessage, changeActiveGeneration, changeLastPage, addNextPageMessages} = chat;
+    const {
+        changeMessages,
+        addNewMessage,
+        changeActiveGeneration,
+        changeLastPage,
+        addNextPageMessages,
+        addCommentToLastPersonMessage
+    } = chat;
     const taskStore = tasksStore();
+    const {changeIsOpenDialog} = taskStore;
     const {prepareForLogout} = shared();
 
     function getMessages(isPagination) {
@@ -34,7 +42,7 @@ export default function dialogsRequests() {
                 if (isPagination) {
                     addNextPageMessages(response.data.data);
                 } else {
-                    changeMessages(response.data.data);
+                    changeMessages(response.data.data, true);
                     changeLastPage(response.data.pagination.last_page);
                 }
             })
@@ -68,17 +76,20 @@ export default function dialogsRequests() {
     }
 
     function getMessageFromTask(id) {
-        axios.get(`${testUrl}/api/user/tasks/messages/get?user_task_id=${id}&task_message_id=${taskStore.currentTask.id}`, {
+        axios.get(`${testUrl}/api/user/tasks/messages/get?task_message_id=${id}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                if (response.data.data.status === "processing") {
+                if (response.data.data[2]?.message_status === "processing") {
                     setTimeout(() => {
                         getMessageFromTask(id)
                     }, 1000);
                 } else {
-                    console.log(response)
-                    addNewMessage(response.data.data.message, true, response.data.data.date);
+                    addNewMessage(response.data.data[1].message, true, response.data.data?.date, true);
+                    addCommentToLastPersonMessage(response.data.data[0].spelling_comment);
+                    if (response.data.data[2]?.task_status === 'success') {
+                        changeIsOpenDialog(true)
+                    }
                     changeActiveGeneration(false);
                 }
             })
@@ -95,7 +106,7 @@ export default function dialogsRequests() {
                         getMessageFormNetwork(id)
                     }, 1000);
                 } else {
-                    addNewMessage(response.data.data.response, true, response.data.data.date);
+                    addNewMessage(response.data.data.response, true, response.data.data.date, false);
                     changeActiveGeneration(false);
                 }
             })
@@ -113,7 +124,7 @@ export default function dialogsRequests() {
     }
 
     function handleError(error) {
-        switch (error.response.status) {
+        switch (error.response?.status) {
             case 401:
                 prepareForLogout();
                 break;

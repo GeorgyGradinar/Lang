@@ -99,6 +99,18 @@ export default function dictionaryRequests() {
             .catch(error => handleError(error))
     }
 
+    function searchFromAllWords(word) {
+        changeActiveSearching(true);
+        axios.get(`${testUrl}/api/word/search?word=${word}`, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization]),
+        })
+            .then(response => {
+                changeSearchWord(response.data.data);
+                changeActiveSearching(false);
+            })
+            .catch(error => handleError(error))
+    }
+
     function addWordsToUserDictionary(idWord) {
         axios.post(`${testUrl}/api/user/dictionary/words/add`, {id: idWord}, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
@@ -133,6 +145,7 @@ export default function dictionaryRequests() {
         getAllWords,
         getAllUsersWords,
         searchWord,
+        searchFromAllWords,
         addWordsToUserDictionary,
         requestToDeleteWord
     }
