@@ -1,0 +1,42 @@
+import axios from "axios";
+import {HEADER_PARAMETERS, testUrl} from "../../../config";
+import requestOptions from "@/mixins/prepare-requests/requestOptions";
+import {statisticStore} from "@/store/statisticStore";
+
+export default function dictionaryRequests() {
+    const statistic = statisticStore();
+    const {changeAllStatistic} = statistic;
+
+    function getAllStatistics() {
+        axios.get(`${testUrl}/api/user/statistics/all`, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
+        })
+            .then(response => {
+                changeAllStatistic(response.data.data)
+            })
+    }
+
+    function getMonthlyStatistic(currentDate) {
+        axios.get(`${testUrl}/api/user/statistics/monthly?month=${currentDate}`, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
+        })
+            .then(response => {
+                changeAllStatistic(response.data.data)
+            })
+    }
+
+    function getDailyStatistic() {
+        axios.get(`${testUrl}/api/user/statistics/daily?day=2024-03-26`, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
+        })
+            .then(response => {
+                console.log(response)
+            })
+    }
+
+    return {
+        getAllStatistics,
+        getMonthlyStatistic,
+        getDailyStatistic
+    }
+}

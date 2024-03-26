@@ -43,7 +43,6 @@ const router = useRouter();
 
 function startTask() {
   router.push({path: '/lesson', query: {id: props.card.id}});
-  console.log('test')
 }
 </script>
 

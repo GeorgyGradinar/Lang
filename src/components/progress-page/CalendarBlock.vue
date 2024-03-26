@@ -8,7 +8,8 @@
               title="text"
               hide-header="false"
               show-adjacent-months
-              @update:modelValue="handleSelectedDay"
+              @update:modelValue="handleSelectedDay($event)"
+              @update:month="handleUpdateMonth"
           ></v-date-picker>
         </div>
       </v-row>
@@ -18,12 +19,16 @@
 
 <script setup>
 
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
+import {statisticStore} from "@/store/statisticStore";
+import {storeToRefs} from "pinia/dist/pinia";
+import statisticRequests from "@/mixins/requests/statisticRequests";
 
 // eslint-disable-next-line no-undef,no-unused-vars
 const props = defineProps({
   currentData: Object
 })
+
 // eslint-disable-next-line no-undef,no-unused-vars
 const emit = defineEmits(['changeData']);
 const history = [
@@ -147,19 +152,10 @@ const history = [
     done: 7,
     exception: 2
   },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
 ];
+const statistic = statisticStore();
+const {allStatistic} = storeToRefs(statistic);
+const {getMonthlyStatistic} = statisticRequests();
 
 let currentHistoryDay = ref();
 let dataPicker = ref(null);
@@ -169,6 +165,10 @@ let data = ref(null);
 onMounted(() => {
   data.value = props.currentData
   currentHistoryDay.value = history[data.value.getDate()];
+  getMonthlyStatistic(getCurrentDate());
+})
+
+watch(allStatistic, () => {
   updateDataPicker();
 })
 
@@ -176,25 +176,56 @@ function handleSelectedDay() {
   emit('changeData', data.value);
 }
 
+function handleUpdateMonth(event) {
+  removeInfoFromDataPicker();
+
+  let month = event + 1;
+  month = month < 10 ? `0${month}` : `${month}`;
+
+  getMonthlyStatistic(`${new Date().getFullYear()}-${month}`);
+}
+
+function getCurrentDate() {
+  let month = new Date().getMonth() + 1
+  month = month < 10 ? `0${month}` : `${month}`;
+
+  return `${new Date().getFullYear()}-${month}`;
+}
+
+function removeInfoFromDataPicker() {
+  Array.from(document.getElementsByClassName('myClass')).forEach(element => {
+    element.remove();
+  })
+}
+
 function updateDataPicker() {
   const listDate = dataPicker.value.children[0].children[0].children[1].children[0].children;
   const titleClass = 'v-date-picker-month__weekday';
   const anotherClass = 'v-date-picker-month__day--adjacent';
 
+  let indexCurrentMonth = 0;
   for (let index = 0; index < listDate.length; index++) {
     if (!listDate[index].className.includes(titleClass) && !listDate[index].className.includes(anotherClass)) {
-      addDataToCurrentDay(listDate, index);
+
+      const findHistoryDate = allStatistic.value.find(dataHistory => {
+        if (new Date(dataHistory.date).getDate() === indexCurrentMonth) return dataHistory
+      })
+
+      if (findHistoryDate) addDataToCurrentDay(listDate, index, findHistoryDate);
+
+      indexCurrentMonth = indexCurrentMonth + 1;
     }
   }
 }
 
-function addDataToCurrentDay(listDate, index) {
+function addDataToCurrentDay(listDate, index, dataHistory) {
   const wrapperDone = document.createElement('div');
   wrapperDone.appendChild(getImageForStatistic(true));
-  wrapperDone.appendChild(getHtmlTextElement(true, history[+listDate[index].children[0].children[2].innerHTML].done));
+  wrapperDone.appendChild(getHtmlTextElement(true, dataHistory?.tasks?.count_succeeded_tasks));
   wrapperDone.appendChild(getImageForStatistic(false));
-  wrapperDone.appendChild(getHtmlTextElement(false, history[+listDate[index].children[0].children[2].innerHTML].exception));
-  listDate[index].children[0].appendChild(wrapperDone);
+  wrapperDone.appendChild(getHtmlTextElement(false, dataHistory?.tasks?.count_processing_tasks));
+  wrapperDone.classList.add("myClass")
+  listDate[index - 1].children[0].appendChild(wrapperDone);
 }
 
 function getHtmlTextElement(isDoneText, textData) {
