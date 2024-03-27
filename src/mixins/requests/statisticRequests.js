@@ -5,14 +5,14 @@ import {statisticStore} from "@/store/statisticStore";
 
 export default function dictionaryRequests() {
     const statistic = statisticStore();
-    const {changeAllStatistic} = statistic;
+    const {changeMonthStatistic} = statistic;
 
     function getAllStatistics() {
         axios.get(`${testUrl}/api/user/statistics/all`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                changeAllStatistic(response.data.data)
+                changeMonthStatistic(response.data.data)
             })
     }
 
@@ -21,7 +21,7 @@ export default function dictionaryRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                changeAllStatistic(response.data.data)
+                changeMonthStatistic(response.data.data)
             })
     }
 

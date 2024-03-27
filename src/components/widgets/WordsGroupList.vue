@@ -7,7 +7,7 @@
            @click="selectGroup(group)"
       >
         <h4>{{ group.title }}</h4>
-        <p>{{ group.description }}</p>
+<!--        <p>{{ group.description }}</p>-->
       </div>
     </div>
   </div>
@@ -51,11 +51,13 @@ function selectGroup(group) {
   border-radius: 10px;
   border: 2px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
-  background-color: var(--red);
+  background-color: var(--light_pink);
 
   .words__title {
     font-size: 26px;
+    font-weight: 900;
     margin-bottom: 20px;
+    color: var(--dark-pink);
   }
 
   .words__group-row {
@@ -65,8 +67,9 @@ function selectGroup(group) {
     gap: 20px;
 
     .words__group {
-      width: 100%;
-      max-width: 160px;
+      display: flex;
+      justify-content: center;
+      min-width: 100px;
       background-color: var(--dark-pink);
       padding: 10px;
       border-radius: 10px;
@@ -79,11 +82,6 @@ function selectGroup(group) {
       h4 {
         color: var(--yellow);
         font-size: 17px;
-        margin-bottom: 10px;
-      }
-
-      p {
-        font-size: 13px;
       }
 
       &:hover {

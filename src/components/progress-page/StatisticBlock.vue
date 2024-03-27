@@ -1,31 +1,45 @@
 <template>
   <div class="statistic">
     <div class="progress-chart" :class="{'clean-history': isActiveCleanAnimation}">
-      <p>{{ currentHistoryDay?.done }} / 10</p>
+      <p>{{ currentDayStatistic?.tasks?.count_succeeded_tasks }} / {{ currentDayStatistic?.tasks?.count_all_tasks }}</p>
       <p class="progress-chart--title">Выполненно</p>
       <div class="main_wave"
-           :style="{'bottom': currentHistoryDay?.done * 10 + '%'}">
+           :style="{'bottom': getPercentDone(currentDayStatistic?.tasks?.count_succeeded_tasks,  currentDayStatistic?.tasks?.count_all_tasks) + '%'}">
       </div>
-      <div class="secondary_wave" :style="{'bottom':( currentHistoryDay?.done * 10) * 0.95 + '%'}"></div>
+      <div class="secondary_wave"
+           :style="{'bottom':getPercentDone(currentDayStatistic?.tasks?.count_succeeded_tasks,  currentDayStatistic?.tasks?.count_all_tasks) * 0.95 + '%'}"></div>
     </div>
     <div class="progress-chart" :class="{'clean-history': isActiveCleanAnimation}">
-      <p>{{ currentHistoryDay?.exception }} / 10</p>
+      <p>{{ currentDayStatistic?.tasks?.count_processing_tasks }} / {{
+          currentDayStatistic?.tasks?.count_all_tasks
+        }}</p>
+      <p class="progress-chart--title">В процессе</p>
+      <div class="main_wave"
+           :style="{'bottom': getPercentDone(currentDayStatistic?.tasks?.count_processing_tasks, currentDayStatistic?.tasks?.count_all_tasks) + '%'}"></div>
+      <div class="secondary_wave"
+           :style="{'bottom': getPercentDone(currentDayStatistic?.tasks?.count_processing_tasks, currentDayStatistic?.tasks?.count_all_tasks)* 0.95 + '%'}"></div>
+    </div>
+    <div class="progress-chart" :class="{'clean-history': isActiveCleanAnimation}">
+      <p>{{ currentDayStatistic?.tasks?.count_failed_tasks }} / {{ currentDayStatistic?.tasks?.count_all_tasks }}</p>
       <p class="progress-chart--title">С ошибкой</p>
-      <div class="main_wave" :style="{'bottom': currentHistoryDay?.exception * 10 + '%'}"></div>
-      <div class="secondary_wave" :style="{'bottom':( currentHistoryDay?.exception * 10) * 0.95 + '%'}"></div>
+      <div class="main_wave"
+           :style="{'bottom': getPercentDone(currentDayStatistic?.tasks?.count_failed_tasks, currentDayStatistic?.tasks?.count_all_tasks) + '%'}"></div>
+      <div class="secondary_wave"
+           :style="{'bottom': getPercentDone(currentDayStatistic?.tasks?.count_failed_tasks, currentDayStatistic?.tasks?.count_all_tasks)* 0.95 + '%'}"></div>
     </div>
   </div>
 </template>
 
 <script setup>
+import {statisticStore} from "@/store/statisticStore";
+import {storeToRefs} from "pinia/dist/pinia";
 
-import {toRefs} from "vue";
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  currentHistoryDay: Object,
-  isActiveCleanAnimation: Boolean
-})
-const {currentHistoryDay, isActiveCleanAnimation} = toRefs(props);
+const statistic = statisticStore();
+const {currentDayStatistic, isActiveCleanAnimation} = storeToRefs(statistic);
+
+function getPercentDone(done, totalTasks) {
+  return done && totalTasks ? (done * 100) / totalTasks : 0;
+}
 </script>
 
 <style scoped lang="scss">
@@ -39,19 +53,19 @@ const {currentHistoryDay, isActiveCleanAnimation} = toRefs(props);
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     background-color: var(--green);
-    border: 2px solid var(--dark);
+    border: 4px solid var(--dark);
     box-shadow: 1px 4px 1px var(--dark);
     overflow: hidden;
 
     p {
       font-size: 40px;
       font-weight: 700;
-      color: var(--red);
-      mix-blend-mode: difference;
+      color: var(--green);
+      mix-blend-mode: color-dodge;
       z-index: 2;
     }
 
@@ -65,7 +79,7 @@ const {currentHistoryDay, isActiveCleanAnimation} = toRefs(props);
       left: 50%;
       min-width: 100vw;
       min-height: 100vw;
-      background-color: var(--light-yellow);
+      background-color: var(--dark-pink);
       animation-name: rotate;
       animation-iteration-count: 1;
       animation-timing-function: ease-in-out;
@@ -87,8 +101,25 @@ const {currentHistoryDay, isActiveCleanAnimation} = toRefs(props);
       animation-name: rotateLeft;
     }
 
-    &:nth-child(even) {
+    &:nth-child(2) {
       background-color: var(--yellow);
+
+      p {
+        color: var(--yellow);
+      }
+
+      .main_wave,
+      .secondary_wave {
+        transform: translate(-50%, 0) rotateZ(10deg);
+      }
+    }
+
+    &:nth-child(3) {
+      background-color: var(--red);
+
+      p {
+        color: var(--red);
+      }
 
       .main_wave,
       .secondary_wave {
@@ -151,8 +182,8 @@ const {currentHistoryDay, isActiveCleanAnimation} = toRefs(props);
   .statistic {
 
     .progress-chart {
-      width: 500px;
-      height: 500px;
+      width: 400px;
+      height: 400px;
 
       p {
         font-size: 60px;
@@ -193,8 +224,8 @@ const {currentHistoryDay, isActiveCleanAnimation} = toRefs(props);
     gap: 10px;
 
     .progress-chart {
-      width: 250px;
-      height: 250px;
+      width: 230px;
+      height: 230px;
 
       p {
 

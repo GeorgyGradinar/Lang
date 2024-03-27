@@ -1,8 +1,8 @@
 <template>
-  <div class="tasks-card bg-base-red" @click="addTasksToUser">
-    <div class="tasks-card__img">
-      <img :src="card.img">
-    </div>
+  <div class="tasks-card" @click="addTasksToUser">
+<!--    <div class="tasks-card__img">-->
+<!--      <img :src="card.img">-->
+<!--    </div>-->
     <h3 class="tasks-card__title">{{ card.title }}</h3>
     <p class="tasks-card__descr">{{ card.description }}</p>
     <!--    <div class="info">-->
@@ -53,28 +53,23 @@ function addTasksToUser() {
   gap: 10px;
   border-radius: 10px;
   width: 300px;
-  padding: 24px;
+  padding: 25px 20px;
   border: 1px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
   cursor: pointer;
   transition: all 0.2s;
   color: var(--white);
-
-  //&:active {
-  //  box-shadow: 0 0 1px var(--dark);
-  //  transform: translateY(5px);
-  //}
+  background-color: var(--pink);
 
   &:hover {
     transform: scale(1.05);
   }
 
-
   .tasks-card__title {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 800;
-    margin-bottom: 20px;
-    color: var(--white);
+    margin-bottom: 10px;
+    color: var(--yellow);
   }
 
   .tasks-card__img {

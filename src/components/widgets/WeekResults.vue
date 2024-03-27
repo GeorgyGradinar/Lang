@@ -2,25 +2,26 @@
   <div class="wrapper-state-week">
     <div class="state-week">
       <div class="chart">
-        <canvas ref="chart"></canvas>
+        <canvas ref="chart" v-if="isShowChart"></canvas>
       </div>
       <div class="state-week__statistic">
         <!--      <p>Задания на сегодня:&nbsp;&nbsp;<span class="bold">{{ success + errors }}/{{ total }}</span></p>-->
         <div class="statistic">
           <div class="wrapper__success">
             <img src="img/icon/check-done.svg">&nbsp;
-            <p> Успешно:&nbsp;<span class="bold">{{ success }}</span></p>
+            <p> Успешно:&nbsp;<span class="bold">{{ currentDayStatistic?.tasks?.count_succeeded_tasks }}</span></p>
           </div>
           <div class="wrapper__errors">
             <img src="img/icon/info.svg">&nbsp;
-            С ошибками:&nbsp;<span class="bold">{{ errors }}</span>
+            С процессе:&nbsp;<span class="bold">{{ currentDayStatistic?.tasks?.count_processing_tasks }}</span>
           </div>
           <div class="wrapper__without-result">
             <img src="img/icon/close.svg">&nbsp;
-            Не выполнено:&nbsp;<span class="bold">{{ errors }}</span>
+            Не выполнено:&nbsp;<span class="bold">{{ currentDayStatistic?.tasks?.count_failed_tasks }}</span>
           </div>
         </div>
       </div>
+
       <div class="state-week__days">
         <div class="day"
              v-for="(item, index) in weekResults" :key="item.day"
@@ -44,12 +45,20 @@ import Chart from 'chart.js/auto';
 import {useWeekResult} from '@/store/weekResult';
 import {storeToRefs} from "pinia/dist/pinia";
 import {onMounted, ref, watch} from "vue";
+import {statisticStore} from "@/store/statisticStore";
+import dictionaryRequests from "@/mixins/requests/statisticRequests";
 
 const weekResult = useWeekResult();
+// eslint-disable-next-line no-unused-vars
 const {changeIndex} = weekResult;
 const {weekResults, currentIndex} = storeToRefs(weekResult);
 
 const labelsT = ['Выполненно', 'С ошибками', 'Не выполненно'];
+
+const {getMonthlyStatistic} = dictionaryRequests();
+const statistic = statisticStore();
+const {changeCurrentDayStatistic} = statistic;
+const {monthStatistic, currentDayStatistic} = storeToRefs(statistic);
 
 let chart = ref(null);
 
@@ -57,8 +66,11 @@ let success = ref(0);
 let errors = ref(0);
 let total = ref(0);
 let currentDay = ref('Пн');
-let myChart = ref();
+// eslint-disable-next-line no-unused-vars
+let myChart;
 let ctx;
+
+let isShowChart = ref(true);
 
 // let doughnutLabel = ref({
 //   id: 'doughnutLabel',
@@ -82,36 +94,52 @@ onMounted(() => {
   showResults();
   ctx = chart.value.getContext("2d");
   setDataToChart();
+  getMonthlyStatistic(getCurrentDate());
 })
 
 watch(currentIndex, () => {
   showResults();
 })
 
+watch(monthStatistic, () => {
+  console.log(monthStatistic.value)
+})
+
+watch(currentDayStatistic, () => {
+  console.log()
+})
+
+function getCurrentDate() {
+  let month = new Date().getMonth() + 1
+  month = month < 10 ? `0${month}` : `${month}`;
+
+  return `${new Date().getFullYear()}-${month}`;
+}
+
 let dataT = ref([1, 5, 4]);
 
 function setDataToChart() {
-  console.log(ctx)
-  myChart.value = new Chart(ctx, {
+  myChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
       labels: labelsT,
-      datasets: [{
-        data: dataT.value,
-        backgroundColor: [
-          '#00c6ad',
-          '#ffd073',
-          '#d4fdf7',
-        ],
-        borderColor: [
-          '#00c6ad',
-          '#ffd073',
-          '#d4fdf7',
-        ],
-        borderWidth: 1,
-        borderRadius: 5,
-        offset: 6,
-      }],
+      datasets: [
+        {
+          data: dataT.value,
+          backgroundColor: [
+            '#00c6ad',
+            '#ffd073',
+            '#d4fdf7',
+          ],
+          borderColor: [
+            '#00c6ad',
+            '#ffd073',
+            '#d4fdf7',
+          ],
+          borderWidth: 1,
+          borderRadius: 5,
+          offset: 6,
+        }],
     },
     options: {
       plugins: {
@@ -150,20 +178,32 @@ function showResults() {
   total.value = weekResults.value[currentIndex.value].total;
 }
 
+let toggle = ref(false);
 
 function changeDay(index, data) {
-  if (weekResults.value[index].state !== 'lock') {
-    changeIndex(index);
-    currentDay.value = data.day;
-    // dataT.value[1] = 10
-    // myChart.value.data.datasets[0].data = [data.success, data.errors, data.total - (data.success + data.errors)]
-    // myChart.value.draw();
-
-    dataT.value = [data.success, data.errors, data.total - (data.success + data.errors)];
-
-    console.log('test')
-    console.log(myChart.value)
+  console.log(index)
+  console.log(data)
+  if (toggle.value) {
+    changeCurrentDayStatistic(27)
+    myChart.data.datasets[0].data = [2, 5, 3]
+    myChart.update();
+  } else {
+    changeCurrentDayStatistic(26)
+    myChart.data.datasets[0].data = [3, 1, 6]
+    myChart.update();
   }
+
+  toggle.value = !toggle.value
+
+  // if (weekResults.value[index].state !== 'lock') {
+  //   changeIndex(index);
+  //   currentDay.value = data.day;
+  //   // dataT.value[1] = 10
+  //   // myChart.value.data.datasets[0].data = [data.success, data.errors, data.total - (data.success + data.errors)]
+  //   // myChart.value.draw();
+  //
+  //   dataT.value = [data.success, data.errors, data.total - (data.success + data.errors)];
+  // }
 }
 </script>
 

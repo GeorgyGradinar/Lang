@@ -7,63 +7,69 @@
       </div>
       <div class="lecture_statistic_data">
         <div class="wrapper-data">
-          <p class="current-data">2300</p>
+          <p class="current-data">{{ currentDayStatistic?.dictionary?.count_added_words }}</p>
           <div class="wrapper-titles">
             <p>добавлено</p>
             <p>Слов/Фраз</p>
           </div>
         </div>
+
         <div class="wrapper-data">
-          <p class="current-data">1200</p>
+          <p class="current-data">{{ currentDayStatistic?.dictionary?.count_word_trainings }}</p>
+          <div class="wrapper-titles">
+            <p>в тренировке</p>
+            <p>Слов</p>
+          </div>
+        </div>
+
+        <div class="wrapper-data">
+          <p class="current-data">{{ currentDayStatistic?.dictionary?.count_completed_words }}</p>
           <div class="wrapper-titles">
             <p>изучено</p>
             <p>Слов</p>
           </div>
         </div>
-        <div class="wrapper-data">
-          <p class="current-data">1100</p>
-          <div class="wrapper-titles">
-            <p>изучено</p>
-            <p>Фраз</p>
-          </div>
-        </div>
       </div>
     </div>
 
-    <div class="lecture_statistic">
-      <div class="lecture_statistic_header">
-        <img src="img/progress/edit-pen.svg" alt="edit">
-        <p>Грамматика</p>
-      </div>
-      <div class="lecture_statistic_data">
-        <div class="wrapper-data">
-          <p class="current-data">950</p>
-          <div class="wrapper-titles">
-            <p>изучено</p>
-            <p>Уроков</p>
-          </div>
-        </div>
-        <div class="wrapper-data">
-          <p class="current-data">65</p>
-          <div class="wrapper-titles">
-            <p>пройдено</p>
-            <p>Курсов</p>
-          </div>
-        </div>
-        <div class="wrapper-data">
-          <p class="current-data">450</p>
-          <div class="wrapper-titles">
-            <p>прокачано</p>
-            <p>Правил</p>
-          </div>
-        </div>
-      </div>
-    </div>
+<!--    <div class="lecture_statistic">-->
+<!--      <div class="lecture_statistic_header">-->
+<!--        <img src="img/progress/edit-pen.svg" alt="edit">-->
+<!--        <p>Грамматика</p>-->
+<!--      </div>-->
+<!--      <div class="lecture_statistic_data">-->
+<!--        <div class="wrapper-data">-->
+<!--          <p class="current-data">950</p>-->
+<!--          <div class="wrapper-titles">-->
+<!--            <p>изучено</p>-->
+<!--            <p>Уроков</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="wrapper-data">-->
+<!--          <p class="current-data">65</p>-->
+<!--          <div class="wrapper-titles">-->
+<!--            <p>пройдено</p>-->
+<!--            <p>Курсов</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="wrapper-data">-->
+<!--          <p class="current-data">450</p>-->
+<!--          <div class="wrapper-titles">-->
+<!--            <p>прокачано</p>-->
+<!--            <p>Правил</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
 <script setup>
+import {statisticStore} from "@/store/statisticStore";
+import {storeToRefs} from "pinia/dist/pinia";
 
+const statistic = statisticStore();
+const {currentDayStatistic} = storeToRefs(statistic);
 </script>
 
 <style scoped lang="scss">

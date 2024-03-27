@@ -96,11 +96,16 @@ function getAllowForMicrophone(isStartRecord = false) {
 }
 
 function sendMessageToNetwork() {
-
   if (currentTask.value?.status === "success") {
     openSnackBarReject('Задание уже выполнено');
     return;
   }
+
+  if (isCyrillic(messageToBot.value) && router.currentRoute.value.path === '/lesson') {
+    openSnackBarReject('Текст должен содержать только латинские символы');
+    return;
+  }
+
   if (!messageToBot.value.trim().length && !isActiveRecord.value) return;
   if (isActiveGeneration.value) return;
 
@@ -118,6 +123,10 @@ function sendMessageToNetwork() {
 
   messageToBot.value = '';
   emit('scrollDown');
+}
+
+function isCyrillic(message) {
+  return /[а-я]/i.test(message);
 }
 
 function handleRecord(event) {

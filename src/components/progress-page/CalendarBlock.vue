@@ -18,162 +18,31 @@
 </template>
 
 <script setup>
-
 import {onMounted, ref, watch} from "vue";
 import {statisticStore} from "@/store/statisticStore";
 import {storeToRefs} from "pinia/dist/pinia";
 import statisticRequests from "@/mixins/requests/statisticRequests";
 
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  currentData: Object
-})
-
-// eslint-disable-next-line no-undef,no-unused-vars
-const emit = defineEmits(['changeData']);
-const history = [
-  {
-    done: 6,
-    exception: 2
-  },
-  {
-    done: 2,
-    exception: 4
-  },
-  {
-    done: 8,
-    exception: 0
-  },
-  {
-    done: 4,
-    exception: 4
-  },
-  {
-    done: 1,
-    exception: 4
-  },
-  {
-    done: 1,
-    exception: 1
-  },
-  {
-    done: 2,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-  {
-    done: 7,
-    exception: 2
-  },
-];
 const statistic = statisticStore();
-const {allStatistic} = storeToRefs(statistic);
+const {monthStatistic} = storeToRefs(statistic);
+const {changeCurrentDayStatistic} = statistic;
 const {getMonthlyStatistic} = statisticRequests();
 
-let currentHistoryDay = ref();
 let dataPicker = ref(null);
 
 let data = ref(null);
 
 onMounted(() => {
-  data.value = props.currentData
-  currentHistoryDay.value = history[data.value.getDate()];
+  data.value = new Date();
   getMonthlyStatistic(getCurrentDate());
 })
 
-watch(allStatistic, () => {
+watch(monthStatistic, () => {
   updateDataPicker();
 })
 
 function handleSelectedDay() {
-  emit('changeData', data.value);
+  changeCurrentDayStatistic(data.value.getDate());
 }
 
 function handleUpdateMonth(event) {
@@ -193,7 +62,7 @@ function getCurrentDate() {
 }
 
 function removeInfoFromDataPicker() {
-  Array.from(document.getElementsByClassName('myClass')).forEach(element => {
+  Array.from(document.getElementsByClassName('info-statistic')).forEach(element => {
     element.remove();
   })
 }
@@ -207,7 +76,7 @@ function updateDataPicker() {
   for (let index = 0; index < listDate.length; index++) {
     if (!listDate[index].className.includes(titleClass) && !listDate[index].className.includes(anotherClass)) {
 
-      const findHistoryDate = allStatistic.value.find(dataHistory => {
+      const findHistoryDate = monthStatistic.value.find(dataHistory => {
         if (new Date(dataHistory.date).getDate() === indexCurrentMonth) return dataHistory
       })
 
@@ -224,7 +93,7 @@ function addDataToCurrentDay(listDate, index, dataHistory) {
   wrapperDone.appendChild(getHtmlTextElement(true, dataHistory?.tasks?.count_succeeded_tasks));
   wrapperDone.appendChild(getImageForStatistic(false));
   wrapperDone.appendChild(getHtmlTextElement(false, dataHistory?.tasks?.count_processing_tasks));
-  wrapperDone.classList.add("myClass")
+  wrapperDone.classList.add("info-statistic")
   listDate[index - 1].children[0].appendChild(wrapperDone);
 }
 

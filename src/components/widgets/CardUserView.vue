@@ -1,11 +1,11 @@
 <template>
-  <div class="tasks-card bg-base-red" @click="startTask">
-    <div class="tasks-card__img">
-      <img :src="card.img">
-    </div>
-    <h3 class="tasks-card-type">{{ card.task.type.title }} №{{ card.id }}</h3>
-    <h4 class="tasks-card__title">{{ card.task.title }}</h4>
+  <div class="tasks-card" @click="startTask">
+    <!--    <div class="tasks-card__img">-->
+    <!--      <img :src="card.img">-->
+    <!--    </div>-->
+    <h4 class="tasks-card__title">№{{ card.id }} {{ card.task.title }}</h4>
     <p class="tasks-card__descr">{{ card.task.description }}</p>
+    <p class="character"><span>Персонаж:</span> {{ card.character_info }}</p>
     <!--    <div class="info">-->
     <!--      <div class="count_tasks">-->
     <!--        <img src="img/tasks/book.svg" alt="">-->
@@ -51,15 +51,16 @@ function startTask() {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 10px;
+  gap: 5px;
   border-radius: 10px;
   width: 300px;
-  padding: 24px;
-  border: 1px solid var(--dark);
+  padding: 30px 20px;
+  border: 2px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
   cursor: pointer;
   transition: all 0.2s;
   color: var(--white);
+  background-color: var(--dark-pink);
 
   //&:active {
   //  box-shadow: 0 0 1px var(--dark);
@@ -70,18 +71,10 @@ function startTask() {
     transform: scale(1.05);
   }
 
-  .tasks-card-type {
-    font-size: 16px;
-    font-weight: 800;
-    margin-bottom: 20px;
-    color: var(--dark-pink);
-  }
-
   .tasks-card__title {
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 800;
-    margin-bottom: 20px;
-    color: var(--white);
+    color: var(--yellow);
   }
 
   .tasks-card__img {
@@ -90,8 +83,20 @@ function startTask() {
   }
 
   .tasks-card__descr {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .character {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--yellow);
+
+    span {
+      color: var(--yellow);
+      font-weight: 700;
+      margin-right: 5px;
+    }
   }
 
   .info {
@@ -150,6 +155,12 @@ function startTask() {
     font-size: 12px;
     margin-top: 10px;
     color: var(--white);
+
+    p {
+      color: #2ec386;
+      font-weight: 700;
+      font-size: 15px;
+    }
 
     .done {
       display: flex;

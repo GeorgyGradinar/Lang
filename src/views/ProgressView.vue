@@ -1,13 +1,10 @@
 <template>
   <div class="wrapper-progress-page">
     <div class="wrapper-show-result">
-      <StatisticBlock :current-history-day="currentHistoryDay"
-                      :is-active-clean-animation="isActiveCleanAnimation">
-      </StatisticBlock>
+      <StatisticBlock></StatisticBlock>
       <DetailStatistic></DetailStatistic>
     </div>
-    <CalendarBlock :currentData="currentData"
-                   @changeData="handleSelectedDay">
+    <CalendarBlock>
     </CalendarBlock>
   </div>
 </template>
@@ -161,6 +158,7 @@ onMounted(() => {
   currentHistoryDay.value = history[currentData.value.getDate()];
 })
 
+// eslint-disable-next-line no-unused-vars
 function handleSelectedDay(event) {
   isActiveCleanAnimation.value = true;
   setTimeout(() => {

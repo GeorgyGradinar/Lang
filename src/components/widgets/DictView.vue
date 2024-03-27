@@ -18,7 +18,7 @@
 
     <div class="words-2__list" v-if="words.length" :class="{'list-show': isShowWordsTypeList}">
       <WordCard v-for="word in words" :key="word.id"
-                :wordData="word.word">
+                :wordData="word.word" :userWord="word">
       </WordCard>
     </div>
 

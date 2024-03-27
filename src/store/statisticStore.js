@@ -2,18 +2,39 @@ import {defineStore} from "pinia/dist/pinia";
 import {ref} from "vue";
 
 export const statisticStore = defineStore('statistic', () => {
-    let allStatistic = ref(null);
+    let monthStatistic = ref(null);
+    let currentDayStatistic = ref(null);
+    let isActiveCleanAnimation = ref(false);
 
     function clearStatisticStore() {
-        allStatistic.value = null;
+        monthStatistic.value = null;
+        currentDayStatistic.value = null;
     }
 
-    function changeAllStatistic(statistic) {
-        allStatistic.value = statistic;
+    function changeMonthStatistic(statistic) {
+        monthStatistic.value = statistic;
+        if (!currentDayStatistic.value) {
+            changeCurrentDayStatistic(new Date().getDate())
+        }
+    }
+
+    function changeCurrentDayStatistic(currentDay) {
+        toggleClearAnimation();
+        setTimeout(() => {
+            let foundDay = monthStatistic.value.find(day => new Date(day.date).getDate() === currentDay)
+            currentDayStatistic.value = foundDay ? foundDay : null;
+            toggleClearAnimation();
+        }, 500);
+    }
+
+    function toggleClearAnimation() {
+        isActiveCleanAnimation.value = !isActiveCleanAnimation.value;
     }
 
     return {
-        allStatistic, changeAllStatistic,
+        monthStatistic, changeMonthStatistic,
+        currentDayStatistic, changeCurrentDayStatistic,
+        isActiveCleanAnimation,
         clearStatisticStore
     }
 })

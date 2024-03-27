@@ -20,10 +20,7 @@
 
     <div class="wrapper-word-chat">
       <div class="words">
-        <words-group-list
-            :groups="wordGroups"
-            @selected="selectGroup"
-        />
+        <words-group-list/>
         <!--        <slider-view :feed="sliderFeed1"/>-->
         <!--        <slider-view :feed="sliderFeed2"/>-->
 
@@ -86,7 +83,6 @@ export default {
     sliderFeed1: [],
     sliderFeed2: [],
     newWords: [],
-    wordGroups: [],
     mistakeTabs: [],
     mistakesArray: {},
     currentMistakes: {},

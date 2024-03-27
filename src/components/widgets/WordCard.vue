@@ -52,9 +52,8 @@
         <v-tooltip activator="parent" location="bottom">Удалить слово</v-tooltip>
       </div>
 
-      <div class="learned" v-if="wordData?.count > 0 || wordData?.done">
-        <p v-if="wordData?.count > 0"><img src="img/icon/fluent_hat-graduation-24-regular.svg">2</p>
-        <p v-if="wordData?.done"><img src="img/icon/lean.png"></p>
+      <div class="learned" v-if="userWord?.training_count">
+        <p ><img src="img/icon/lean.png">{{ userWord?.training_count }}</p>
         <v-tooltip activator="parent" location="bottom">Отработанно</v-tooltip>
       </div>
     </div>
@@ -69,9 +68,10 @@ import {dictionaryStore} from "@/store/dictionaryStore";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
-  wordData: Object
+  wordData: Object,
+  userWord: Object
 })
-const {wordData} = toRefs(props);
+const {wordData, userWord} = toRefs(props);
 const {addWordsToUserDictionary, requestToDeleteWord} = dictionaryRequests();
 const dictionary = dictionaryStore();
 // eslint-disable-next-line no-unused-vars
@@ -102,7 +102,6 @@ function deleteUserWord() {
 }
 
 function playPronunciation() {
-  console.log(wordData.value.pronunciations)
   if (wordData.value.pronunciations.us) {
     new Audio(wordData.value.pronunciations.us).play();
   } else if (wordData.value.pronunciations.uk) {
@@ -237,7 +236,7 @@ function playPronunciation() {
 
       &:active {
         box-shadow: 0 0 1px var(--dark);
-        transform: translateY(5px);
+        transform: translateY(4px);
       }
     }
 
@@ -253,14 +252,20 @@ function playPronunciation() {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 40px;
+      width: 100%;
+      min-width: 40px;
+      max-width: 55px;
       height: 40px;
+      box-shadow: 0 0 1px var(--dark);
+      transform: translateY(2px);
+      border: 2px solid var(--yellow);
 
       P {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-around;
         gap: 2px;
+        color: var(--yellow);
 
         img {
           width: 15px;
