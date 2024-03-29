@@ -5,7 +5,7 @@ import {statisticStore} from "@/store/statisticStore";
 
 export default function dictionaryRequests() {
     const statistic = statisticStore();
-    const {changeMonthStatistic} = statistic;
+    const {changeMonthStatistic, changeWeeklyStatistic} = statistic;
 
     function getAllStatistics() {
         axios.get(`${testUrl}/api/user/statistics/all`, {
@@ -21,7 +21,16 @@ export default function dictionaryRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                changeMonthStatistic(response.data.data)
+                changeMonthStatistic(response.data.data);
+            })
+    }
+
+    function getWeeklyStatistic() {
+        axios.get(`${testUrl}/api/user/statistics/weekly`, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
+        })
+            .then(response => {
+                changeWeeklyStatistic(response.data.data);
             })
     }
 
@@ -37,6 +46,7 @@ export default function dictionaryRequests() {
     return {
         getAllStatistics,
         getMonthlyStatistic,
+        getWeeklyStatistic,
         getDailyStatistic
     }
 }

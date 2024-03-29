@@ -4,7 +4,8 @@
     <div class="payment-page">
       <div class="wrapper-details">
         <payment-state-view :state="paymentState" @cancelSubscr="toggleDialogSubscription(true)"/>
-        <payment-method-view :state="paymentMethod"/>
+        <payment-state-finish></payment-state-finish>
+<!--        <payment-method-view :state="paymentMethod"/>-->
       </div>
 
       <payment-list-view :payments="payments"/>
@@ -16,9 +17,10 @@
 <script setup>
 import MessageView from '@/components/widgets/MessageView.vue';
 import PaymentStateView from '@/components/widgets/PaymentStateView.vue';
-import PaymentMethodView from '@/components/widgets/PaymentMethodView.vue';
+// import PaymentMethodView from '@/components/widgets/PaymentMethodView.vue';
 import PaymentListView from '@/components/widgets/PaymentListView.vue';
 import CancelSubscriptionDlg from '@/components/modals/CancelSubscriptionDlg.vue';
+import PaymentStateFinish from "@/components/widgets/PaymentStateFinish";
 import {onMounted, ref} from "vue";
 
 let messageText = ref('111');

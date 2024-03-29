@@ -58,6 +58,8 @@
       </div>
     </div>
   </div>
+
+  <WordsDetails></WordsDetails>
 </template>
 
 <script setup>
@@ -65,6 +67,7 @@ import {onMounted, ref, toRefs, watch} from "vue";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {storeToRefs} from "pinia/dist/pinia";
 import {dictionaryStore} from "@/store/dictionaryStore";
+import WordsDetails from "@/components/modals/WordsDetails";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -80,7 +83,7 @@ const {isSearching, isShowWordsTypeList} = storeToRefs(dictionary);
 let isShowTranslate = ref(false);
 
 onMounted(() => {
-  console.log(wordData.value)
+  console.log('test')
 })
 
 watch(isShowWordsTypeList, () => {

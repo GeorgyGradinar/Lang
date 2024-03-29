@@ -24,6 +24,7 @@ export default {
   .message {
     display: flex;
     align-items: center;
+    color: var(--light-yellow);
 
     img {
       width: 35px;

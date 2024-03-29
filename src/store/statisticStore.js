@@ -3,28 +3,35 @@ import {ref} from "vue";
 
 export const statisticStore = defineStore('statistic', () => {
     let monthStatistic = ref(null);
+    let weeklyStatistic = ref(null);
     let currentDayStatistic = ref(null);
     let isActiveCleanAnimation = ref(false);
 
     function clearStatisticStore() {
         monthStatistic.value = null;
+        weeklyStatistic.value = null;
         currentDayStatistic.value = null;
     }
 
     function changeMonthStatistic(statistic) {
         monthStatistic.value = statistic;
         if (!currentDayStatistic.value) {
-            changeCurrentDayStatistic(new Date().getDate())
+            changeCurrentDayStatistic(monthStatistic.value, new Date().getDate());
         }
     }
 
-    function changeCurrentDayStatistic(currentDay) {
+    function changeWeeklyStatistic(statistic) {
+        weeklyStatistic.value = statistic;
+        if (!currentDayStatistic.value) {
+            changeCurrentDayStatistic(weeklyStatistic.value, new Date().getDate());
+        }
+    }
+
+    function changeCurrentDayStatistic(allStatistic, currentDay) {
         toggleClearAnimation();
-        setTimeout(() => {
-            let foundDay = monthStatistic.value.find(day => new Date(day.date).getDate() === currentDay)
-            currentDayStatistic.value = foundDay ? foundDay : null;
-            toggleClearAnimation();
-        }, 500);
+        const foundDay = allStatistic.find(day => new Date(day.date).getDate() === currentDay);
+        currentDayStatistic.value = foundDay ? foundDay : null;
+        toggleClearAnimation();
     }
 
     function toggleClearAnimation() {
@@ -33,6 +40,7 @@ export const statisticStore = defineStore('statistic', () => {
 
     return {
         monthStatistic, changeMonthStatistic,
+        weeklyStatistic, changeWeeklyStatistic,
         currentDayStatistic, changeCurrentDayStatistic,
         isActiveCleanAnimation,
         clearStatisticStore

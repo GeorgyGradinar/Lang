@@ -1,5 +1,5 @@
 <template>
-  <div class="sound" @click="play(word)">
+  <div class="sound" @click="play()">
     <img v-if="currentSoundType === soundTypes.mute" src="img/icon/volume-mute.svg" alt="sound">
     <img v-if="currentSoundType === soundTypes.low" src="img/icon/volume-low.svg" alt="sound">
     <img v-if="currentSoundType === soundTypes.high" src="img/icon/volume-high.svg" alt="sound">

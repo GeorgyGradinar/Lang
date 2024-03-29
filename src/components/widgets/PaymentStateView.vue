@@ -8,9 +8,9 @@
       - {{ state.price }} <span class="lower">₽ </span>
     </p>
 
-    <p>- Следующая оплата {{ state.stopDate }}</p>
+    <p>- Оплата действует до: {{ state.stopDate }}</p>
     <div class="wrapper-buttons">
-      <button class="button-cancel-subscribe" @click="$emit('cancelSubscr')">Отменить подписку</button>
+<!--      <button class="button-cancel-subscribe" @click="$emit('cancelSubscr')">Отменить подписку</button>-->
       <button @click="$router.push('/tariff')">Открыть тарифы</button>
     </div>
   </div>
@@ -32,13 +32,13 @@ export default {
 .wrapper-state {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 25px;
   padding: 20px;
   border-radius: 10px;
   border: 1px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
   color: var(--light-green);
-  background-color: var(--red);
+  background-color: var(--dark-pink);
 
   h2 {
     display: flex;
