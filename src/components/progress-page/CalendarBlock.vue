@@ -42,7 +42,7 @@ watch(monthStatistic, () => {
 })
 
 function handleSelectedDay() {
-  changeCurrentDayStatistic(data.value.getDate());
+  changeCurrentDayStatistic(monthStatistic.value, data.value.getDate());
 }
 
 function handleUpdateMonth(event) {
