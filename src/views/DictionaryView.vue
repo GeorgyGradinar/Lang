@@ -17,9 +17,9 @@ import {onMounted} from "vue";
 const {getGroups, getAllWords, getAllUsersWords} = dictionaryRequests();
 
 onMounted(() => {
-  // getGroups();
+  getGroups();
   // getAllWords();
-  // getAllUsersWords();
+  getAllUsersWords();
 })
 
 </script>

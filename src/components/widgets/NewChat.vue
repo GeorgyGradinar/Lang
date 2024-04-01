@@ -48,11 +48,7 @@
             <div class="message">
               <p>{{ message.message }}</p>
             </div>
-
-            <p class="comment animate__animated animate__fast animate__fadeInRight"
-               v-if="message?.spelling_comment">
-              {{ message.spelling_comment }}
-            </p>
+            <CommentElement v-if="message?.spelling_comment" :comment="message?.spelling_comment"></CommentElement>
           </div>
 
 
@@ -120,6 +116,7 @@ import {useRouter} from "vue-router/dist/vue-router";
 import {tasksStore} from "@/store/tasksStore";
 import {TASKS, LESSON} from "@/configuration/Routers";
 import TaskAndAnswer from "@/components/widgets/TaskAndAnswer";
+import CommentElement from "@/components/chat/CommentElement";
 
 const router = useRouter();
 // eslint-disable-next-line no-undef
@@ -160,7 +157,6 @@ onMounted(() => {
   } else {
     getMessages();
   }
-  console.log(new Date())
   messagesBlock.value.addEventListener('scroll', handelScrollForPagination);
 })
 
@@ -385,14 +381,6 @@ onUnmounted(() => {
           flex-direction: column;
           align-items: flex-end;
           width: 100%;
-
-          .comment {
-            display: flex;
-            flex-wrap: wrap;
-            color: var(--red);
-            margin-top: 5px;
-            max-width: 60%;
-          }
         }
 
         .typing-message {

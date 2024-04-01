@@ -28,7 +28,6 @@
     <LoaderSpiner v-if="!words.length && isActiveLoading"></LoaderSpiner>
   </div>
 
-  <WordsDetails></WordsDetails>
 </template>
 
 <script setup>
@@ -40,7 +39,6 @@ import BorderNav from '@/components/app/BorderNav.vue';
 import TextNav from '@/components/app/TextNav.vue';
 import DictionarySearchBlock from "@/components/widgets/DictionarySearchBlock";
 import ToggleShowWordsListOrBlock from "@/components/widgets/ToggleShowWordsListOrBlock";
-import WordsDetails from "@/components/modals/WordsDetails";
 
 const dictionary = dictionaryStore();
 const {words, isSearching, isActiveLoading, isShowWordsTypeList} = storeToRefs(dictionary);

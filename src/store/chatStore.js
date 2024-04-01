@@ -39,6 +39,8 @@ export const chatStore = defineStore('chat', () => {
             messages.value = allMessages
         }
 
+        console.log(messages.value)
+
         triggerScrollDown();
     }
 

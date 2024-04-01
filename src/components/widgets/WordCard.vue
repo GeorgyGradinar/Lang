@@ -36,11 +36,10 @@
         <v-tooltip activator="parent" location="bottom">Задачи</v-tooltip>
       </div>
 
-      <div class="help">
+      <div class="help" @click="toggleOpenDetailModal">
         <img src="img/icon/bxs-help-circle.svg">
         <v-tooltip activator="parent" location="bottom">an exciting or unexpected event or course of events</v-tooltip>
       </div>
-
 
       <div v-if="!wordData?.in_dictionary" class="add-word" @click="addWordToAccount()">
         <img src="img/dictionary/add.svg">
@@ -53,17 +52,17 @@
       </div>
 
       <div class="learned" v-if="userWord?.training_count">
-        <p ><img src="img/icon/lean.png">{{ userWord?.training_count }}</p>
+        <p><img src="img/icon/lean.png">{{ userWord?.training_count }}</p>
         <v-tooltip activator="parent" location="bottom">Отработанно</v-tooltip>
       </div>
     </div>
   </div>
 
-  <WordsDetails></WordsDetails>
+  <WordsDetails v-if="isOpenDialog" :word="wordData" @hiddenBlock="toggleOpenDetailModal"></WordsDetails>
 </template>
 
 <script setup>
-import {onMounted, ref, toRefs, watch} from "vue";
+import {ref, toRefs, watch} from "vue";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {storeToRefs} from "pinia/dist/pinia";
 import {dictionaryStore} from "@/store/dictionaryStore";
@@ -77,14 +76,10 @@ const props = defineProps({
 const {wordData, userWord} = toRefs(props);
 const {addWordsToUserDictionary, requestToDeleteWord} = dictionaryRequests();
 const dictionary = dictionaryStore();
-// eslint-disable-next-line no-unused-vars
-const {isSearching, isShowWordsTypeList} = storeToRefs(dictionary);
+const {isShowWordsTypeList} = storeToRefs(dictionary);
 
 let isShowTranslate = ref(false);
-
-onMounted(() => {
-  console.log('test')
-})
+let isOpenDialog = ref(false);
 
 watch(isShowWordsTypeList, () => {
   isShowTranslate.value = false;
@@ -94,6 +89,10 @@ function toggleIsShowTranslate() {
   if (!isShowWordsTypeList.value) {
     isShowTranslate.value = !isShowTranslate.value;
   }
+}
+
+function toggleOpenDetailModal(isOpen) {
+  isOpenDialog.value = isOpen;
 }
 
 function addWordToAccount() {

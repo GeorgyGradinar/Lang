@@ -69,7 +69,6 @@ export default function dialogsRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                console.log(response)
                 getMessageFromTask(response.data.task_message_id);
             })
             .catch(error => handleError(error))
@@ -81,6 +80,7 @@ export default function dialogsRequests() {
         })
             .then(response => {
                 if (response.data.data[2]?.message_status === "processing") {
+                    if (response.data.data[0].spelling_comment) addCommentToLastPersonMessage(response.data.data[0].spelling_comment);
                     setTimeout(() => {
                         getMessageFromTask(id)
                     }, 1000);

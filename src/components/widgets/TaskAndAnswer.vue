@@ -19,6 +19,11 @@
           <p>Задание:</p>
           <p>{{ currentTask?.task?.description }}</p>
         </div>
+
+        <div class="wrapper-task-description">
+          <p>Персонаж:</p>
+          <p>{{ currentTask?.character_info }}</p>
+        </div>
       </div>
 
       <!--      <div class="answer">-->
