@@ -20,6 +20,10 @@
       <WordCard v-for="word in words" :key="word.id"
                 :wordData="word.word" :userWord="word">
       </WordCard>
+      <ButtonMoreWords v-if="paginationUserWords?.current_page < paginationUserWords?.last_page"
+                       :active-loader="isActiveUserWordLoader"
+                       :isUserWords="true">
+      </ButtonMoreWords>
     </div>
 
     <p class="message" v-if="!words.length && isSearching && !isActiveLoading">Слово не найдено</p>
@@ -39,9 +43,17 @@ import BorderNav from '@/components/app/BorderNav.vue';
 import TextNav from '@/components/app/TextNav.vue';
 import DictionarySearchBlock from "@/components/widgets/DictionarySearchBlock";
 import ToggleShowWordsListOrBlock from "@/components/widgets/ToggleShowWordsListOrBlock";
+import ButtonMoreWords from "@/components/dictionary/ButtonMoreWords";
 
 const dictionary = dictionaryStore();
-const {words, isSearching, isActiveLoading, isShowWordsTypeList} = storeToRefs(dictionary);
+const {
+  words,
+  isSearching,
+  isActiveLoading,
+  isShowWordsTypeList,
+  isActiveUserWordLoader,
+  paginationUserWords
+} = storeToRefs(dictionary);
 
 const wordNav = [
   {id: 0, title: 'Список слов'},

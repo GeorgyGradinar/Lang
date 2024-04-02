@@ -9,6 +9,7 @@ export const dictionaryStore = defineStore('dictionary', () => {
     let isSearching = ref(false);
     let isActiveLoading = ref(false);
     let isActiveGroupWordLoader = ref(false);
+    let isActiveUserWordLoader = ref(false);
     let isShowWordsTypeList = ref(false);
 
     //sort
@@ -22,7 +23,10 @@ export const dictionaryStore = defineStore('dictionary', () => {
     };
     let sortUserWords = ref(ALFABET_SORT);
 
-    //pagination
+    //pagination for user words
+    let paginationUserWords = ref(null);
+
+    //pagination group's words
     let allPagesWordInGroup = ref(null);
     let currentPageWordsInGroup = ref(1);
 
@@ -32,7 +36,9 @@ export const dictionaryStore = defineStore('dictionary', () => {
         selectedGroupWords.value = null;
         isActiveLoading.value = false;
         isActiveGroupWordLoader.value = false;
+        isActiveUserWordLoader.value = false;
         isShowWordsTypeList.value = false;
+        paginationUserWords.value = null;
         clearForSearching();
         clearPagination();
     }
@@ -51,9 +57,17 @@ export const dictionaryStore = defineStore('dictionary', () => {
         words.value = newWords;
     }
 
+    function addMoreWords(newWords) {
+        words.value = [...words.value, ...newWords];
+    }
+
     function deleteWord(deleteId) {
         const index = words.value.findIndex(data => data.word.id === deleteId);
         words.value.splice(index, 1);
+    }
+
+    function changePaginationForUserWords(pagination) {
+        paginationUserWords.value = pagination;
     }
 
     function changeGroups(newGroups) {
@@ -96,12 +110,17 @@ export const dictionaryStore = defineStore('dictionary', () => {
         isActiveGroupWordLoader.value = isActive;
     }
 
+    function toggleActiveUserWordLoader(isActive) {
+        isActiveUserWordLoader.value = isActive;
+    }
+
     function toggleTypeShowWords(isList) {
         isShowWordsTypeList.value = isList;
     }
 
     return {
-        words, changeWords, deleteWord,
+        words, changeWords, addMoreWords, deleteWord,
+        paginationUserWords, changePaginationForUserWords,
         groups, changeGroups,
         groupWords, changeGroupWords, addWordsToGroupWords,
         selectedGroupWords, changeSelectedGroup,
@@ -111,6 +130,7 @@ export const dictionaryStore = defineStore('dictionary', () => {
         isSearching, changeIsSearch,
         isActiveLoading, toggleActiveLoader,
         isActiveGroupWordLoader, toggleActiveGroupWordsLoader,
+        isActiveUserWordLoader, toggleActiveUserWordLoader,
         isShowWordsTypeList, toggleTypeShowWords,
         clearDictionaryStore, clearForSearching, clearPagination
     }

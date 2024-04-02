@@ -1,8 +1,8 @@
 <template>
   <div class="tasks-card" @click="addTasksToUser">
-<!--    <div class="tasks-card__img">-->
-<!--      <img :src="card.img">-->
-<!--    </div>-->
+    <!--    <div class="tasks-card__img">-->
+    <!--      <img :src="card.img">-->
+    <!--    </div>-->
     <h3 class="tasks-card__title">{{ card.title }}</h3>
     <p class="tasks-card__descr">{{ card.description }}</p>
     <!--    <div class="info">-->
@@ -29,10 +29,14 @@
     <!--      <p>Выполненно!</p>-->
     <!--    </div>-->
   </div>
+
+  <ShowWordsForTask v-if="isOpenWordList" @hiddenBlock="toggleOpenWordsList"></ShowWordsForTask>
 </template>
 
 <script setup>
 import taskRequests from "@/mixins/requests/taskRequests";
+import ShowWordsForTask from "@/components/modals/ShowWordsForTask";
+import {ref} from "vue";
 
 // eslint-disable-next-line no-undef,no-unused-vars
 const props = defineProps({
@@ -40,8 +44,18 @@ const props = defineProps({
 });
 const {taskStart} = taskRequests();
 
+let isOpenWordList = ref(false);
+
 function addTasksToUser() {
-  taskStart(props.card.id);
+  if (props.card.id === 6) {
+    toggleOpenWordsList(true);
+  } else {
+    taskStart(props.card.id);
+  }
+}
+
+function toggleOpenWordsList(isOpen) {
+  isOpenWordList.value = isOpen;
 }
 </script>
 

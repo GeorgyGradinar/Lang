@@ -192,8 +192,8 @@ function openOptionBlock(event) {
     return;
   }
 
-  top.value = event.y - 150 + event.view.scrollY;
-  left.value = event.x - 150;
+  top.value = event.y - 160 + event.view.scrollY;
+  left.value = event.x - 175;
   currentWord.value = event.target;
 }
 

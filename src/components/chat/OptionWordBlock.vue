@@ -1,30 +1,49 @@
 <template>
   <div v-if="topPosition" id="option-block" class="option-block"
        :style="{'top': `${topPosition}px`, 'left': `${leftPosition}px`}">
-    <div class="wrapper-option-word">
-      <SoundComponent :word="sound"></SoundComponent>
-      <p class="find-word">{{ word }}</p>
-      <div class="add-word">
-        <img src="img/dictionary/add.svg">
-        <v-tooltip activator="parent" location="bottom">Добавить в аккаунт</v-tooltip>
-      </div>
-    </div>
+    <template v-if="!isActiveSearching">
+      <template v-if="foundWord">
+        <div class="wrapper-option-word">
+          <button class="add-word" @click="addWordsToUserDictionary(foundWord.id)">
+            Добавить в аккаунт
+          </button>
+        </div>
 
-    <p>Перевод</p>
-    <div class="wrapper-option-word">
-      <template v-if="!isActiveSearching">
-        <SoundComponent :word="sound"></SoundComponent>
-        <p>{{ getFirstTranslation(foundWord.translation) }}</p>
-        <div></div>
+        <div class="wrapper-translate">
+          <p class="find-word">{{ foundWord?.word }}</p>
+          -
+          <p>{{ getFirstTranslation(foundWord.translation) }}</p>
+        </div>
+
+        <div class="transcriptions" v-if="foundWord?.pronunciations">
+          <div class="uk">
+            <p><img src="img/flugs/uk.svg" alt="flug"> {{ foundWord?.transcriptions?.uk }}</p>
+            <button class="volume" @click="playPronunciation(foundWord?.pronunciations?.us)">
+              <img src="img/icon/bxs-volume-low-light.svg">
+              <v-tooltip activator="parent" location="bottom">Озвучить</v-tooltip>
+            </button>
+          </div>
+
+          <div class="line"></div>
+
+          <div class="us">
+            <p><img src="img/flugs/us.svg" alt="flug"> {{ foundWord?.transcriptions?.us }}</p>
+            <button class="volume" @click="playPronunciation(foundWord?.pronunciations?.us)">
+              <img src="img/icon/bxs-volume-low-light.svg">
+              <v-tooltip activator="parent" location="bottom">Озвучить</v-tooltip>
+            </button>
+          </div>
+        </div>
       </template>
-      <LoaderCircle v-else></LoaderCircle>
-    </div>
+
+      <p v-else class="cant-find">Слово не найдено</p>
+    </template>
+    <LoaderCircle v-else></LoaderCircle>
   </div>
 </template>
 
 <script setup>
 import {toRefs, watch} from "vue";
-import SoundComponent from "@/components/widgets/SoundComponent";
 import LoaderCircle from "@/components/app/LoaderCircle";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {chatStore} from "@/store/chatStore";
@@ -37,17 +56,21 @@ const props = defineProps({
   word: String
 })
 const {topPosition, leftPosition, word} = toRefs(props);
-const {searchFromAllWords} = dictionaryRequests();
+const {searchFromAllWords, addWordsToUserDictionary} = dictionaryRequests();
 const chat = chatStore();
+const {changeSearchWord} = chat;
 const {foundWord, isActiveSearching} = storeToRefs(chat);
-
-const sound = {id: 0, title: 'Cloud', hint: 'подсказка1', sound: 'sound/black.mp3', path: '/lesson'};
 
 watch(topPosition, () => {
   if (topPosition.value) {
+    changeSearchWord(null);
     searchFromAllWords(word.value);
   }
 })
+
+function playPronunciation(url) {
+  new Audio(url).play();
+}
 
 function getFirstTranslation(translations) {
   return translations.split(',')[0]
@@ -57,7 +80,7 @@ function getFirstTranslation(translations) {
 <style scoped lang="scss">
 .option-block {
   position: absolute;
-  width: 300px;
+  width: 350px;
   background-color: var(--light-yellow);
   padding: 10px;
   border-radius: 10px;
@@ -69,33 +92,16 @@ function getFirstTranslation(translations) {
     color: var(--dark-pink);
   }
 
+  .cant-find {
+    font-size: 15px;
+    font-weight: 800;
+  }
+
   .wrapper-option-word {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 5px;
-    border-bottom: 2px solid var(--dark-pink);
-
-    &:first-child {
-      padding-bottom: 5px;
-      margin-bottom: 5px;
-    }
-
-    &:last-child {
-      border-bottom: unset;
-    }
-
-    p {
-      color: var(--dark);
-      font-weight: 700;
-      font-size: 16px;
-    }
-
-    .find-word {
-      flex: 1;
-      margin-right: 20px;
-      text-align: center;
-    }
 
     .add-word {
       display: flex;
@@ -104,14 +110,90 @@ function getFirstTranslation(translations) {
       border-radius: 10px;
       padding: 5px;
       transition: all 0.2s;
+      font-size: 12px;
       background-color: var(--dark-pink);
+      color: var(--light-yellow);
       cursor: pointer;
 
-      img {
-        width: 20px;
-        height: 20px;
-        fill: var(--white);
+      &:active {
+        box-shadow: 0 0 1px var(--dark);
+        transform: translateY(4px);
       }
+
+      &:hover {
+        background-color: var(--pink);
+      }
+    }
+  }
+
+  .wrapper-translate {
+    display: flex;
+    gap: 5px;
+    margin-top: 15px;
+
+    p {
+      color: var(--dark-pink);
+      font-weight: 800;
+      font-size: 18px;
+    }
+  }
+
+  .transcriptions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 0;
+
+    .uk,
+    .us {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+
+      p {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--dark-pink);
+
+        img {
+          width: 25px;
+        }
+      }
+
+      button {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+        border-radius: 10px;
+        border: 2px solid var(--dark);
+        box-shadow: 1px 4px 1px var(--dark);
+        background-color: var(--pink);
+        transition: all 0.2s;
+
+        img {
+          width: 20px;
+        }
+
+        &:active {
+          box-shadow: 0 0 1px var(--dark);
+          transform: translateY(4px);
+        }
+
+        &:hover {
+          background-color: var(--dark-pink);
+        }
+      }
+    }
+
+    .line {
+      background-color: var(--dark-pink);
+      width: 1px;
+    }
+
+    p {
+      color: var(--light-green);
     }
   }
 }

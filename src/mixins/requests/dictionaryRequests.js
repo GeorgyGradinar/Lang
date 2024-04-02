@@ -10,12 +10,15 @@ export default function dictionaryRequests() {
     const dictionary = dictionaryStore();
     const {
         changeWords,
+        addMoreWords,
+        changePaginationForUserWords,
         deleteWord,
         changeIsSearch,
         changeGroups,
         changeGroupWords,
         addWordsToGroupWords,
         toggleActiveLoader,
+        toggleActiveUserWordLoader,
         toggleActiveGroupWordsLoader,
         changeAllPagesWordsInGroup,
         changeCurrentPageWordsInGroup
@@ -65,15 +68,31 @@ export default function dictionaryRequests() {
             .catch(error => handleError(error))
     }
 
-    function getAllUsersWords() {
-        toggleActiveLoader(true);
-        axios.get(`${testUrl}/api/user/dictionary/words?column=${dictionary.sortUserWords.type}&per_page=20`, {
+    function getAllUsersWords(isPagination) {
+        isPagination ? toggleActiveUserWordLoader(true) : toggleActiveLoader(true);
+
+        let body = {
+            'column': dictionary.sortUserWords.type,
+            'per_page': 20
+        };
+
+        const currentPage = dictionary.paginationUserWords?.current_page
+        body = currentPage < dictionary.paginationUserWords?.last_page ? {...body, page: currentPage + 1} : body;
+
+        axios.get(`${testUrl}/api/user/dictionary/words?${new URLSearchParams(body)}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization]),
         })
             .then(response => {
                 setTimeout(() => {
-                    changeWords(response.data.data);
+                    if (isPagination) {
+                        addMoreWords(response.data.data);
+                    } else {
+                        changeWords(response.data.data);
+                    }
+
+                    changePaginationForUserWords(response.data.pagination);
                     toggleActiveLoader(false);
+                    toggleActiveUserWordLoader(false);
                 }, 1000);
             })
             .catch(error => handleError(error))
@@ -137,6 +156,7 @@ export default function dictionaryRequests() {
 
     function handleError(error) {
         console.log(error)
+        changeActiveSearching(false);
     }
 
     return {

@@ -31,14 +31,14 @@
         <v-tooltip activator="parent" location="bottom">Озвучить</v-tooltip>
       </div>
 
-      <div class="tasks">
+      <div class="tasks" @click="openTaskWithWord()">
         <img src="img/icon/bxs-extension.svg">
         <v-tooltip activator="parent" location="bottom">Задачи</v-tooltip>
       </div>
 
       <div class="help" @click="toggleOpenDetailModal">
         <img src="img/icon/bxs-help-circle.svg">
-        <v-tooltip activator="parent" location="bottom">an exciting or unexpected event or course of events</v-tooltip>
+        <v-tooltip activator="parent" location="bottom">Детальная информация</v-tooltip>
       </div>
 
       <div v-if="!wordData?.in_dictionary" class="add-word" @click="addWordToAccount()">
@@ -67,6 +67,7 @@ import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {storeToRefs} from "pinia/dist/pinia";
 import {dictionaryStore} from "@/store/dictionaryStore";
 import WordsDetails from "@/components/modals/WordsDetails";
+import taskRequests from "@/mixins/requests/taskRequests";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -75,6 +76,7 @@ const props = defineProps({
 })
 const {wordData, userWord} = toRefs(props);
 const {addWordsToUserDictionary, requestToDeleteWord} = dictionaryRequests();
+const {taskStart} = taskRequests();
 const dictionary = dictionaryStore();
 const {isShowWordsTypeList} = storeToRefs(dictionary);
 
@@ -93,6 +95,11 @@ function toggleIsShowTranslate() {
 
 function toggleOpenDetailModal(isOpen) {
   isOpenDialog.value = isOpen;
+}
+
+function openTaskWithWord() {
+  console.log(userWord.value)
+  taskStart(6, userWord.value.id);
 }
 
 function addWordToAccount() {

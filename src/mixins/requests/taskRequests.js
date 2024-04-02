@@ -4,10 +4,12 @@ import requestOptions from "@/mixins/prepare-requests/requestOptions";
 import dialogsRequests from "@/mixins/requests/dialogsRequests";
 import {tasksStore} from "@/store/tasksStore";
 import {useRouter} from "vue-router/dist/vue-router";
+import {storeToRefs} from "pinia/dist/pinia";
 
 export default function taskRequests() {
     const taskStore = tasksStore();
-    const {changeTasks, changeUserPasts, changeCurrentTask} = taskStore;
+    const {changeTasks, changeUserTasks, addToUserTasks, changePagination, changeCurrentTask} = taskStore;
+    const {pagination} = storeToRefs(taskStore);
     const {getAllMessagesInTask} = dialogsRequests();
     const router = useRouter();
 
@@ -18,15 +20,28 @@ export default function taskRequests() {
             .then(response => {
                 changeTasks(response.data.data)
             })
-
     }
 
-    function getAllUsersTasks() {
-        axios.get(`${testUrl}/api/user/tasks?sort_by=asc&column=created_at`, {
+    function getAllUsersTasks(isPagination) {
+        let body = {
+            'sort_by': 'desc',
+            'column': 'created_at',
+        }
+
+        const currentPage = pagination.value?.current_page
+        body = currentPage < pagination.value?.last_page ? {...body, page: currentPage + 1} : body;
+
+        axios.get(`${testUrl}/api/user/tasks?${new URLSearchParams(body)}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                changeUserPasts(response.data.data)
+                if (isPagination) {
+                    addToUserTasks(response.data.data);
+                } else {
+                    changeUserTasks(response.data.data);
+                }
+
+                changePagination(response.data.pagination);
             })
             .catch(error => handleError(error))
     }
@@ -51,8 +66,13 @@ export default function taskRequests() {
             .catch(error => handleError(error))
     }
 
-    function taskStart(id) {
-        axios.post(`${testUrl}/api/task/start?task_id=${id}`, {}, {
+    function taskStart(id, wordId) {
+        let body = {
+            'task_id': id,
+        }
+        body = wordId ? {...body, user_word_id: wordId} : body;
+
+        axios.post(`${testUrl}/api/task/start?${new URLSearchParams(body)}`, {}, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {

@@ -11,17 +11,23 @@ import DictView from '@/components/widgets/DictView.vue';
 import ThemsView from '@/components/widgets/ThemsView.vue';
 import MiniChat from "@/components/widgets/MiniChat";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
-import {onMounted} from "vue";
+import {onMounted, onUnmounted} from "vue";
+import {dictionaryStore} from "@/store/dictionaryStore";
 
-// eslint-disable-next-line no-unused-vars
-const {getGroups, getAllWords, getAllUsersWords} = dictionaryRequests();
+const {getGroups, getAllUsersWords} = dictionaryRequests();
+const dictionary = dictionaryStore();
+const {clearDictionaryStore} = dictionary;
 
 onMounted(() => {
+  clearDictionaryStore();
+
   getGroups();
-  // getAllWords();
   getAllUsersWords();
 })
 
+onUnmounted(() => {
+  clearDictionaryStore();
+})
 </script>
 
 <style scoped lang="scss">
