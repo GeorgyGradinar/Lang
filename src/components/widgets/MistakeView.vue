@@ -1,39 +1,75 @@
 <template>
   <div class="mistakes__list-wrap">
-    <div class="mistakes__list-row">
-      <p class="mistake__title"
-           v-for="item in mistakes.title" :key="item"
-           :class="{ 'w60' : item.w === 60, 'w50' : item.w === 50}"
-      >
-        {{ item.text }}
-      </p>
-    </div>
-    <div class="mistakes__list-row"
-         v-for="row in mistakes.rows" :key="row"
-    >
-      <div class="mistake__item"
-           v-for="item in row" :key="item"
-           :class="{ 'w60' : item.w === 60, 'w50' : item.w === 50}"
-           v-html="item.text"
-      >
+    <!--    <div class="mistakes__list-row">-->
+    <!--      <p class="mistake__title"-->
+    <!--           v-for="item in mistakes.title" :key="item"-->
+    <!--           :class="{ 'w60' : item.w === 60, 'w50' : item.w === 50}"-->
+    <!--      >-->
+    <!--        {{ item.text }}-->
+    <!--      </p>-->
+    <!--    </div>-->
+    <!--    <div class="mistakes__list-row"-->
+    <!--         v-for="row in mistakes.rows" :key="row"-->
+    <!--    >-->
+    <!--      <div class="mistake__item"-->
+    <!--           v-for="item in row" :key="item"-->
+    <!--           :class="{ 'w60' : item.w === 60, 'w50' : item.w === 50}"-->
+    <!--           v-html="item.text"-->
+    <!--      >-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <template v-for="error in userErrors" :key="error.id">
+      <div class="error" v-if="error.user_text">
+        <p>{{ error.user_text }}</p>
+        <p>{{ error.spelling_comment }}</p>
+        <p>{{ error.timestamp }}</p>
       </div>
-    </div>
+    </template>
+
   </div>
 </template>
 
 <script setup>
-// eslint-disable-next-line no-unused-vars,no-undef
-const props = defineProps({
-  mistakes: Object
-});
+import {onMounted, watch} from "vue";
+import {tasksStore} from "@/store/tasksStore";
+import {storeToRefs} from "pinia/dist/pinia";
+import taskRequests from "@/mixins/requests/taskRequests";
+
+const {getUsersErrors} = taskRequests();
+const taskStore = tasksStore();
+const {userErrors} = storeToRefs(taskStore);
+
+onMounted(() => {
+  getUsersErrors();
+})
+
+watch(userErrors, () => {
+  console.log(userErrors.value)
+})
 </script>
 
 <style scoped lang="scss">
 .mistakes__list-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 15px;
   height: 100%;
+
+  .error {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--blue);
+    border: 2px solid var(--dark);
+    box-shadow: 1px 4px 1px var(--dark);
+  }
 
   .mistakes__list-row {
     display: flex;
+    flex-direction: column;
     gap: 30px;
 
     .mistake__title {

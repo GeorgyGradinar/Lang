@@ -17,9 +17,9 @@
 
       <img v-if="isMiniChat" src="img/chart/close.svg" alt="close" @click="emit('closeMini')">
 
-      <div class="wrapper-messages-counter" v-if="!isMiniChat && currentTask?.task?.message_limit">
+      <div class="wrapper-messages-counter" v-if="!isMiniChat">
         <p>Использованно сообщений</p>
-        <p> {{ getCountUserMessages(messages) }} / {{ currentTask?.task?.message_limit }}</p>
+        <p> {{ getCountUserMessages(messages) }} / {{ getCountLimitMessage() }}</p>
       </div>
     </div>
 
@@ -34,8 +34,10 @@
               <img src="img/robots/робот-01.png">
             </div>
             <div class="message">
-              <span class="message-in-main-page" v-if="router.currentRoute.value.path === '/'"
-                    v-html="message.message"></span>
+              <span class="message-in-main-page"
+                    v-if="router.currentRoute.value.path !== '/lesson'"
+                    v-html="message.message">
+              </span>
 
               <span v-else v-for="word in message.message" :key="word?.id"
                     @click="openOptionBlock($event, word)" v-html="word">
@@ -44,7 +46,6 @@
           </div>
 
           <div v-else class="person_message animate__animated animate__fast animate__fadeInRight">
-
             <div class="message">
               <p>{{ message.message }}</p>
             </div>
@@ -82,7 +83,13 @@
       </div>
     </div>
     <InputBlock @scrollDown="scrollDown()"></InputBlock>
+
+    <div class="wrapper-loader-for-message" v-if="isActiveLoaderMessageGeneration">
+      <LoaderSpiner :is-yellow-color="true"></LoaderSpiner>
+      <p class="text">Составляю вам задание<span class="dots"></span></p>
+    </div>
   </div>
+
   <OptionWordBlock ref="optionBlock"
                    :topPosition="top"
                    :leftPosition="left"
@@ -97,7 +104,6 @@
       </TaskAndAnswer>
     </div>
   </Transition>
-
 </template>
 
 <script setup>
@@ -117,6 +123,7 @@ import {tasksStore} from "@/store/tasksStore";
 import {TASKS, LESSON} from "@/configuration/Routers";
 import TaskAndAnswer from "@/components/widgets/TaskAndAnswer";
 import CommentElement from "@/components/chat/CommentElement";
+import LoaderSpiner from "@/components/widgets/LoaderSpiner";
 
 const router = useRouter();
 // eslint-disable-next-line no-undef
@@ -130,8 +137,10 @@ const chat = chatStore();
 const {changeCurrentPage, clearChatStore} = chat;
 const {
   messages,
+  messageLimit,
   isTriggerScrollDown,
   isActiveGeneration,
+  isActiveLoaderMessageGeneration,
   currentPage,
   lastPage,
   triggerSaveScrollForPagination
@@ -220,6 +229,14 @@ function getCountUserMessages(messages) {
   return messages.filter(item => !item.is_bot).length;
 }
 
+function getCountLimitMessage() {
+  if (router.currentRoute.value.path === '/lesson') {
+    return currentTask.value?.task?.message_limit;
+  } else {
+    return messageLimit.value;
+  }
+}
+
 onBeforeUnmount(() => {
   messagesBlock.value.removeEventListener('scroll', handelScrollForPagination);
 })
@@ -232,6 +249,7 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
+
 
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
@@ -255,6 +273,7 @@ onUnmounted(() => {
 }
 
 .wrapper-chart {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -332,6 +351,7 @@ onUnmounted(() => {
   }
 
   .chat {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -479,13 +499,70 @@ onUnmounted(() => {
     flex: unset;
 
     .wrapper-messages {
+      padding: 5px 2px 0 2px;
+
       .wrapper-message {
+
+        .message {
+          max-width: 75%;
+        }
+
         :deep(.player) {
           #slider {
             svg {
               width: 150px;
             }
           }
+        }
+
+
+      }
+    }
+  }
+
+  .wrapper-loader-for-message {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+    background-color: rgba(163, 54, 214, 0.6);
+
+    .text {
+      display: flex;
+      align-items: flex-end;
+      color: var(--yellow);
+      font-size: 18px;
+
+      .dots {
+        display: flex;
+        width: 5px;
+        margin-left: 14px;
+        margin-bottom: 7px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        animation: l5 2s infinite linear alternate;
+      }
+
+      @keyframes l5 {
+        0% {
+          box-shadow: 8px 0 #ffd073, -8px 0 #0002;
+          background: #ffd073
+        }
+        33% {
+          box-shadow: 8px 0 #0002, -8px 0 #ffd073;
+          background: #0002
+        }
+        66% {
+          box-shadow: 8px 0 #ffd073, -8px 0 #0002;
+          background: #0002
+        }
+        100% {
+          box-shadow: 8px 0 #0002, -8px 0 #ffd073;
+          background: #ffd073
         }
       }
     }

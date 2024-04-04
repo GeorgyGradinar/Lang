@@ -9,8 +9,10 @@ export default function dialogsRequests() {
     const chat = chatStore()
     const {
         changeMessages,
+        changeMessageLimit,
         addNewMessage,
         changeActiveGeneration,
+        changeActiveLoaderMessageGeneration,
         changeLastPage,
         addNextPageMessages,
         addCommentToLastPersonMessage
@@ -28,6 +30,7 @@ export default function dialogsRequests() {
                     addNextPageMessages(response.data.data);
                 } else {
                     changeMessages(response.data.data);
+                    changeMessageLimit(response.data.message_limitа);
                     changeLastPage(response.data.pagination.last_page);
                 }
             })
@@ -35,6 +38,7 @@ export default function dialogsRequests() {
     }
 
     function getAllMessagesInTask(id, isPagination) {
+        changeActiveLoaderMessageGeneration(true);
         axios.get(`${testUrl}/api/user/tasks/messages?user_task_id=${id}&page=${chat.currentPage}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
@@ -42,8 +46,15 @@ export default function dialogsRequests() {
                 if (isPagination) {
                     addNextPageMessages(response.data.data);
                 } else {
-                    changeMessages(response.data.data, true);
-                    changeLastPage(response.data.pagination.last_page);
+                    if (response.data.data.length) {
+                        changeMessages(response.data.data, true);
+                        changeLastPage(response.data.pagination.last_page);
+                        changeActiveLoaderMessageGeneration(false);
+                    } else {
+                        setTimeout(() => {
+                            getAllMessagesInTask(id, isPagination);
+                        }, 1500);
+                    }
                 }
             })
             .catch(error => handleError(error))
@@ -124,6 +135,8 @@ export default function dialogsRequests() {
     }
 
     function handleError(error) {
+        changeActiveLoaderMessageGeneration(false);
+
         switch (error.response?.status) {
             case 401:
                 prepareForLogout();

@@ -130,9 +130,8 @@ function getPartOrAllListExamples() {
   padding: 20px;
   border-radius: 20px;
   border: 2px solid var(--dark);
-  width: 100%;
-  max-width: 700px;
-  max-height: 65vh;
+  width: 700px;
+  max-height: 70vh;
   overflow: auto;
 
   .header-modal {

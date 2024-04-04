@@ -72,6 +72,10 @@ export const dictionaryStore = defineStore('dictionary', () => {
 
     function changeGroups(newGroups) {
         groups.value = newGroups;
+
+        if (selectedGroupWords.value) {
+            changeSelectedGroup(groups.value.find(group => group.id === selectedGroupWords.value.id));
+        }
     }
 
     function changeGroupWords(newWords) {

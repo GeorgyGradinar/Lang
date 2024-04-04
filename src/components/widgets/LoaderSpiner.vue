@@ -1,5 +1,5 @@
 <template>
-  <div class="loader" :class="{'mini-loader': isMiniLoader}"></div>
+  <div class="loader" :class="{'mini-loader': isMiniLoader, 'chat-loader': isYellowColor}"></div>
 </template>
 
 <script setup>
@@ -7,9 +7,10 @@ import {toRefs} from "vue";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
-  isMiniLoader: Boolean
+  isMiniLoader: Boolean,
+  isYellowColor: Boolean
 })
-const {isMiniLoader} = toRefs(props);
+const {isMiniLoader, isYellowColor} = toRefs(props);
 </script>
 
 <style scoped lang="scss">
@@ -60,6 +61,17 @@ const {isMiniLoader} = toRefs(props);
     left: 0;
     border-radius: 50%;
     animation: shadow324 0.6s linear infinite;
+  }
+}
+
+.chat-loader {
+  &:before {
+    background: var(--dark-pink);
+
+  }
+
+  &:after {
+    background: var(--yellow);
   }
 }
 

@@ -98,7 +98,6 @@ function toggleOpenDetailModal(isOpen) {
 }
 
 function openTaskWithWord() {
-  console.log(userWord.value)
   taskStart(6, userWord.value.id);
 }
 

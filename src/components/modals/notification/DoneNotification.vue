@@ -19,7 +19,6 @@ const notifications = notificationStore();
 const {changeTextForSnackBarDone} = notifications;
 const { isOpenSnackBarDone, textForSnackBarDone} = storeToRefs(notifications);
 
-
 watch(isOpenSnackBarDone, () => {
   if (!isOpenSnackBarDone.value){
     changeTextForSnackBarDone(null);

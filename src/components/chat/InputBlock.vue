@@ -102,7 +102,7 @@ function sendMessageToNetwork() {
   }
 
   if (isCyrillic(messageToBot.value) && router.currentRoute.value.path === '/lesson') {
-    openSnackBarReject('Текст должен содержать только латинские символы');
+    openSnackBarReject('В заданиях пишите только на английском');
     return;
   }
 

@@ -32,9 +32,7 @@ export default function dictionaryRequests() {
         axios.get(`${testUrl}/api/group`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
-            .then(response => {
-                changeGroups(response.data.data);
-            })
+            .then(response => changeGroups(response.data.data))
             .catch(error => handleError(error))
     }
 
@@ -142,6 +140,17 @@ export default function dictionaryRequests() {
             .catch(error => handleError(error))
     }
 
+    function addGroupToUser(idGroup) {
+        axios.post(`${testUrl}/api/user/dictionary/groups/add`, {id: idGroup}, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
+        })
+            .then(() => {
+                openSnackBarDone('Группа добавлена');
+                getGroups();
+            })
+            .catch(error => handleError(error))
+    }
+
     function requestToDeleteWord(idWord) {
         axios.delete(`${testUrl}/api/user/dictionary/words/delete?id=${idWord}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization]),
@@ -167,6 +176,7 @@ export default function dictionaryRequests() {
         searchWord,
         searchFromAllWords,
         addWordsToUserDictionary,
+        addGroupToUser,
         requestToDeleteWord
     }
 }

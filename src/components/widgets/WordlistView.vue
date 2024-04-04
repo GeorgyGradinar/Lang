@@ -1,8 +1,10 @@
 <template>
-  <div class="word__list__view" :class="{'popup_style': isPopup}">
-    <div class="wrapper-list" :class="{'two_columns': columns === 2,'three_columns': columns === 3}"
-         v-for="word in cutObjectWords(words)" :key="word.id">
-      <WordComponent :word="getWordData(word)"></WordComponent>
+  <div class="wrapper-list-view">
+    <div class="word__list__view" :class="{'popup_style': isPopup}">
+      <div class="wrapper-list" :class="{'two_columns': columns === 2,'three_columns': columns === 3}"
+           v-for="word in cutObjectWords(words)" :key="word.id">
+        <WordComponent :word="getWordData(word)"></WordComponent>
+      </div>
     </div>
   </div>
 </template>
@@ -37,29 +39,30 @@ function getWordData(word) {
 </script>
 
 <style scoped lang="scss">
-
-.word__list__view {
+.wrapper-list-view {
   display: flex;
-  flex-wrap: wrap;
-  flex: 1;
-  height: 100%;
   align-items: flex-start;
+  height: 100%;
   margin: 10px 0;
 
-  .wrapper-list {
+  .word__list__view {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
 
-  }
+    .wrapper-list {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
 
-  .two_columns {
-    width: 50%
-  }
+    .two_columns {
+      width: 50%
+    }
 
-  .three_columns {
-    width: 33%
+    .three_columns {
+      width: 33%
+    }
   }
 }
 

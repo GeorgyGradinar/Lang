@@ -5,11 +5,21 @@ import dialogsRequests from "@/mixins/requests/dialogsRequests";
 import {tasksStore} from "@/store/tasksStore";
 import {useRouter} from "vue-router/dist/vue-router";
 import {storeToRefs} from "pinia/dist/pinia";
+import {chatStore} from "@/store/chatStore";
 
 export default function taskRequests() {
     const taskStore = tasksStore();
-    const {changeTasks, changeUserTasks, addToUserTasks, changePagination, changeCurrentTask} = taskStore;
+    const {
+        changeTasks,
+        changeUserTasks,
+        addToUserTasks,
+        changePagination,
+        changeCurrentTask,
+        changeUsersErrors
+    } = taskStore;
     const {pagination} = storeToRefs(taskStore);
+    const chat = chatStore()
+    const {changeActiveLoaderMessageGeneration} = chat;
     const {getAllMessagesInTask} = dialogsRequests();
     const router = useRouter();
 
@@ -62,6 +72,7 @@ export default function taskRequests() {
             .then(response => {
                 changeCurrentTask(response.data.data);
                 getAllMessagesInTask(response.data.data.id, false);
+                changeActiveLoaderMessageGeneration(false);
             })
             .catch(error => handleError(error))
     }
@@ -102,8 +113,20 @@ export default function taskRequests() {
             .catch(error => handleError(error))
     }
 
+    function getUsersErrors() {
+        axios.get(`${testUrl}/api/user/errors`, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
+        })
+            .then(response => {
+                console.log(response)
+                changeUsersErrors(response.data.data);
+            })
+            .catch(error => handleError(error))
+    }
+
     function handleError(error) {
         console.log(error)
+        changeActiveLoaderMessageGeneration(false);
     }
 
     return {
@@ -113,6 +136,7 @@ export default function taskRequests() {
         taskShow,
         taskStart,
         taskRestart,
-        taskCancel
+        taskCancel,
+        getUsersErrors
     }
 }

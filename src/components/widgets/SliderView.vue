@@ -57,7 +57,6 @@ function onPage(index) {
 }
 
 function showSLide() {
-  console.log(slideIndex.value)
   if (props.feed.length > 0) {
     bg_class.value = props.feed[slideIndex.value].bgclass;
     slider_style.value = `margin-left:-${100 * slideIndex.value}%;`;

@@ -1,5 +1,5 @@
 <template>
-  <div class="rapper-mini-chat" :class="{'full-size': isShowChat}">
+  <div class="wrapper-mini-chat" :class="{'full-size': isShowChat}">
     <img src="img/chart/chat-message.svg" alt="" @click="toggleShowChat" v-if="!isShowChat">
     <div v-if="isShowChat">
       <ChartBlock :isMiniChat="true" @closeMini="toggleShowChat"></ChartBlock>
@@ -19,7 +19,7 @@ function toggleShowChat() {
 </script>
 
 <style scoped lang="scss">
-.rapper-mini-chat {
+.wrapper-mini-chat {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -41,7 +41,7 @@ function toggleShowChat() {
 }
 
 .full-size {
-  width: 400px;
+  width: 450px;
   height: 600px;
   border-radius: 13px;
 }

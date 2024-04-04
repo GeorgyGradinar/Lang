@@ -3,8 +3,10 @@ import {ref} from "vue";
 
 export const chatStore = defineStore('chat', () => {
     let messages = ref([]);
+    let messageLimit = ref(null);
     let isTriggerScrollDown = ref(false);
     let isActiveGeneration = ref(false);
+    let isActiveLoaderMessageGeneration = ref(false);
     let currentPage = ref(1);
     let lastPage = ref(null);
     let foundWord = ref(null);
@@ -13,8 +15,10 @@ export const chatStore = defineStore('chat', () => {
 
     function clearChatStore() {
         messages.value = [];
+        messageLimit.value = null;
         isTriggerScrollDown.value = false;
         isActiveGeneration.value = false;
+        isActiveLoaderMessageGeneration.value = false;
         currentPage.value = 1;
         lastPage.value = null;
         foundWord.value = null;
@@ -61,6 +65,7 @@ export const chatStore = defineStore('chat', () => {
 
     function addNewMessage(newMessage, isBot, timestamp, isSeparateMessage) {
         let completedMessageData
+        console.log(isSeparateMessage)
         if (isSeparateMessage) {
             completedMessageData = {
                 is_bot: isBot,
@@ -89,12 +94,20 @@ export const chatStore = defineStore('chat', () => {
         lastMessage.spelling_comment = comments;
     }
 
+    function changeMessageLimit(limit) {
+        messageLimit.value = limit;
+    }
+
     function triggerScrollDown() {
         isTriggerScrollDown.value = !isTriggerScrollDown.value;
     }
 
     function changeActiveGeneration(isActive) {
         isActiveGeneration.value = isActive;
+    }
+
+    function changeActiveLoaderMessageGeneration(isActive) {
+        isActiveLoaderMessageGeneration.value = isActive;
     }
 
     function changeCurrentPage(page) {
@@ -115,8 +128,10 @@ export const chatStore = defineStore('chat', () => {
 
     return {
         messages, changeMessages, addNextPageMessages, addNewMessage, addCommentToLastPersonMessage,
+        messageLimit, changeMessageLimit,
         isTriggerScrollDown, triggerScrollDown,
         isActiveGeneration, changeActiveGeneration,
+        isActiveLoaderMessageGeneration, changeActiveLoaderMessageGeneration,
         currentPage, changeCurrentPage,
         lastPage, changeLastPage,
         foundWord, changeSearchWord,

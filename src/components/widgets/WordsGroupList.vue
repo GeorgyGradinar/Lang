@@ -7,12 +7,11 @@
            @click="selectGroup(group)"
       >
         <h4>{{ group.title }}</h4>
-<!--        <p>{{ group.description }}</p>-->
       </div>
     </div>
   </div>
 
-  <words-list-dlg :triggerOpen="isOpenDialog"/>
+  <words-list-dlg v-if="isOpenDialog" @hiddenBlock="toggleOpenDialog"/>
 </template>
 
 <script setup>
@@ -34,9 +33,13 @@ onMounted(() => {
 })
 
 function selectGroup(group) {
-  isOpenDialog.value = !isOpenDialog.value;
   changeSelectedGroup(group);
   getWordsFromGroup();
+  toggleOpenDialog(true);
+}
+
+function toggleOpenDialog(isOpen) {
+  isOpenDialog.value = isOpen;
 }
 </script>
 

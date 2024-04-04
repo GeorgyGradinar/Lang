@@ -41,7 +41,7 @@
 <script setup>
 import Chart from 'chart.js/auto';
 import {storeToRefs} from "pinia/dist/pinia";
-import {onMounted, ref, watch} from "vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
 import {statisticStore} from "@/store/statisticStore";
 import dictionaryRequests from "@/mixins/requests/statisticRequests";
 
@@ -64,10 +64,9 @@ let isShowChart = ref(true);
 onMounted(() => {
   getWeeklyStatistic();
   ctx = chart.value.getContext("2d");
-  setDataToChart();
-})
 
-watch(weeklyStatistic, () => {
+  const dataChat = currentDayStatistic.value ? getDataChart(currentDayStatistic.value) : [0, 0, 0];
+  setDataToChart(dataChat);
 })
 
 watch(currentDayStatistic, () => {
@@ -76,14 +75,14 @@ watch(currentDayStatistic, () => {
   }
 })
 
-function setDataToChart() {
+function setDataToChart(setData) {
   myChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
       labels: labelsT,
       datasets: [
         {
-          data: [0, 0, 0],
+          data: setData,
           backgroundColor: [
             '#00c6ad',
             '#ffd073',
@@ -132,13 +131,21 @@ function changeDay(index, data) {
 }
 
 function changeDataForChat(data) {
-  const success = data?.tasks?.count_succeeded_tasks;
-  const processing = data?.tasks?.count_processing_tasks;
-  const fail = data?.tasks?.count_failed_tasks;
-  myChart.data.datasets[0].data = [success, processing, fail];
+  myChart.data.datasets[0].data = getDataChart(data);
   currentDay.value = weeksDay[new Date(data.date).getDay() - 1];
   myChart.update();
 }
+
+function getDataChart(data) {
+  const success = data?.tasks?.count_succeeded_tasks;
+  const processing = data?.tasks?.count_processing_tasks;
+  const fail = data?.tasks?.count_failed_tasks;
+  return [success, processing, fail];
+}
+
+onUnmounted(() => {
+  myChart.clear();
+})
 </script>
 
 <style lang="scss">

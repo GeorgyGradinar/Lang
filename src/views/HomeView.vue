@@ -3,6 +3,11 @@
     <!-- Результаты недели -->
     <week-results/>
 
+    <div class="wrapper-welcome-block">
+      <WelcomeBlock></WelcomeBlock>
+    </div>
+
+
     <!-- Секция чата и заданий -->
     <div class="wrapper-dialog-promo">
       <div class="dialog-promo">
@@ -32,27 +37,16 @@
     <div class="wrapper-mistakes">
       <div class="mistakes">
         <h3 class="mistakes__title">Ваши ошибки и что можно улучшить</h3>
-        <tab-nav
-            :tabs="mistakeTabs"
-            @selected="selectMistakeTab"
-        />
+        <!--        <tab-nav-->
+        <!--            :tabs="mistakeTabs"-->
+        <!--            @selected="selectMistakeTab"-->
+        <!--        />-->
         <div class="mistakes__list">
-          <mistake-view
-              :mistakes="currentMistakes"
-          />
+          <mistake-view/>
         </div>
       </div>
     </div>
-
-    <!-- Секция footer -->
-    <div class="footer bg-base-1">
-      <promo-view
-          :data="footerLeft"
-      />
-      <promo-view
-          :data="footerRight"
-      />
-    </div>
+    <FooterElement></FooterElement>
   </div>
 </template>
 
@@ -61,33 +55,35 @@ import WeekResults from '@/components/widgets/WeekResults.vue';
 // import ChatView from '@/components/widgets/ChatView.vue';
 // import SliderView from '@/components/widgets/SliderView.vue';
 import WordsGroupList from '@/components/widgets/WordsGroupList.vue';
-import TabNav from '@/components/app/TabNav.vue';
+// import TabNav from '@/components/app/TabNav.vue';
 import MistakeView from '@/components/widgets/MistakeView.vue';
-import PromoView from '@/components/widgets/PromoView.vue';
 import ChartBlock from "@/components/widgets/NewChat";
 import NewAddedWordBlock from "@/components/widgets/NewAddedWordBlock";
 import TasksList from "@/components/widgets/TasksList";
+import FooterElement from "@/components/FooterElement";
+import WelcomeBlock from "@/components/main-page/WelcomeBlock";
 
 export default {
   name: 'HomeView',
   components: {
+    WelcomeBlock,
+    FooterElement,
     TasksList,
     NewAddedWordBlock,
     ChartBlock,
     WeekResults,
     // ChatView,
     // SliderView,
-    WordsGroupList, TabNav, MistakeView, PromoView
+    WordsGroupList,
+    // TabNav,
+    MistakeView,
   },
   data: () => ({
     sliderFeed1: [],
     sliderFeed2: [],
-    newWords: [],
     mistakeTabs: [],
     mistakesArray: {},
     currentMistakes: {},
-    footerLeft: {},
-    footerRight: {},
   }),
 
   created() {
@@ -244,24 +240,6 @@ export default {
       }
     ]
     this.selectMistakeTab({id: 0})
-
-    // структура банеров в подвале
-    this.footerLeft = {
-      title: 'Присоединяйтесь к нам Вконтакте',
-      text: 'Каждый день тематичные подборки и карточки с новыми словами для всех',
-      img: 'img/promo/VK.png',
-      route: '',
-      extpath: 'http://www.vk.com',
-      bgclass: 'bg-base-purple'
-    }
-    this.footerRight = {
-      title: 'Пригласите друзей',
-      text: 'Есть ли у вас кто-то, кому может быть полезно изучение английского?',
-      img: 'img/promo/f1.png',
-      route: '/tariff',
-      extpath: '',
-      bgclass: 'bg-base-3'
-    }
   },
 
   methods: {
@@ -278,6 +256,12 @@ export default {
 
 .wrapper-home-page {
 
+  .wrapper-welcome-block {
+    display: flex;
+    justify-content: center;
+    background-color: var(--white);
+  }
+
   .wrapper-dialog-promo {
     display: flex;
     justify-content: center;
@@ -290,7 +274,7 @@ export default {
       gap: 25px;
       width: 100%;
       max-width: 1440px;
-      padding: 90px 0 12px 0;
+      padding: 0 0 12px 0;
       margin: 0 20px;
       font-size: 15px;
       font-weight: 600;
@@ -359,15 +343,6 @@ export default {
       }
     }
   }
-
-  .footer {
-    display: flex;
-    gap: 40px;
-    padding: 40px 5%;
-    font-size: 18px;
-    font-weight: 600;
-    color: #fff;
-  }
 }
 
 @media screen and (max-width: 900px) {
@@ -398,10 +373,6 @@ export default {
 
       }
     }
-
-    .footer {
-      flex-direction: column;
-    }
   }
 }
 
@@ -431,10 +402,6 @@ export default {
       .mistakes__list {
         padding: 30px 15px;
       }
-    }
-
-    .footer {
-      font-size: 15px;
     }
   }
 }
