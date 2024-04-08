@@ -3,7 +3,11 @@
     <!--    <div class="tasks-card__img">-->
     <!--      <img :src="card.img">-->
     <!--    </div>-->
-    <h3 class="tasks-card__title">{{ card.title }}</h3>
+    <div class="wrapper-task-title">
+      <img :src="card.type.image" alt="task icon">
+      <h3 class="tasks-card__title">{{ card.title }}</h3>
+    </div>
+
     <p class="tasks-card__descr">{{ card.description }}</p>
     <!--    <div class="info">-->
     <!--      <div class="count_tasks">-->
@@ -79,12 +83,23 @@ function toggleOpenWordsList(isOpen) {
     transform: scale(1.05);
   }
 
-  .tasks-card__title {
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 10px;
-    color: var(--yellow);
+  .wrapper-task-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    img {
+      width: 30px;
+    }
+
+    .tasks-card__title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--yellow);
+    }
   }
+
 
   .tasks-card__img {
     width: 40px;

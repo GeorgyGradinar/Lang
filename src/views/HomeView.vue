@@ -7,7 +7,6 @@
       <WelcomeBlock></WelcomeBlock>
     </div>
 
-
     <!-- Секция чата и заданий -->
     <div class="wrapper-dialog-promo">
       <div class="dialog-promo">

@@ -1,7 +1,7 @@
 import axios from "axios";
 import {HEADER_PARAMETERS, testUrl} from "../../../config";
 import requestOptions from "@/mixins/prepare-requests/requestOptions";
-import dialogsRequests from "@/mixins/requests/dialogsRequests";
+// import dialogsRequests from "@/mixins/requests/dialogsRequests";
 import {tasksStore} from "@/store/tasksStore";
 import {useRouter} from "vue-router/dist/vue-router";
 import {storeToRefs} from "pinia/dist/pinia";
@@ -20,7 +20,7 @@ export default function taskRequests() {
     const {pagination} = storeToRefs(taskStore);
     const chat = chatStore()
     const {changeActiveLoaderMessageGeneration} = chat;
-    const {getAllMessagesInTask} = dialogsRequests();
+    // const {getAllMessagesInTask} = dialogsRequests();
     const router = useRouter();
 
     function getAllTasks() {
@@ -71,7 +71,6 @@ export default function taskRequests() {
         })
             .then(response => {
                 changeCurrentTask(response.data.data);
-                getAllMessagesInTask(response.data.data.id, false);
                 changeActiveLoaderMessageGeneration(false);
             })
             .catch(error => handleError(error))
@@ -98,7 +97,7 @@ export default function taskRequests() {
         })
             .then(response => {
                 changeCurrentTask(response.data.data.task);
-                getAllMessagesInTask(response.data.data.id, false);
+                // getAllMessagesInTask(response.data.data.id, false);
             })
             .catch(error => handleError(error))
     }

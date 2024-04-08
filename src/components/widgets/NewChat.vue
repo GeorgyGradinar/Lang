@@ -13,7 +13,8 @@
     </div>
 
     <div class="title-chat">
-      <h3>ИИ-репетитор</h3>
+
+      <TimerLesson></TimerLesson>
 
       <img v-if="isMiniChat" src="img/chart/close.svg" alt="close" @click="emit('closeMini')">
 
@@ -25,13 +26,17 @@
 
     <div class="chat" :class="{'size-mini': isMiniChat}">
       <div class="wrapper-messages" ref="messagesBlock">
+
+        <CharacterBlock></CharacterBlock>
+
         <div class="wrapper-message"
              v-for="message in messages" :key="message?.id">
           <!--          <template v-if="message.isText">-->
 
           <div v-if="message.is_bot" class="bot-message animate__animated animate__fast animate__fadeInLeft">
             <div class="icon-bot">
-              <img src="img/robots/робот-01.png">
+              <img src="img/chart/Белый мужчина.webp">
+              <v-tooltip activator="parent" location="bottom">{{ currentTask?.character_info }}</v-tooltip>
             </div>
             <div class="message">
               <span class="message-in-main-page"
@@ -46,10 +51,14 @@
           </div>
 
           <div v-else class="person_message animate__animated animate__fast animate__fadeInRight">
-            <div class="message">
-              <p>{{ message.message }}</p>
+            <div class="message"
+                 :class="{
+              'bg-done': message?.grading !== 'error',
+              'bg-reject': message?.grading === 'error'
+            }">
+              <span>{{ message.message }}</span>
             </div>
-            <CommentElement v-if="message?.spelling_comment" :comment="message?.spelling_comment"></CommentElement>
+            <CommentElement v-if="message?.spelling_comment" :comment="message"></CommentElement>
           </div>
 
 
@@ -117,13 +126,15 @@ import OptionWordBlock from "@/components/chat/OptionWordBlock";
 import {onClickOutside} from '@vueuse/core';
 import TypingLoader from "@/components/chat/TypingLoader";
 import InputBlock from "@/components/chat/InputBlock";
-import taskRequests from "@/mixins/requests/taskRequests";
+// import taskRequests from "@/mixins/requests/taskRequests";
 import {useRouter} from "vue-router/dist/vue-router";
 import {tasksStore} from "@/store/tasksStore";
 import {TASKS, LESSON} from "@/configuration/Routers";
 import TaskAndAnswer from "@/components/widgets/TaskAndAnswer";
 import CommentElement from "@/components/chat/CommentElement";
 import LoaderSpiner from "@/components/widgets/LoaderSpiner";
+import CharacterBlock from "@/components/chat/CharacterBlock";
+import TimerLesson from "@/components/chat/TimerLesson";
 
 const router = useRouter();
 // eslint-disable-next-line no-undef
@@ -148,8 +159,8 @@ const {
 const taskStore = tasksStore();
 const {changeCurrentTask} = taskStore;
 const {currentTask} = storeToRefs(taskStore);
-const {getMessages} = dialogsRequests();
-const {taskShow} = taskRequests();
+const {getMessages, getAllMessagesInTask} = dialogsRequests();
+// const {taskShow} = taskRequests();
 
 let messagesBlock = ref(null);
 let top = ref(null);
@@ -162,7 +173,7 @@ let isOpenMoreInformationBlock = ref(false);
 
 onMounted(() => {
   if (router.currentRoute.value.query.id && router.currentRoute.value.path === LESSON) {
-    taskShow(router.currentRoute.value.query.id);
+    getAllMessagesInTask(router.currentRoute.value.query.id)
   } else {
     getMessages();
   }
@@ -321,7 +332,7 @@ onUnmounted(() => {
 
   .title-chat {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     padding: 10px 20px;
     color: var(--light-gray);
 
@@ -387,11 +398,11 @@ onUnmounted(() => {
             width: 35px;
             height: 35px;
             border: 3px solid var(--dark-pink);
-            padding: 3px;
+            overflow: hidden;
 
             img {
               width: 100%;
-              height: 100%;
+              object-fit: cover;
             }
           }
         }
@@ -408,6 +419,7 @@ onUnmounted(() => {
         }
 
         .message {
+          position: relative;
           display: flex;
           flex-wrap: wrap;
           border-radius: 20px;
@@ -427,9 +439,24 @@ onUnmounted(() => {
             }
           }
 
+          img {
+            position: absolute;
+            right: -5px;
+            top: -8px;
+            width: 20px;
+          }
+
           .message-in-main-page {
             white-space: pre-wrap;
           }
+        }
+
+        .bg-done {
+          background-color: var(--green);
+        }
+
+        .bg-reject {
+          background-color: var(--light-red);
         }
 
 

@@ -20,9 +20,14 @@
           <p>{{ currentTask?.task?.description }}</p>
         </div>
 
-        <div class="wrapper-task-description">
+        <div class="wrapper-task-description" v-if="currentTask?.character_info ">
           <p>Персонаж:</p>
           <p>{{ currentTask?.character_info }}</p>
+        </div>
+
+        <div class="wrapper-task-word" v-if="currentTask?.user_word">
+          <p>Изучаемое слово:</p>
+          <p>{{ currentTask?.user_word.word.word }}</p>
         </div>
       </div>
 
@@ -35,6 +40,18 @@
       <!--        </textarea>-->
       <!--        <button @click="submitResult">Отправить</button>-->
       <!--      </div>-->
+      <div class="wrapper-counter-message">
+        <div class="counter" v-if="countDoneMessages">
+          <img src="img/chart/done.svg">
+          <span>Без ошибок:</span>
+          <span>{{ countDoneMessages }}</span>
+        </div>
+        <div class="counter" v-if="countRejectMessages">
+          <img src="img/chart/reject.svg">
+          <span>С ошибками:</span>
+          <span>{{ countRejectMessages }}</span>
+        </div>
+      </div>
     </div>
 
     <div class="wrapper-button-back">
@@ -52,11 +69,12 @@
 
 <script setup>
 
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import CongraduationModal from "@/components/modals/chat/CongraduationModal";
 import {tasksStore} from "@/store/tasksStore";
 import {storeToRefs} from "pinia/dist/pinia";
+import {chatStore} from "@/store/chatStore";
 
 const router = useRouter();
 // eslint-disable-next-line no-undef,no-unused-vars
@@ -68,10 +86,23 @@ const emit = defineEmits(['hiddenBlock']);
 const taskStore = tasksStore();
 const {changeIsOpenDialog} = taskStore;
 const {currentTask, isOpenFinalModal} = storeToRefs(taskStore);
+const chat = chatStore();
+const {messages} = storeToRefs(chat);
 
 let textarea = ref(null);
 // eslint-disable-next-line no-unused-vars
 let answer = ref('');
+
+let countDoneMessages = ref(null);
+let countRejectMessages = ref(null);
+
+watch(messages, () => {
+  if (messages.value.length) {
+    const countersData = getCountDoneMessages();
+    countDoneMessages.value = countersData.done;
+    countRejectMessages.value = countersData.reject;
+  }
+}, {deep: true, immediate: true})
 
 // eslint-disable-next-line no-unused-vars
 function autoGrow() {
@@ -84,6 +115,23 @@ function submitResult() {
   setTimeout(() => {
     changeIsOpenDialog(true)
   }, 1000)
+}
+
+function getCountDoneMessages() {
+  let countDone = null;
+  let countReject = null;
+
+  messages.value.forEach(message => {
+    if (!message?.is_bot) {
+      if (message?.grading === 'success') {
+        countDone++
+      } else if (message?.grading === 'error') {
+        countReject++
+      }
+    }
+  })
+
+  return {done: countDone, reject: countReject};
 }
 
 function closeFinalModal() {
@@ -139,7 +187,8 @@ function goBack() {
     margin-bottom: 30px;
 
     .wrapper-theme,
-    .wrapper-task-description {
+    .wrapper-task-description,
+    .wrapper-task-word {
       display: flex;
       gap: 10px;
       font-size: 15px;
@@ -149,6 +198,30 @@ function goBack() {
 
       p:first-child {
         color: var(--light-gray);
+      }
+    }
+  }
+
+  .wrapper-counter-message {
+    .counter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      img {
+        width: 25px;
+      }
+
+      span {
+        color: var(--yellow);
+
+        &:first-of-type {
+          color: var(--light-gray);
+        }
+      }
+
+      &:first-of-type {
+        margin-bottom: 10px;
       }
     }
   }

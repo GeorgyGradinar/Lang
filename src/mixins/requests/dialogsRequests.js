@@ -4,6 +4,7 @@ import requestOptions from "@/mixins/prepare-requests/requestOptions";
 import {chatStore} from "@/store/chatStore";
 import {tasksStore} from "@/store/tasksStore";
 import shared from "@/mixins/shared";
+import taskRequests from "@/mixins/requests/taskRequests";
 
 export default function dialogsRequests() {
     const chat = chatStore()
@@ -19,6 +20,7 @@ export default function dialogsRequests() {
     } = chat;
     const taskStore = tasksStore();
     const {changeIsOpenDialog} = taskStore;
+    const {taskShow} = taskRequests();
     const {prepareForLogout} = shared();
 
     function getMessages(isPagination) {
@@ -30,7 +32,7 @@ export default function dialogsRequests() {
                     addNextPageMessages(response.data.data);
                 } else {
                     changeMessages(response.data.data);
-                    changeMessageLimit(response.data.message_limitа);
+                    changeMessageLimit(response.data.message_limit);
                     changeLastPage(response.data.pagination.last_page);
                 }
             })
@@ -47,6 +49,7 @@ export default function dialogsRequests() {
                     addNextPageMessages(response.data.data);
                 } else {
                     if (response.data.data.length) {
+                        taskShow(id);
                         changeMessages(response.data.data, true);
                         changeLastPage(response.data.pagination.last_page);
                         changeActiveLoaderMessageGeneration(false);
@@ -90,7 +93,7 @@ export default function dialogsRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                if (response.data.data[2]?.message_status === "processing") {
+                if (response.data.data[2]?.task_status === "processing") {
                     if (response.data.data[0].spelling_comment) addCommentToLastPersonMessage(response.data.data[0].spelling_comment);
                     setTimeout(() => {
                         getMessageFromTask(id)

@@ -21,11 +21,11 @@
         <button class="logout" v-if="person?.id && mobileMenu" @click="prepareForLogout">Выйти</button>
       </div>
 
-      <div class="header__sign-wrap" v-if="person?.id" @click="popupMenu = !popupMenu">
+      <div class="header__sign-wrap" v-if="person?.id" >
         <div class="header__sign-title">
-          <button>
-            <a href="#">Пользователь</a>
+          <button @click="togglePopupMenu">
             <img src="img/icon/bxs-user-circle2.svg">
+            <p>{{ person?.name }}</p>
           </button>
         </div>
         <div class="header__sign-popup" :class="{'open-popup': popupMenu}">
@@ -83,6 +83,10 @@ function routeTo(path, query) {
 function closeAllModal() {
   mobileMenu.value = false;
   popupMenu.value = false;
+}
+
+function togglePopupMenu() {
+  popupMenu.value = !popupMenu.value;
 }
 </script>
 

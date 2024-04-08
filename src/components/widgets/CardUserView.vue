@@ -3,9 +3,14 @@
     <!--    <div class="tasks-card__img">-->
     <!--      <img :src="card.img">-->
     <!--    </div>-->
-    <h4 class="tasks-card__title">№{{ card.id }} {{ card.task.title }}</h4>
+    <div class="wrapper-task-title">
+      <img :src="card.task.type.image" alt="task icon">
+      <h4 class="tasks-card__title">№{{ card.id }} {{ card.task.title }}</h4>
+    </div>
+
     <p class="tasks-card__descr">{{ card.task.description }}</p>
-    <p class="character"><span>Персонаж:</span> {{ card.character_info }}</p>
+    <p class="character" v-if="card.character_info"><span>Персонаж:</span> {{ card.character_info }}</p>
+    <p class="study-word"><span>Изучаемое слово:</span>{{ card?.user_word?.word?.word }}</p>
     <!--    <div class="info">-->
     <!--      <div class="count_tasks">-->
     <!--        <img src="img/tasks/book.svg" alt="">-->
@@ -71,10 +76,20 @@ function startTask() {
     transform: scale(1.05);
   }
 
-  .tasks-card__title {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--yellow);
+  .wrapper-task-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    img {
+      width: 30px;
+    }
+
+    .tasks-card__title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--yellow);
+    }
   }
 
   .tasks-card__img {
@@ -96,6 +111,15 @@ function startTask() {
       color: var(--yellow);
       font-weight: 700;
       margin-right: 5px;
+    }
+  }
+
+  .study-word {
+    color: var(--yellow);
+
+    span {
+      color: var(--white);
+      margin-right: 10px;
     }
   }
 

@@ -1,5 +1,6 @@
 <template>
-  <div class="price__tariff" data-aos="fade-up"
+  <div class="price__tariff" :data-aos="!isMiniBlock ? 'fade-up' : ''"
+       :class="{'mini-block': isMiniBlock}"
        :data-aos-delay="getTimeDelay()"
        data-aos-duration="500"
        data-aos-once="true">
@@ -31,7 +32,8 @@ import userRequests from "@/mixins/requests/userRequesrs";
 // eslint-disable-next-line no-unused-vars,no-undef
 const props = defineProps({
   tariff: Object,
-  index: Number
+  index: Number,
+  isMiniBlock: Boolean
 });
 // eslint-disable-next-line no-unused-vars
 const {getPaymentLink} = userRequests();
@@ -322,6 +324,20 @@ function getTimeDelay() {
     .price__tariff-descr {
       color: var(--dark);
     }
+  }
+}
+
+.mini-block {
+  width: 250px;
+  padding: 10px 15px;
+  margin-top: unset;
+
+  .robot {
+    display: none !important;
+  }
+
+  .price__tariff-title {
+    font-size: 30px;
   }
 }
 

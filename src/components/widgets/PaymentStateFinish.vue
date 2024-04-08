@@ -4,12 +4,31 @@
 
     <button>Продлить <span>PRO</span> тариф</button>
 
-    <p>Так же вы можете выбрать другой тариф <a href="">здесь</a></p>
+    <div class="price__tariffs-row">
+      <p>Так же вы можете выбрать другой тариф ниже</p>
+
+      <tariff-card-view v-for="(tariff, index) in plans" :key="tariff.id"
+          :tariff="tariff" :index="index"
+                        :isMiniBlock="true"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
+import {onMounted} from "vue";
+import userRequests from "@/mixins/requests/userRequesrs";
+import {mainStore} from "@/store/mainStore";
+import {storeToRefs} from "pinia/dist/pinia";
+import TariffCardView from '@/components/widgets/TariffCardView.vue';
 
+const {getPlans} = userRequests();
+const main = mainStore();
+const {plans} = storeToRefs(main);
+
+onMounted(() => {
+  getPlans();
+})
 </script>
 
 <style scoped lang="scss">
@@ -61,6 +80,14 @@
         color: var(--yellow);
       }
     }
+  }
+
+  .price__tariffs-row {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
   }
 }
 </style>

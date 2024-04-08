@@ -18,7 +18,7 @@
         <div class="transcriptions" v-if="foundWord?.pronunciations">
           <div class="uk">
             <p><img src="img/flugs/uk.svg" alt="flug"> {{ foundWord?.transcriptions?.uk }}</p>
-            <button class="volume" @click="playPronunciation(foundWord?.pronunciations?.us)">
+            <button class="volume" @click="playPronunciation(foundWord?.pronunciations?.uk)">
               <img src="img/icon/bxs-volume-low-light.svg">
               <v-tooltip activator="parent" location="bottom">Озвучить</v-tooltip>
             </button>

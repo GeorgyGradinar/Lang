@@ -1,8 +1,7 @@
 <template>
   <div class="wrapper-comment animate__animated animate__fast animate__fadeInRight">
-    <p class="comment"
-       :class="{'show-comment': isShowComment, 'correct-message': comment === 'Ошибок нет.'}">
-      {{ comment }}
+    <p class="comment" :class="{'show-comment': isShowComment, 'correct-message': comment?.grading === 'success'}">
+        {{ comment?.spelling_comment }}
     </p>
     <button v-if="comment.length > 50" @click="toggleIsShowComment">{{ textButton }}</button>
   </div>
@@ -30,27 +29,25 @@ function toggleIsShowComment() {
   display: flex;
   align-items: flex-end;
   flex-direction: column;
-  max-width: 60%;
+  max-width: 40%;
 
   .comment {
+    text-align: center;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     color: var(--yellow);
-    margin-top: 5px;
+    font-size: 12px;
     text-overflow: ellipsis;
     white-space: normal;
     overflow: hidden;
+    margin: 10px 0;
     transition: all 0.2s;
   }
 
   .show-comment {
     display: flex;
     white-space: pre-wrap;
-  }
-
-  .correct-message {
-    color: #00ff69;
   }
 
   button {
@@ -68,6 +65,10 @@ function toggleIsShowComment() {
       box-shadow: 0 0 1px var(--dark);
       transform: translateY(5px);
     }
+  }
+
+  .correct-message {
+    color: var(--light-gray);
   }
 }
 </style>
