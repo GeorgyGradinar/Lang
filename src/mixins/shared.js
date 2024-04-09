@@ -22,7 +22,7 @@ export default function shared() {
         clearChatStore();
         clearTasksStore();
         setLocalStorage(ACCOUNT_STORAGE_KEY, '');
-        router.push({path: AUTH});
+        router.push({path: AUTH, query: {type: 'signin'}});
     }
 
     return {prepareForLogout}

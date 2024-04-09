@@ -32,23 +32,7 @@
         <div class="wrapper-message"
              v-for="message in messages" :key="message?.id">
           <!--          <template v-if="message.isText">-->
-
-          <div v-if="message.is_bot" class="bot-message animate__animated animate__fast animate__fadeInLeft">
-            <div class="icon-bot">
-              <img src="img/chart/Белый мужчина.webp">
-              <v-tooltip activator="parent" location="bottom">{{ currentTask?.character_info }}</v-tooltip>
-            </div>
-            <div class="message">
-              <span class="message-in-main-page"
-                    v-if="router.currentRoute.value.path !== '/lesson'"
-                    v-html="message.message">
-              </span>
-
-              <span v-else v-for="word in message.message" :key="word?.id"
-                    @click="openOptionBlock($event, word)" v-html="word">
-              </span>
-            </div>
-          </div>
+          <BotMessage v-if="message.is_bot" :message="message" @openOption="openOptionBlock"></BotMessage>
 
           <div v-else class="person_message animate__animated animate__fast animate__fadeInRight">
             <div class="message"
@@ -122,6 +106,7 @@ import {storeToRefs} from "pinia/dist/pinia";
 // eslint-disable-next-line no-unused-vars
 import Vue3WaveAudioPlayer from 'vue3-wave-audio-player';
 import dialogsRequests from "@/mixins/requests/dialogsRequests";
+// eslint-disable-next-line no-unused-vars
 import OptionWordBlock from "@/components/chat/OptionWordBlock";
 import {onClickOutside} from '@vueuse/core';
 import TypingLoader from "@/components/chat/TypingLoader";
@@ -135,6 +120,9 @@ import CommentElement from "@/components/chat/CommentElement";
 import LoaderSpiner from "@/components/widgets/LoaderSpiner";
 import CharacterBlock from "@/components/chat/CharacterBlock";
 import TimerLesson from "@/components/chat/TimerLesson";
+import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
+// eslint-disable-next-line no-unused-vars
+import BotMessage from "@/components/chat/BotMessage";
 
 const router = useRouter();
 // eslint-disable-next-line no-undef
@@ -160,6 +148,8 @@ const taskStore = tasksStore();
 const {changeCurrentTask} = taskStore;
 const {currentTask} = storeToRefs(taskStore);
 const {getMessages, getAllMessagesInTask} = dialogsRequests();
+// eslint-disable-next-line no-unused-vars
+const {translateFullMessage} = dictionaryRequests();
 // const {taskShow} = taskRequests();
 
 let messagesBlock = ref(null);
@@ -207,6 +197,7 @@ function handelScrollForPagination() {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function openOptionBlock(event) {
   if (!event?.target?.className?.includes('english-word')) {
     return;
@@ -362,7 +353,6 @@ onUnmounted(() => {
   }
 
   .chat {
-    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -385,27 +375,27 @@ onUnmounted(() => {
         width: 100%;
         margin-bottom: 10px;
 
-        .bot-message {
-          display: flex;
-          align-items: flex-end;
-          gap: 5px;
-
-          .icon-bot {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            border: 3px solid var(--dark-pink);
-            overflow: hidden;
-
-            img {
-              width: 100%;
-              object-fit: cover;
-            }
-          }
-        }
+        //.bot-message {
+        //  display: flex;
+        //  align-items: flex-end;
+        //  gap: 5px;
+        //
+        //  .icon-bot {
+        //    display: flex;
+        //    justify-content: center;
+        //    align-items: center;
+        //    border-radius: 50%;
+        //    width: 35px;
+        //    height: 35px;
+        //    border: 3px solid var(--dark-pink);
+        //    overflow: hidden;
+        //
+        //    img {
+        //      width: 100%;
+        //      object-fit: cover;
+        //    }
+        //  }
+        //}
 
         .person_message {
           display: flex;
@@ -439,15 +429,42 @@ onUnmounted(() => {
             }
           }
 
-          img {
-            position: absolute;
-            right: -5px;
-            top: -8px;
-            width: 20px;
-          }
-
           .message-in-main-page {
             white-space: pre-wrap;
+          }
+
+          .translate-all-message {
+            position: absolute;
+            opacity: 0;
+            bottom: -7px;
+            right: -15px;
+            display: flex;
+            border-radius: 10px;
+            padding: 4px 6px;
+            border: 2px solid var(--dark);
+            box-shadow: 1px 4px 1px var(--dark);
+            background-color: var(--yellow);
+            transition: all 0.2s;
+
+            img {
+              width: 20px;
+            }
+
+            &:hover {
+              background-color: var(--light-yellow);
+            }
+
+            &:active {
+              box-shadow: 0 0 1px var(--dark);
+              transform: translateY(5px);
+            }
+
+          }
+
+          &:hover {
+            .translate-all-message {
+              opacity: 1;
+            }
           }
         }
 

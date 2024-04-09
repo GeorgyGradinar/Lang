@@ -5,7 +5,6 @@
 
       <template v-if="isUserTasks">
         <CardUserView v-for="card in cards" :key="card.id" :card="card"></CardUserView>
-
       </template>
 
       <template v-else>

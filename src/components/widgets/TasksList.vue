@@ -6,12 +6,14 @@
       <button @click="startSelectedTask(task)">Начать</button>
     </div>
   </div>
+
+  <ShowWordsForTask v-if="isOpenWordList" @hiddenBlock="toggleOpenWordsList"></ShowWordsForTask>
 </template>
 
 <script setup>
-
+import ShowWordsForTask from "@/components/modals/ShowWordsForTask";
 import taskRequests from "@/mixins/requests/taskRequests";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {tasksStore} from "@/store/tasksStore";
 import {storeToRefs} from "pinia/dist/pinia";
 
@@ -19,12 +21,22 @@ const {getAllTasks, taskStart} = taskRequests();
 const taskStore = tasksStore();
 const {allTasks} = storeToRefs(taskStore);
 
+let isOpenWordList = ref(false);
+
 onMounted(() => {
   getAllTasks();
 })
 
 function startSelectedTask(task) {
-  taskStart(task.id);
+  if (task.type.title === "Тренировка слова") {
+    toggleOpenWordsList(true);
+  } else {
+    taskStart(task.id);
+  }
+}
+
+function toggleOpenWordsList(isOpen) {
+  isOpenWordList.value = isOpen;
 }
 </script>
 

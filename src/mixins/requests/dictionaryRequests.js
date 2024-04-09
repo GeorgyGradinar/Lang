@@ -24,7 +24,7 @@ export default function dictionaryRequests() {
         changeCurrentPageWordsInGroup
     } = dictionary;
     const chat = chatStore();
-    const {changeSearchWord, changeActiveSearching} = chat;
+    const {changeSearchWord, changeActiveSearching, changeActiveLoaderTranslate, changeTranslationsMessage} = chat;
     const notifications = notificationStore();
     const {openSnackBarDone} = notifications;
 
@@ -128,6 +128,19 @@ export default function dictionaryRequests() {
             .catch(error => handleError(error))
     }
 
+    function translateFullMessage(id) {
+        changeActiveLoaderTranslate(true);
+        axios.post(`${testUrl}/api/user/tasks/messages/translate`, {user_task_message_id: id}, {
+            headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization]),
+        })
+            .then(response => {
+                console.log(response)
+                changeActiveLoaderTranslate(false);
+                changeTranslationsMessage(response.data.data);
+            })
+            .catch(error => handleError(error))
+    }
+
     function addWordsToUserDictionary(idWord) {
         axios.post(`${testUrl}/api/user/dictionary/words/add`, {id: idWord}, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
@@ -175,6 +188,7 @@ export default function dictionaryRequests() {
         getAllUsersWords,
         searchWord,
         searchFromAllWords,
+        translateFullMessage,
         addWordsToUserDictionary,
         addGroupToUser,
         requestToDeleteWord

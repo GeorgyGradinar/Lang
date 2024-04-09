@@ -7,6 +7,7 @@ export const chatStore = defineStore('chat', () => {
     let isTriggerScrollDown = ref(false);
     let isActiveGeneration = ref(false);
     let isActiveLoaderMessageGeneration = ref(false);
+    let isActiveLoaderTranslate = ref(false);
     let currentPage = ref(1);
     let lastPage = ref(null);
     let foundWord = ref(null);
@@ -19,6 +20,7 @@ export const chatStore = defineStore('chat', () => {
         isTriggerScrollDown.value = false;
         isActiveGeneration.value = false;
         isActiveLoaderMessageGeneration.value = false;
+        isActiveLoaderTranslate.value = false;
         currentPage.value = 1;
         lastPage.value = null;
         foundWord.value = null;
@@ -59,13 +61,18 @@ export const chatStore = defineStore('chat', () => {
         triggerSaveScrollForPagination.value = !triggerSaveScrollForPagination.value;
     }
 
+    function changeTranslationsMessage(data) {
+        let messageBot = messages.value.find(message => message.message_id === data[2].message_id);
+        messageBot.translate = data[1].translate;
+        console.log(messageBot)
+    }
+
     function handleMessage(message) {
         return message.replaceAll(/([\w']+)/ig, (substr) => `|divider|<span class="english-word">${substr}</span>|divider|`).replaceAll(' |divider|', '&nbsp;|divider|').split('|divider|');
     }
 
     function addNewMessage(newMessage, isBot, timestamp, isSeparateMessage) {
         let completedMessageData
-        console.log(isSeparateMessage)
         if (isSeparateMessage) {
             completedMessageData = {
                 is_bot: isBot,
@@ -110,6 +117,10 @@ export const chatStore = defineStore('chat', () => {
         isActiveLoaderMessageGeneration.value = isActive;
     }
 
+    function changeActiveLoaderTranslate(isActive) {
+        isActiveLoaderTranslate.value = isActive;
+    }
+
     function changeCurrentPage(page) {
         currentPage.value = page;
     }
@@ -127,11 +138,12 @@ export const chatStore = defineStore('chat', () => {
     }
 
     return {
-        messages, changeMessages, addNextPageMessages, addNewMessage, addCommentToLastPersonMessage,
+        messages, changeMessages, addNextPageMessages, changeTranslationsMessage, addNewMessage, addCommentToLastPersonMessage,
         messageLimit, changeMessageLimit,
         isTriggerScrollDown, triggerScrollDown,
         isActiveGeneration, changeActiveGeneration,
         isActiveLoaderMessageGeneration, changeActiveLoaderMessageGeneration,
+        isActiveLoaderTranslate, changeActiveLoaderTranslate,
         currentPage, changeCurrentPage,
         lastPage, changeLastPage,
         foundWord, changeSearchWord,

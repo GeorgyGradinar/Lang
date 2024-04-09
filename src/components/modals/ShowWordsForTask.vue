@@ -6,12 +6,18 @@
     <v-card :class="'rounded-lg'">
       <div class="word-list-dialog">
         <h3>Выберите слово для тренировки</h3>
-
-        <div class="wrapper-words">
+        <div class="wrapper-words" v-if="words.length">
           <button v-for="word in words" :key="word.id" @click="openTask(word?.id)">
             {{ word?.word?.word }}
             <v-tooltip activator="parent" location="bottom">{{ word?.word?.translation }}</v-tooltip>
           </button>
+        </div>
+        <p class="have-not-words" v-if="!words.length && !isActiveLoading">У вас пока нет слов, перейдите в словарь, что
+          бы добавить новые слова.
+        </p>
+
+        <div class="wrapper-loader" v-if="!words.length && isActiveLoading">
+          <LoaderSpiner></LoaderSpiner>
         </div>
       </div>
     </v-card>
@@ -19,6 +25,7 @@
 </template>
 
 <script setup>
+import LoaderSpiner from "@/components/widgets/LoaderSpiner";
 import {onMounted, ref, watch} from "vue";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {dictionaryStore} from "@/store/dictionaryStore";
@@ -27,7 +34,7 @@ import taskRequests from "@/mixins/requests/taskRequests";
 
 const {getAllUsersWords} = dictionaryRequests();
 const dictionary = dictionaryStore();
-const {words} = storeToRefs(dictionary);
+const {words, isActiveLoading} = storeToRefs(dictionary);
 // eslint-disable-next-line
 const emit = defineEmits(['hiddenBlock']);
 const {taskStart} = taskRequests();
@@ -98,6 +105,24 @@ function openTask(id) {
         background-color: var(--dark-pink);
       }
     }
+  }
+
+  .have-not-words {
+    color: var(--dark-pink);
+    font-size: 17px;
+    font-weight: 800;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--light_pink);
+    border: 2px solid var(--dark-pink);
+    margin-top: 20px;
+  }
+
+  .wrapper-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

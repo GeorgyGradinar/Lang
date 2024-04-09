@@ -12,7 +12,7 @@
 <script setup>
 import RegistrationBlock from "@/components/signin/RegistrationBlock";
 import LoginBlock from "@/components/signin/LoginBlock";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router/dist/vue-router";
 
 const route = useRoute();
@@ -20,10 +20,16 @@ const route = useRoute();
 let isShowLoginBlock = ref(false);
 
 onMounted(() => {
-  if (route.query?.type === 'signin'){
-    isShowLoginBlock.value = true;
-  }
+  handleRoute()
 })
+
+watch(route, () => {
+  handleRoute()
+})
+
+function handleRoute() {
+  isShowLoginBlock.value = route.query?.type === 'signin';
+}
 
 function changeMode(arg) {
   isShowLoginBlock.value = arg;

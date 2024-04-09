@@ -271,7 +271,7 @@ header {
         button {
           color: #201f26;
           padding: 10px 20px;
-          border-bottom: 1px solid #4f3dca45;
+          border-bottom: 1px solid var(--purple);
           transition: all 0.2s;
 
           &:hover {

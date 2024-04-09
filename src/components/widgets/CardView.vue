@@ -51,7 +51,7 @@ const {taskStart} = taskRequests();
 let isOpenWordList = ref(false);
 
 function addTasksToUser() {
-  if (props.card.id === 6) {
+  if (props.card.type.title === "Тренировка слова") {
     toggleOpenWordsList(true);
   } else {
     taskStart(props.card.id);

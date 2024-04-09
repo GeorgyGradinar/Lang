@@ -1,10 +1,20 @@
 <template>
   <div class="words-wrap">
     <p class="words__title">Новые добавленные слова</p>
-    <wordlist-view
-        :words="words"
-        :columns="2"
-    />
+
+    <template v-if="words.length">
+      <wordlist-view
+          :words="words"
+          :columns="2"
+      />
+    </template>
+    <template v-if="!words.length && !isActiveLoading">
+      <p class="have-not-words">У вас пока нет слов, перейдите в словарь, что бы добавить новые слова.</p>
+    </template>
+
+    <div class="wrapper-loader" v-if="!words.length && isActiveLoading">
+      <LoaderSpiner></LoaderSpiner>
+    </div>
 
     <router-link to="/dictionary" class="secondary-button">
       Перейти в словарь
@@ -16,6 +26,7 @@
 </template>
 
 <script setup>
+import LoaderSpiner from "@/components/widgets/LoaderSpiner";
 import WordlistView from '@/components/widgets/WordlistView.vue';
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {onMounted} from "vue";
@@ -24,7 +35,7 @@ import {storeToRefs} from "pinia/dist/pinia";
 
 const {getAllUsersWords} = dictionaryRequests();
 const dictionary = dictionaryStore();
-const {words} = storeToRefs(dictionary);
+const {words, isActiveLoading} = storeToRefs(dictionary);
 
 onMounted(() => {
   getAllUsersWords();
@@ -56,6 +67,23 @@ onMounted(() => {
   .words__title {
     font-size: 26px;
     color: var(--dark-pink);
+  }
+
+  .have-not-words {
+    color: var(--dark-pink);
+    font-size: 17px;
+    font-weight: 800;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--light_pink);
+    border: 2px solid var(--dark-pink);
+  }
+
+  .wrapper-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .secondary-button {

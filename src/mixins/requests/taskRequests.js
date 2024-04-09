@@ -82,7 +82,7 @@ export default function taskRequests() {
         }
         body = wordId ? {...body, user_word_id: wordId} : body;
 
-        axios.post(`${testUrl}/api/task/start?${new URLSearchParams(body)}`, {}, {
+        axios.post(`${testUrl}/api/task/start?${new URLSearchParams(body)}`, {'task_id': id,}, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
