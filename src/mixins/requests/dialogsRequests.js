@@ -5,8 +5,11 @@ import {chatStore} from "@/store/chatStore";
 import {tasksStore} from "@/store/tasksStore";
 import shared from "@/mixins/shared";
 import taskRequests from "@/mixins/requests/taskRequests";
+import {useRouter} from "vue-router/dist/vue-router";
+import {LESSON} from "@/configuration/Routers";
 
 export default function dialogsRequests() {
+    const router = useRouter();
     const chat = chatStore()
     const {
         changeMessages,
@@ -19,7 +22,7 @@ export default function dialogsRequests() {
         addCommentToLastPersonMessage
     } = chat;
     const taskStore = tasksStore();
-    const {changeIsOpenDialog} = taskStore;
+    const {changeIsOpenDialog, changeStatusCurrentTask} = taskStore;
     const {taskShow} = taskRequests();
     const {prepareForLogout} = shared();
 
@@ -45,6 +48,8 @@ export default function dialogsRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
+                if (router.currentRoute.value.path !== LESSON) return;
+
                 if (isPagination) {
                     addNextPageMessages(response.data.data);
                 } else {
@@ -93,16 +98,19 @@ export default function dialogsRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                if (response.data.data[2]?.task_status === "processing") {
-                    if (response.data.data[0].spelling_comment) addCommentToLastPersonMessage(response.data.data[0].spelling_comment);
+                if (router.currentRoute.value.path !== LESSON) return;
+
+                if (response.data.data[2]?.message_status === "processing") {
+                    if (response.data.data[0].spelling_comment) addCommentToLastPersonMessage(response.data.data[0]);
                     setTimeout(() => {
                         getMessageFromTask(id)
                     }, 1000);
                 } else {
-                    addNewMessage(response.data.data[1].message, true, response.data.data?.date, true);
-                    addCommentToLastPersonMessage(response.data.data[0].spelling_comment);
+                    addNewMessage(response.data.data[1].message, response.data.data[2].message_id, true, response.data.data?.date, true);
+                    addCommentToLastPersonMessage(response.data.data[0]);
                     if (response.data.data[2]?.task_status === 'success') {
-                        changeIsOpenDialog(true)
+                        changeIsOpenDialog(true);
+                        changeStatusCurrentTask(response.data.data[2]?.task_status)
                     }
                     changeActiveGeneration(false);
                 }
@@ -115,14 +123,17 @@ export default function dialogsRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
+                if (router.currentRoute.value.path === LESSON) return;
+
                 if (response.data.data.status === "processing") {
                     setTimeout(() => {
                         getMessageFormNetwork(id)
                     }, 1000);
                 } else {
-                    addNewMessage(response.data.data.response, true, response.data.data.date, false);
+                    addNewMessage(response.data.data.response, response.data.data.id, true, response.data.data.date, false);
                     changeActiveGeneration(false);
                 }
+
             })
             .catch(error => handleError(error))
     }

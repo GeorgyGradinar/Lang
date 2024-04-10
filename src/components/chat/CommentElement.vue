@@ -12,7 +12,7 @@ import {ref} from "vue";
 
 // eslint-disable-next-line no-undef,no-unused-vars
 const props = defineProps({
-  comment: String
+  comment: Object
 })
 
 let isShowComment = ref(false);

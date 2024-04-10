@@ -8,7 +8,7 @@ import PaymentView from '../views/PaymentView.vue'
 import CallbackView from '../views/CallbackView.vue'
 import SigninView from '../views/SigninView.vue'
 import LessonView from '../views/LessonView.vue'
-
+import {LESSON} from "@/configuration/Routers";
 
 const routes = [
   {
@@ -52,7 +52,7 @@ const routes = [
     component: SigninView
   },
   {
-    path: '/lesson',
+    path: LESSON,
     name: 'lesson',
     component: LessonView
   },

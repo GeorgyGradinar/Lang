@@ -34,6 +34,10 @@ export const tasksStore = defineStore('taskStore', () => {
         currentTask.value = task;
     }
 
+    function changeStatusCurrentTask(status) {
+        if (currentTask.value?.status) currentTask.value.status = status
+    }
+
     function changePagination(data) {
         pagination.value = data;
     }
@@ -49,7 +53,7 @@ export const tasksStore = defineStore('taskStore', () => {
     return {
         allTasks, changeTasks,
         userTasks, changeUserTasks, addToUserTasks,
-        currentTask, changeCurrentTask,
+        currentTask, changeCurrentTask, changeStatusCurrentTask,
         pagination, changePagination,
         isOpenFinalModal, changeIsOpenDialog,
         userErrors, changeUsersErrors,

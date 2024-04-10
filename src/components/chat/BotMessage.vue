@@ -9,7 +9,7 @@
 
     <div class="message">
       <span class="message-in-main-page"
-            v-if="router.currentRoute.value.path !== '/lesson'"
+            v-if="router.currentRoute.value.path !== LESSON"
             v-html="message.message">
       </span>
 
@@ -20,17 +20,18 @@
       <div class="wrapper-translate"
            ref="wrapperTranslate"
            :class="{'show-translate': isShowTranslate}">
-        <p class="translate" ref="translateBlock" v-if="!isActiveLoaderTranslate && message.translate">
+        <p class="translate" ref="translateBlock" v-if="!isActiveTranslateLoader && message.translate">
           {{ message.translate }}
         </p>
 
-        <div class="wrapper-loader-translate-message" v-if="isActiveLoaderTranslate">
+        <div class="wrapper-loader-translate-message" v-if="isActiveTranslateLoader">
           <LoaderSpiner :less-margin="true"></LoaderSpiner>
         </div>
       </div>
 
       <button class="translate-all-message"
-              @click="translateMessage(message.message_id)">
+              @click="translateMessage(message.message_id)"
+              v-if="router.currentRoute.value.path === LESSON">
         <img src="img/chart/translate.svg" alt="translate">
         <v-tooltip activator="parent" location="bottom">Перевести весь текст</v-tooltip>
       </button>
@@ -45,13 +46,11 @@ import {storeToRefs} from "pinia/dist/pinia";
 import {useRouter} from "vue-router/dist/vue-router";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {ref, toRefs, watch} from "vue";
-import {chatStore} from "@/store/chatStore";
+import {LESSON} from "@/configuration/Routers";
 
 const router = useRouter();
 const taskStore = tasksStore();
 const {currentTask} = storeToRefs(taskStore);
-const chat = chatStore();
-const {isActiveLoaderTranslate} = storeToRefs(chat);
 // eslint-disable-next-line no-unused-vars
 const {translateFullMessage} = dictionaryRequests();
 
@@ -64,29 +63,31 @@ const props = defineProps({
 const {message} = toRefs(props);
 
 let isShowTranslate = ref(false);
+let isActiveTranslateLoader = ref(false);
 
 let wrapperTranslate = ref(null);
 let translateBlock = ref(null);
 
 watch(message, () => {
-  console.log('__________')
-  console.log(message.value)
-  console.log(isActiveLoaderTranslate.value)
-  updateHeightMessage();
+  isActiveTranslateLoader.value = false;
+  setTimeout(() => {
+    updateHeightMessage();
+  })
 }, {deep: true})
 
 function translateMessage(id) {
   isShowTranslate.value = !isShowTranslate.value;
+
   if (message.value.translate) {
     updateHeightMessage();
   } else {
+    isActiveTranslateLoader.value = true;
     wrapperTranslate.value.style.height = `${100}px`
     translateFullMessage(id);
   }
 }
 
 function updateHeightMessage() {
-  console.log(translateBlock.value)
   wrapperTranslate.value.style.height = isShowTranslate.value ? `${translateBlock.value.clientHeight + 10}px` : 0;
 }
 </script>
@@ -131,6 +132,11 @@ function updateHeightMessage() {
       span.english-word:hover {
         color: var(--red);
       }
+
+      span.line {
+        width: 500px;
+        white-space: pre-line;
+      }
     }
 
     .message-in-main-page {
@@ -146,13 +152,13 @@ function updateHeightMessage() {
       transition: all 0.4s;
 
       &.show-translate {
-        border-top: 1px solid red;
+        border-top: 1px solid var(--dark);
         margin-top: 10px;
         padding-top: 10px;
       }
 
       .translate {
-
+        color: var(--dark-pink);
       }
 
       .wrapper-loader-translate-message {

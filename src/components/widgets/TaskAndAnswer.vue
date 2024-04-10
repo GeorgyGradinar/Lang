@@ -41,12 +41,12 @@
       <!--        <button @click="submitResult">Отправить</button>-->
       <!--      </div>-->
       <div class="wrapper-counter-message">
-        <div class="counter" v-if="countDoneMessages">
+        <div class="counter">
           <img src="img/chart/done.svg">
           <span>Без ошибок:</span>
           <span>{{ countDoneMessages }}</span>
         </div>
-        <div class="counter" v-if="countRejectMessages">
+        <div class="counter">
           <img src="img/chart/reject.svg">
           <span>С ошибками:</span>
           <span>{{ countRejectMessages }}</span>
@@ -93,14 +93,14 @@ let textarea = ref(null);
 // eslint-disable-next-line no-unused-vars
 let answer = ref('');
 
-let countDoneMessages = ref(null);
-let countRejectMessages = ref(null);
+let countDoneMessages = ref(0);
+let countRejectMessages = ref(0);
 
 watch(messages, () => {
   if (messages.value.length) {
     const countersData = getCountDoneMessages();
-    countDoneMessages.value = countersData.done;
-    countRejectMessages.value = countersData.reject;
+    countDoneMessages.value = countersData.done ? countersData.done : 0;
+    countRejectMessages.value = countersData.reject ? countersData.reject : 0;
   }
 }, {deep: true, immediate: true})
 

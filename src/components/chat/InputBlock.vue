@@ -112,7 +112,7 @@ function sendMessageToNetwork() {
   if (isActiveRecord.value) {
     toggleActiveRecord();
   } else {
-    addNewMessage(messageToBot.value, false, new Date, false);
+    addNewMessage(messageToBot.value, null, false, new Date, false);
     if (router.currentRoute.value.path === '/lesson') {
       sendMessageToTask(messageToBot.value);
     } else {

@@ -44,8 +44,9 @@ export const chatStore = defineStore('chat', () => {
         } else {
             messages.value = allMessages
         }
-
-        triggerScrollDown();
+        setTimeout(() => {
+            triggerScrollDown();
+        }, 500)
     }
 
     function addNextPageMessages(allMessages) {
@@ -64,19 +65,21 @@ export const chatStore = defineStore('chat', () => {
     function changeTranslationsMessage(data) {
         let messageBot = messages.value.find(message => message.message_id === data[2].message_id);
         messageBot.translate = data[1].translate;
-        console.log(messageBot)
     }
 
     function handleMessage(message) {
-        return message.replaceAll(/([\w']+)/ig, (substr) => `|divider|<span class="english-word">${substr}</span>|divider|`).replaceAll(' |divider|', '&nbsp;|divider|').split('|divider|');
+        // console.dir(message.toString());
+        // console.dir(message.replaceAll(/([\w']+)/ig, (substr) => `|divider|<span class="english-word">${substr}</span>|divider|`).replaceAll(' |divider|', '&nbsp;|divider|').replaceAll('\n\n', '|divider|<span class="divider"></span>|divider|').split('|divider|'));
+        return message.replaceAll(/([\w']+)/ig, (substr) => `|divider|<span class="english-word">${substr}</span>|divider|`).replaceAll(' |divider|', '&nbsp;|divider|').replaceAll('\n\n', '|divider|<span class="line">------</span>|divider|').split('|divider|');
     }
 
-    function addNewMessage(newMessage, isBot, timestamp, isSeparateMessage) {
+    function addNewMessage(newMessage, id, isBot, timestamp, isSeparateMessage) {
         let completedMessageData
         if (isSeparateMessage) {
             completedMessageData = {
                 is_bot: isBot,
                 message: handleMessage(newMessage),
+                message_id: id,
                 timestamp
             }
         } else {
@@ -88,7 +91,9 @@ export const chatStore = defineStore('chat', () => {
         }
 
         messages.value.push(completedMessageData);
-        triggerScrollDown();
+        setTimeout(() => {
+            triggerScrollDown();
+        }, 500)
     }
 
     function addCommentToLastPersonMessage(comments) {
@@ -98,7 +103,9 @@ export const chatStore = defineStore('chat', () => {
                 lastMessage = message
             }
         })
-        lastMessage.spelling_comment = comments;
+        lastMessage.spelling_comment = comments.spelling_comment;
+        lastMessage.grading = comments.grading;
+        triggerScrollDown();
     }
 
     function changeMessageLimit(limit) {
@@ -138,16 +145,30 @@ export const chatStore = defineStore('chat', () => {
     }
 
     return {
-        messages, changeMessages, addNextPageMessages, changeTranslationsMessage, addNewMessage, addCommentToLastPersonMessage,
-        messageLimit, changeMessageLimit,
-        isTriggerScrollDown, triggerScrollDown,
-        isActiveGeneration, changeActiveGeneration,
-        isActiveLoaderMessageGeneration, changeActiveLoaderMessageGeneration,
-        isActiveLoaderTranslate, changeActiveLoaderTranslate,
-        currentPage, changeCurrentPage,
-        lastPage, changeLastPage,
-        foundWord, changeSearchWord,
-        isActiveSearching, changeActiveSearching,
+        messages,
+        changeMessages,
+        addNextPageMessages,
+        changeTranslationsMessage,
+        addNewMessage,
+        addCommentToLastPersonMessage,
+        messageLimit,
+        changeMessageLimit,
+        isTriggerScrollDown,
+        triggerScrollDown,
+        isActiveGeneration,
+        changeActiveGeneration,
+        isActiveLoaderMessageGeneration,
+        changeActiveLoaderMessageGeneration,
+        isActiveLoaderTranslate,
+        changeActiveLoaderTranslate,
+        currentPage,
+        changeCurrentPage,
+        lastPage,
+        changeLastPage,
+        foundWord,
+        changeSearchWord,
+        isActiveSearching,
+        changeActiveSearching,
         triggerSaveScrollForPagination,
         clearChatStore
     }

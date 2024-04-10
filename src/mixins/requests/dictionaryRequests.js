@@ -134,7 +134,6 @@ export default function dictionaryRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization]),
         })
             .then(response => {
-                console.log(response)
                 changeActiveLoaderTranslate(false);
                 changeTranslationsMessage(response.data.data);
             })
@@ -179,6 +178,7 @@ export default function dictionaryRequests() {
     function handleError(error) {
         console.log(error)
         changeActiveSearching(false);
+        changeActiveLoaderTranslate(false);
     }
 
     return {
