@@ -34,6 +34,7 @@ export default function dialogsRequests() {
                 if (isPagination) {
                     addNextPageMessages(response.data.data);
                 } else {
+                    console.log('new test')
                     changeMessages(response.data.data);
                     changeMessageLimit(response.data.message_limit);
                     changeLastPage(response.data.pagination.last_page);
