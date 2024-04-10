@@ -85,8 +85,6 @@ function translateMessage(id) {
     wrapperTranslate.value.style.height = `${100}px`
     translateFullMessage(id);
   }
-
-  console.log('test')
 }
 
 function updateHeightMessage() {
