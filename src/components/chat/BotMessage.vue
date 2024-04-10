@@ -72,6 +72,7 @@ watch(message, () => {
   setTimeout(() => {
     updateHeightMessage();
   })
+  console.log('test')
 }, {deep: true})
 
 function translateMessage(id) {
