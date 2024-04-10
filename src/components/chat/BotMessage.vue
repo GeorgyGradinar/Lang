@@ -64,7 +64,6 @@ const {message} = toRefs(props);
 
 let isShowTranslate = ref(false);
 let isActiveTranslateLoader = ref(false);
-
 let wrapperTranslate = ref(null);
 let translateBlock = ref(null);
 
