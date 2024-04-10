@@ -37,9 +37,9 @@
           <div v-else class="person_message animate__animated animate__fast animate__fadeInRight">
             <div class="message"
                  :class="{
-              'bg-done': message?.grading === 'success',
-              'bg-reject': message?.grading === 'error'
-            }">
+                    'bg-done': message?.grading === 'success',
+                    'bg-reject': message?.grading === 'error'
+                 }">
               <span>{{ message.message }}</span>
             </div>
             <CommentElement v-if="message?.spelling_comment" :comment="message"></CommentElement>

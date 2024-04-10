@@ -108,8 +108,9 @@ export default function dialogsRequests() {
                 } else {
                     addNewMessage(response.data.data[1].message, response.data.data[2].message_id, true, response.data.data?.date, true);
                     addCommentToLastPersonMessage(response.data.data[0]);
-                    if (response.data.data[2]?.task_status === 'success') {
-                        changeIsOpenDialog(true);
+                    if (response.data.data[2]?.task_status !== 'processing') {
+                        if (response.data.data[2]?.task_status === 'success') changeIsOpenDialog(true);
+                        // if (response.data.data[2]?.task_status === 'failed') changeIsOpenDialog(true);
                         changeStatusCurrentTask(response.data.data[2]?.task_status)
                     }
                     changeActiveGeneration(false);

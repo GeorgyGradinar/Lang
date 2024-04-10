@@ -47,19 +47,21 @@ let timestamp = ref(null);
 watch(currentTask, () => {
 
   taskStatus.value = currentTask.value.status;
+
+  if (taskStatus.value !== 'processing') return;
+
   timestamp.value = currentTask.value.task.timeout * 1000;
   startTimeTask.value = currentTask.value.started_at
+
   if (startTimeTask.value.toString().split('').length === 10) {
     startTimeTask.value = startTimeTask.value * 1000;
   }
 
-  let endTimeTask = startTimeTask.value + timestamp.value
-
-  if (endTimeTask > new Date().getTime()) {
+  if ((startTimeTask.value + timestamp.value) > new Date().getTime()) {
     setDataToTimer();
     timer();
   }
-})
+}, {deep: true})
 
 function timer() {
   interval.value = setInterval(() => {
@@ -72,6 +74,8 @@ function setDataToTimer() {
   hours.value = Math.floor(restOfTime / 3600);
   minutes.value = Math.floor((restOfTime - (hours.value * 3600)) / 60);
   seconds.value = restOfTime - (hours.value * 3600) - (minutes.value * 60);
+
+  if (!hours.value && !minutes.value && !seconds.value) taskStatus.value = 'failed';
 }
 
 onUnmounted(() => {

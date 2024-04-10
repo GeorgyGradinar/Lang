@@ -56,15 +56,6 @@ export default function taskRequests() {
             .catch(error => handleError(error))
     }
 
-    function getTaskInformation() {
-        // axios.post(`${testUrl}/api/task/${2}/start`, {id: 1}, {
-        //     headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
-        // })
-        //     .then(response => {
-        //         console.log(response)
-        //     })
-    }
-
     function taskShow(id) {
         axios.get(`${testUrl}/api/user/tasks/show?id=${id}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
@@ -131,7 +122,6 @@ export default function taskRequests() {
     return {
         getAllTasks,
         getAllUsersTasks,
-        getTaskInformation,
         taskShow,
         taskStart,
         taskRestart,

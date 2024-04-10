@@ -99,6 +99,9 @@ function sendMessageToNetwork() {
   if (currentTask.value?.status === "success") {
     openSnackBarReject('Задание уже выполнено');
     return;
+  } else if (currentTask.value?.status === "failed") {
+    openSnackBarReject('Задание завершено');
+    return;
   }
 
   if (isCyrillic(messageToBot.value) && router.currentRoute.value.path === '/lesson') {

@@ -26,14 +26,15 @@ import taskRequests from "@/mixins/requests/taskRequests";
 import {tasksStore} from "@/store/tasksStore";
 import {storeToRefs} from "pinia/dist/pinia";
 
-const {getAllTasks, getAllUsersTasks, getTaskInformation} = taskRequests();
+const {getAllTasks, getAllUsersTasks} = taskRequests();
 const taskStore = tasksStore();
+const {clearTasksStore} = taskStore;
 const {allTasks, userTasks} = storeToRefs(taskStore);
 
 onMounted(() => {
+  clearTasksStore();
   getAllTasks();
   getAllUsersTasks();
-  getTaskInformation();
 })
 </script>
 

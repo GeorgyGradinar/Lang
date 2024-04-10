@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper-comment animate__animated animate__fast animate__fadeInRight">
     <p class="comment" :class="{'show-comment': isShowComment, 'correct-message': comment?.grading === 'success'}">
-        {{ comment?.spelling_comment }}
+      {{ comment?.spelling_comment }}
     </p>
-    <button v-if="comment.length > 50" @click="toggleIsShowComment">{{ textButton }}</button>
+    <button v-if="comment?.spelling_comment.length > 50" @click="toggleIsShowComment">{{ textButton }}</button>
   </div>
 </template>
 
