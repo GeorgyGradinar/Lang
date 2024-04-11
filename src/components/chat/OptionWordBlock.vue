@@ -1,6 +1,6 @@
 <template>
-  <div v-if="topPosition" id="option-block" class="option-block"
-       :style="{'top': `${topPosition}px`, 'left': `${leftPosition}px`}">
+  <div v-if="topPosition" ref="optionBlock" id="option-block" class="option-block"
+       :style="{'top': `${top}px`, 'left': `${leftPosition}px`}">
     <template v-if="!isActiveSearching">
       <template v-if="foundWord">
         <div class="wrapper-option-word">
@@ -12,7 +12,7 @@
         <div class="wrapper-translate">
           <p class="find-word">{{ foundWord?.word }}</p>
           -
-          <p>{{ getFirstTranslation(foundWord.translation) }}</p>
+          <p>{{ foundWord.translation }}</p>
         </div>
 
         <div class="transcriptions" v-if="foundWord?.pronunciations">
@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import {toRefs, watch} from "vue";
+import {ref, toRefs, watch} from "vue";
 import LoaderCircle from "@/components/app/LoaderCircle";
 import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
 import {chatStore} from "@/store/chatStore";
@@ -61,10 +61,20 @@ const chat = chatStore();
 const {changeSearchWord} = chat;
 const {foundWord, isActiveSearching} = storeToRefs(chat);
 
+let optionBlock = ref(null);
+let top = ref(null);
+
 watch(topPosition, () => {
   if (topPosition.value) {
     changeSearchWord(null);
     searchFromAllWords(word.value);
+    top.value = topPosition.value - 90;
+  }
+})
+
+watch(foundWord, () => {
+  if (foundWord.value) {
+    getTopPosition();
   }
 })
 
@@ -72,19 +82,28 @@ function playPronunciation(url) {
   new Audio(url).play();
 }
 
-function getFirstTranslation(translations) {
-  return translations.split(',')[0]
+function getTopPosition() {
+  setTimeout(() => {
+    top.value = topPosition.value - optionBlock.value?.clientHeight - 20;
+  })
 }
+
+// function getFirstTranslation(translations) {
+//   return translations.split(',')[0]
+// }
 </script>
 
 <style scoped lang="scss">
 .option-block {
   position: absolute;
-  width: 350px;
+  top: 0;
+  left: 0;
+  width: 400px;
   background-color: var(--light-yellow);
   padding: 10px;
   border-radius: 10px;
-  border: 2px solid var(--dark-pink);
+  border: 2px solid var(--dark);
+  transition: all 0.2s;
 
   p {
     font-size: 13px;

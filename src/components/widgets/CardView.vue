@@ -100,11 +100,9 @@ function toggleOpenWordsList(isOpen) {
     }
   }
 
-
   .tasks-card__img {
     width: 40px;
     height: 40px;
-
   }
 
   .tasks-card__descr {
@@ -184,5 +182,6 @@ function toggleOpenWordsList(isOpen) {
       }
     }
   }
+
 }
 </style>

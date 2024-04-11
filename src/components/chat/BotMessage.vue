@@ -14,6 +14,7 @@
       </span>
 
       <span v-else v-for="word in message.message" :key="word?.id"
+            :class="{'new-line': word.includes('new-line')}"
             @click="emit('openOption', $event, word)" v-html="word">
       </span>
 
@@ -133,9 +134,8 @@ function updateHeightMessage() {
         color: var(--red);
       }
 
-      span.line {
-        width: 500px;
-        white-space: pre-line;
+      &.new-line {
+        width: 100%;
       }
     }
 

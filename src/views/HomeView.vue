@@ -47,9 +47,10 @@
     </div>
     <FooterElement></FooterElement>
   </div>
+  <RejectModal v-if="isOpenRejectModal" @hiddenBlock="hiddenRejectModal"></RejectModal>
 </template>
 
-<script>
+<script setup>
 import WeekResults from '@/components/widgets/WeekResults.vue';
 // import ChatView from '@/components/widgets/ChatView.vue';
 // import SliderView from '@/components/widgets/SliderView.vue';
@@ -61,192 +62,14 @@ import NewAddedWordBlock from "@/components/widgets/NewAddedWordBlock";
 import TasksList from "@/components/widgets/TasksList";
 import FooterElement from "@/components/FooterElement";
 import WelcomeBlock from "@/components/main-page/WelcomeBlock";
+import RejectModal from "@/components/modals/chat/RejectModal";
+import {ref} from "vue";
 
-export default {
-  name: 'HomeView',
-  components: {
-    WelcomeBlock,
-    FooterElement,
-    TasksList,
-    NewAddedWordBlock,
-    ChartBlock,
-    WeekResults,
-    // ChatView,
-    // SliderView,
-    WordsGroupList,
-    // TabNav,
-    MistakeView,
-  },
-  data: () => ({
-    sliderFeed1: [],
-    sliderFeed2: [],
-    mistakeTabs: [],
-    mistakesArray: {},
-    currentMistakes: {},
-  }),
+let isOpenRejectModal = ref(true);
 
-  created() {
-    // центральный слвйдер
-    this.sliderFeed1 = [
-      {
-        id: 1,
-        bgclass: 'bg-base-purple',
-        title: 'Доступные задания',
-        img: 'img/promo/Pound_Sign_L1.png',
-        group: 'Интервью',
-        path: '/tasks',
-        description: 'Интервью на английском языке - разбираем популярные варианты'
-      },
-      {
-        id: 2,
-        bgclass: 'bg-base-green',
-        title: 'perfect continuous tense',
-        img: 'img/promo/Sphere_Matrix_x3__L.png',
-        group: 'Группа 2',
-        path: '/dictionary',
-        description: 'The Present Perfect Continuous Tense и форма have been + Ving'
-      },
-      {
-        id: 3,
-        bgclass: 'bg-base-red',
-        title: 'uncountable nouns',
-        img: 'img/promo/2x2_Brick_Magenta_L.png',
-        group: 'Группа 3',
-        path: '/dictionary',
-        description: 'Эквиваленты модальных глаголов с Have, правильное употребление'
-      }
-    ]
-    // правый слайдер
-    this.sliderFeed2 = [
-      {
-        id: 1,
-        bgclass: 'bg-base-3',
-        title: 'Изучение слов',
-        img: 'img/promo/Action_translate_L1.png',
-        group: 'IT-термины',
-        path: '/dictionary',
-        description: 'Изучаем новые слова в профессии и сочетания слов для тематики'
-      },
-      {
-        id: 1,
-        bgclass: 'bg-base-purple',
-        title: 'Изучение слов',
-        img: 'img/promo/Block_Cross_3D_2__L1.png',
-        group: 'Географические наименования',
-        path: '/dictionary',
-        description: 'Эквиваленты модальных глаголов с Have, правильное употребление'
-      },
-      {
-        id: 1,
-        bgclass: 'bg-base-red',
-        title: 'Изучение слов',
-        img: 'img/promo/Block_Cross_3D_2__L1.png',
-        group: 'Природа и погода',
-        path: '/dictionary',
-        description: 'О местоимениях в английском, группы местоимений'
-      },
-    ]
-    // Навигация в ошибках
-    this.mistakeTabs = [
-      {id: 0, title: 'Словарь'},
-      {id: 1, title: 'Произношение'},
-      {id: 2, title: 'Грамматика'},
-    ]
-    // структура с ошибками
-    this.mistakesArray = [{
-      id: 0,
-      data: {
-        title: [
-          {w: 50, text: 'Оригинальное'},
-          {w: 50, text: 'Верное'},
-          {w: 50, text: 'Рекомендации'}
-        ],
-        rows: [
-          [
-            {w: 50, text: 'I have five years of teaching experience and also have other jobs like hosting events.'},
-            {w: 50, text: 'I`ve been teaching for five years and I also have experience hosting events.'},
-            {w: 50, text: 'Используйте эти примеры для повышения уровня нативности.'},
-          ],
-          [
-            {w: 50, text: 'In addition, I do commissioned coffee artworks.'},
-            {w: 50, text: 'Furthermore, I create commissioned coffee artworks.'},
-            {
-              w: 50,
-              text: 'У вас хороший словарь. В данном случае можно использовать для более естественного звучания.'
-            },
-          ],
-          [
-            {w: 50, text: 'I have five years of teaching experience and also have other jobs like hosting events.'},
-            {w: 50, text: 'I`ve been teaching for five years and I also have experience hosting events.'},
-            {w: 50, text: 'Используйте эти примеры для повышения уровня нативности.'},
-          ],
-          [
-            {w: 50, text: 'In addition, I do commissioned coffee artworks.'},
-            {w: 50, text: 'Furthermore, I create commissioned coffee artworks.'},
-            {
-              w: 50,
-              text: 'У вас хороший словарь. В данном случае можно использовать для более естественного звучания.'
-            },
-          ],
-        ]
-      }
-    },
-      {
-        id: 1,
-        data: {
-          title: [
-            {w: 60, text: 'Оригинальное'},
-            {w: 40, text: 'Рекомендации'}
-          ],
-          rows: [
-            [
-              {
-                w: 60,
-                text: 'Taking time to space out – whether by showering, pulling weeds, or petting a dog – provides an opportunity for what psychologists call wakeful rest.'
-              },
-              {w: 40, text: 'Ошибка произношения выделенного слова. Общий ритм речи немного медленный.'},
-            ],
-            [
-              {
-                w: 60,
-                text: 'Constantly cramming knowledge and experiences into your brain may seem like the quickest path to self-optimisation.'
-              },
-              {w: 40, text: 'Фонетические неточности, изменяющие смысл. Речь достаточно беглая.'},
-            ],
-          ]
-        }
-      },
-      {
-        id: 2,
-        data: {
-          title: [
-            {w: 50, text: 'Ваши продвинутые грамматические конструкции'},
-            {w: 50, text: 'Распространенные грамматические проблемы'}
-          ],
-          rows: [
-            [
-              {
-                w: 50,
-                text: '<span style="line-height:32px">1.Relative clauses<br>2.Passive voice<br>3.Tags<br>4.Tenses: Future Continuous, Present Continuous<br>5.Conditional: Zero<br>6.Intensifiers: a lot, quite, rather<br>7.Modals: may, might, should<br>8.Phrasal verbs: get along</span>'
-              },
-              {
-                w: 50,
-                text: '<span style="line-height:32px">1.Prepositions - 3<br>Wrong sequence - 2<br>2.Conditionals - 1<br>3.Articles -  1<br>4.Verb Constructions -  1</span>'
-              },
-            ],
-          ]
-        }
-      }
-    ]
-    this.selectMistakeTab({id: 0})
-  },
 
-  methods: {
-    selectMistakeTab(tab) {
-      const page = this.mistakesArray.find(val => val.id === tab.id)
-      this.currentMistakes = (page) ? page.data : {mode: 33, title: [], rows: []}
-    }
-  }
+function hiddenRejectModal(isOpen) {
+  isOpenRejectModal.value = isOpen;
 }
 </script>
 

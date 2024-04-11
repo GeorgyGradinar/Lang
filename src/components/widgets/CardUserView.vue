@@ -22,17 +22,23 @@
     <!--      </div>-->
     <!--    </div>-->
 
-    <div class="progress" v-if="card?.progress !== 100">
+    <div class="progress" v-if="card?.status === 'processing'">
       <div class="load_line">
         <div class="done_progress" :style="{'width': `${card?.progress}%`} "></div>
       </div>
       <p>{{ card?.progress }}%</p>
     </div>
-    <div class="progress_done" v-else>
+    <div class="progress_done" v-if="card?.status === 'success'">
       <div class="done">
-        <img src="img/done.svg" alt="">
+        <img src="img/done.svg" alt="done">
       </div>
-      <p>Выполненно!</p>
+      <p>Выполненно</p>
+    </div>
+    <div class="progress_reject" v-if="card?.status === 'failed'">
+      <div class="reject-icon">
+        <img src="img/chart/reject.svg" alt="reject">
+      </div>
+      <p>Не выполнено</p>
     </div>
   </div>
 </template>
@@ -199,6 +205,34 @@ function startTask() {
         width: 18px;
         height: 18px;
       }
+    }
+  }
+
+  .progress_reject {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    margin-top: 10px;
+
+    .reject-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      padding: 3px;
+      border: 2px solid var(--light-red);
+
+      img {
+        width: 10px;
+        height: 10px;
+      }
+    }
+
+    p {
+      color: var(--light-red);
+      font-weight: 700;
+      font-size: 15px;
     }
   }
 }

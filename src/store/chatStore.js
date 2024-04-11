@@ -68,9 +68,12 @@ export const chatStore = defineStore('chat', () => {
     }
 
     function handleMessage(message) {
-        // console.dir(message.toString());
-        // console.dir(message.replaceAll(/([\w']+)/ig, (substr) => `|divider|<span class="english-word">${substr}</span>|divider|`).replaceAll(' |divider|', '&nbsp;|divider|').replaceAll('\n\n', '|divider|<span class="divider"></span>|divider|').split('|divider|'));
-        return message.replaceAll(/([\w']+)/ig, (substr) => `|divider|<span class="english-word">${substr}</span>|divider|`).replaceAll(' |divider|', '&nbsp;|divider|').replaceAll('\n\n', '|divider|<span class="line">------</span>|divider|').split('|divider|');
+        return message
+            .replaceAll(/([\w']+)/ig, (substr) => `|divider|<span class="english-word">${substr}</span>|divider|`)
+            .replaceAll(' |divider|', '&nbsp;|divider|')
+            .replaceAll('\n\n', '|divider|<div class="new-line"></div>|divider|')
+            .replaceAll('\n', '|divider|<div class="new-line"></div>|divider|')
+            .split('|divider|');
     }
 
     function addNewMessage(newMessage, id, isBot, timestamp, isSeparateMessage) {

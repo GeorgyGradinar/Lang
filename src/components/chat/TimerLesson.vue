@@ -26,12 +26,12 @@
 </template>
 
 <script setup>
-
 import {tasksStore} from "@/store/tasksStore";
 import {storeToRefs} from "pinia/dist/pinia";
 import {onUnmounted, ref, watch} from "vue";
 
 const taskStore = tasksStore();
+const {changeIsOpenRejectDialog} = taskStore;
 const {currentTask} = storeToRefs(taskStore);
 
 let taskStatus = ref(null);
@@ -46,7 +46,7 @@ let timestamp = ref(null);
 
 watch(currentTask, () => {
 
-  taskStatus.value = currentTask.value.status;
+  taskStatus.value = currentTask.value?.status;
 
   if (taskStatus.value !== 'processing') return;
 
@@ -75,7 +75,10 @@ function setDataToTimer() {
   minutes.value = Math.floor((restOfTime - (hours.value * 3600)) / 60);
   seconds.value = restOfTime - (hours.value * 3600) - (minutes.value * 60);
 
-  if (!hours.value && !minutes.value && !seconds.value) taskStatus.value = 'failed';
+  if (hours.value <= 0 && minutes.value <= 0 && seconds.value <= 0) {
+    taskStatus.value = 'failed';
+    changeIsOpenRejectDialog(true);
+  }
 }
 
 onUnmounted(() => {

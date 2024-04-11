@@ -4,7 +4,7 @@
     <h2>Приветствую, я - НейроРепититор!</h2>
     <div class="text">
       <p>Самое время заняться английским. Начните с выполнения интересного задания</p>
-      <button class="secondary-button" @click="test">
+      <button class="secondary-button" @click="openTask">
         Выполнить задание
         <img src="img/main/arrow-top-right.svg">
       </button>
@@ -13,14 +13,18 @@
 </template>
 
 <script setup>
+import taskRequests from "@/mixins/requests/taskRequests";
+import {tasksStore} from "@/store/tasksStore";
+import {storeToRefs} from "pinia/dist/pinia";
 
-import {notificationStore} from "@/store/notificationStore";
+const {taskStart} = taskRequests();
+const taskStore = tasksStore();
+const {allTasks} = storeToRefs(taskStore);
 
-const notifications = notificationStore()
-const {openSnackBarReject} = notifications;
-
-function test() {
-  openSnackBarReject('test');
+function openTask() {
+  if (allTasks.value?.length) {
+    taskStart(allTasks.value[0].id);
+  }
 }
 </script>
 

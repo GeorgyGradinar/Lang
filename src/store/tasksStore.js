@@ -7,6 +7,7 @@ export const tasksStore = defineStore('taskStore', () => {
     let currentTask = ref(null);
     let pagination = ref(null);
     let isOpenFinalModal = ref(false);
+    let isOpenRejectModal = ref(false);
     let userErrors = ref(null);
 
     function clearTasksStore() {
@@ -15,6 +16,7 @@ export const tasksStore = defineStore('taskStore', () => {
         currentTask.value = null;
         pagination.value = null;
         isOpenFinalModal.value = false;
+        isOpenRejectModal.value = false;
         userErrors.value = null;
     }
 
@@ -46,6 +48,10 @@ export const tasksStore = defineStore('taskStore', () => {
         isOpenFinalModal.value = isOpen;
     }
 
+    function changeIsOpenRejectDialog(isOpen) {
+        isOpenRejectModal.value = isOpen;
+    }
+
     function changeUsersErrors(errors) {
         userErrors.value = errors;
     }
@@ -56,6 +62,7 @@ export const tasksStore = defineStore('taskStore', () => {
         currentTask, changeCurrentTask, changeStatusCurrentTask,
         pagination, changePagination,
         isOpenFinalModal, changeIsOpenDialog,
+        isOpenRejectModal, changeIsOpenRejectDialog,
         userErrors, changeUsersErrors,
         clearTasksStore
     }

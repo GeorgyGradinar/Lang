@@ -22,7 +22,7 @@ export default function dialogsRequests() {
         addCommentToLastPersonMessage
     } = chat;
     const taskStore = tasksStore();
-    const {changeIsOpenDialog, changeStatusCurrentTask} = taskStore;
+    const {changeIsOpenDialog, changeIsOpenRejectDialog, changeStatusCurrentTask} = taskStore;
     const {taskShow} = taskRequests();
     const {prepareForLogout} = shared();
 
@@ -111,7 +111,7 @@ export default function dialogsRequests() {
                     addCommentToLastPersonMessage(response.data.data[0]);
                     if (response.data.data[2]?.task_status !== 'processing') {
                         if (response.data.data[2]?.task_status === 'success') changeIsOpenDialog(true);
-                        // if (response.data.data[2]?.task_status === 'failed') changeIsOpenDialog(true);
+                        if (response.data.data[2]?.task_status === 'failed') changeIsOpenRejectDialog(true);
                         changeStatusCurrentTask(response.data.data[2]?.task_status)
                     }
                     changeActiveGeneration(false);
@@ -127,7 +127,7 @@ export default function dialogsRequests() {
             .then(response => {
                 if (router.currentRoute.value.path === LESSON) return;
 
-                if (response.data.data.status === "processing") {
+                if (response.data.data?.status === "processing") {
                     setTimeout(() => {
                         getMessageFormNetwork(id)
                     }, 1000);

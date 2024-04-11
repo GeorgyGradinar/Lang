@@ -29,6 +29,11 @@
           <p>Изучаемое слово:</p>
           <p>{{ currentTask?.user_word.word.word }}</p>
         </div>
+
+        <div class="wrapper-condition-reject" v-if="currentTask?.task?.defeat_condition">
+          <p>Условия поражения:</p>
+          <p>{{ currentTask?.task?.defeat_condition }}</p>
+        </div>
       </div>
 
       <!--      <div class="answer">-->
@@ -65,10 +70,12 @@
   <div class="wrapper-congraduation" v-if="isOpenFinalModal">
     <CongraduationModal :isOpenDialog="isOpenFinalModal" @closeDialog="closeFinalModal"></CongraduationModal>
   </div>
+
+  <RejectModal></RejectModal>
 </template>
 
 <script setup>
-
+import RejectModal from "@/components/modals/chat/RejectModal";
 import {ref, watch} from "vue";
 import {useRouter} from "vue-router/dist/vue-router";
 import CongraduationModal from "@/components/modals/chat/CongraduationModal";
@@ -188,7 +195,8 @@ function goBack() {
 
     .wrapper-theme,
     .wrapper-task-description,
-    .wrapper-task-word {
+    .wrapper-task-word,
+    .wrapper-condition-reject {
       display: flex;
       gap: 10px;
       font-size: 15px;
@@ -198,6 +206,14 @@ function goBack() {
 
       p:first-child {
         color: var(--light-gray);
+      }
+    }
+
+    .wrapper-condition-reject {
+      color: var(--light-red);
+
+      p:first-of-type {
+        white-space: nowrap;
       }
     }
   }

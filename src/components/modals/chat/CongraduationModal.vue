@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-      v-model="isOpenDialog"
+      v-model="isOpenFinalModal"
       width="auto"
   >
     <v-card>
@@ -12,9 +12,12 @@
           </div>
           <div class="wrapper-buttons">
             <button @click="exit">Выйти</button>
-<!--            <button @click="nextLesson">Следующее задание</button>-->
+            <button class="secondary-button stay-in-chat"
+                    @click="changeIsOpenDialog(false)">
+              Остаться в чате
+            </button>
           </div>
-          <ConfettiAnimation :activeConfetti="isSubmit"></ConfettiAnimation>
+          <ConfettiAnimation :activeConfetti="isShowConfetti"></ConfettiAnimation>
         </div>
       </v-card-text>
     </v-card>
@@ -29,18 +32,19 @@
 </template>
 
 <script setup>
-import {onMounted, ref, toRefs, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import ConfettiAnimation from '@/components/widgets/ConfettiAnimation';
+import {tasksStore} from "@/store/tasksStore";
+import {storeToRefs} from "pinia/dist/pinia";
+import {useRouter} from "vue-router/dist/vue-router";
+import {TASKS} from "@/configuration/Routers";
 
-// eslint-disable-next-line no-undef
-const props = defineProps({
-  isOpenDialog: Boolean
-})
-const {isOpenDialog} = toRefs(props)
-// eslint-disable-next-line no-undef
-const emit = defineEmits(['closeDialog']);
+const router = useRouter();
+const taskStore = tasksStore();
+const {changeIsOpenDialog} = taskStore;
+const {isOpenFinalModal} = storeToRefs(taskStore);
 
-let isSubmit = ref(false);
+let isShowConfetti = ref(false);
 let isShowFlagWell = ref(true);
 let isShowFlagGreat = ref(true);
 
@@ -53,8 +57,8 @@ onMounted(() => {
   changeShowFlag();
 })
 
-watch(isOpenDialog, () => {
-  isSubmit.value = !isSubmit.value;
+watch(isOpenFinalModal, () => {
+  isShowConfetti.value = !isShowConfetti.value;
 })
 
 function changeShowFlag() {
@@ -65,7 +69,7 @@ function changeShowFlag() {
 }
 
 function exit() {
-  emit('closeDialog');
+  router.push({path: TASKS});
 }
 
 // function nextLesson() {

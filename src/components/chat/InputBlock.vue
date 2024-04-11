@@ -47,6 +47,7 @@ import dialogsRequests from "@/mixins/requests/dialogsRequests";
 import AllowMicrophoneMessage from "@/components/chat/AllowMicrophoneMessage";
 import {useRouter} from "vue-router/dist/vue-router";
 import {notificationStore} from "@/store/notificationStore";
+import {LESSON} from "@/configuration/Routers";
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['scrollDown']);
@@ -104,7 +105,7 @@ function sendMessageToNetwork() {
     return;
   }
 
-  if (isCyrillic(messageToBot.value) && router.currentRoute.value.path === '/lesson') {
+  if (isCyrillic(messageToBot.value) && router.currentRoute.value.path === LESSON) {
     openSnackBarReject('В заданиях пишите только на английском');
     return;
   }
@@ -116,7 +117,7 @@ function sendMessageToNetwork() {
     toggleActiveRecord();
   } else {
     addNewMessage(messageToBot.value, null, false, new Date, false);
-    if (router.currentRoute.value.path === '/lesson') {
+    if (router.currentRoute.value.path === LESSON) {
       sendMessageToTask(messageToBot.value);
     } else {
       sendMessage(messageToBot.value);
