@@ -21,7 +21,8 @@ export default function dictionaryRequests() {
         toggleActiveUserWordLoader,
         toggleActiveGroupWordsLoader,
         changeAllPagesWordsInGroup,
-        changeCurrentPageWordsInGroup
+        changeCurrentPageWordsInGroup,
+        COMPLETED_SORT
     } = dictionary;
     const chat = chatStore();
     const {changeSearchWord, changeActiveSearching, changeActiveLoaderTranslate, changeTranslationsMessage} = chat;
@@ -69,13 +70,11 @@ export default function dictionaryRequests() {
     function getAllUsersWords(isPagination) {
         isPagination ? toggleActiveUserWordLoader(true) : toggleActiveLoader(true);
 
-        let body = {
-            'column': dictionary.sortUserWords.type,
-            'per_page': 20
-        };
+        let body = {'column': dictionary.sortUserWords.type, 'per_page': 20};
 
         const currentPage = dictionary.paginationUserWords?.current_page
         body = currentPage < dictionary.paginationUserWords?.last_page ? {...body, page: currentPage + 1} : body;
+        body = dictionary.sortUserWords.type === COMPLETED_SORT.type ? {...body, 'sort_by': 'desc'} : body;
 
         axios.get(`${testUrl}/api/user/dictionary/words?${new URLSearchParams(body)}`, {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization]),

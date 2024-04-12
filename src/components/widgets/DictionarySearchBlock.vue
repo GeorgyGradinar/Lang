@@ -10,6 +10,8 @@
           single-line
           hide-details
           @click:append-inner="findWord"
+          @keydown.enter="findWord"
+          @update:modelValue="debounceTime"
       ></v-text-field>
     </div>
 
@@ -29,6 +31,16 @@ const {clearForSearching} = dictionary;
 const {isSearching} = storeToRefs(dictionary);
 
 let searchData = ref('');
+let debounceTimeout = null;
+
+function debounceTime() {
+  if (debounceTimeout) {
+    clearTimeout(debounceTimeout);
+  }
+  debounceTimeout = setTimeout(() => {
+    findWord();
+  }, 1000);
+}
 
 function findWord() {
   clearForSearching();

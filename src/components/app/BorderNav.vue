@@ -1,30 +1,31 @@
 <template>
-  <div class="words-2__nav1" :class="{'left' : tabs[0]?.id === tabID}">
-    <div v-for="tab in tabs" :key="tab.id"
-         @click="() => {tabID = tab.id; emit('selected', tab)}"
-         :class="{'active': tab.id === tabID}">
-      {{ tab.title }}
+  <div class="words-2__nav1" :class="{'left' : COMPLETED_SORT.type !== sortUserWords?.type}">
+    <div @click="changeSort(ALFABET_SORT)"
+         :class="{'active': ALFABET_SORT.type === sortUserWords?.type}">
+      Список слов
+    </div>
+
+    <div @click="changeSort(COMPLETED_SORT)"
+         :class="{'active': COMPLETED_SORT.type === sortUserWords?.type}">
+      {{ COMPLETED_SORT.title }}
     </div>
   </div>
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
+import {dictionaryStore} from "@/store/dictionaryStore";
+import {storeToRefs} from "pinia/dist/pinia";
+const {getAllUsersWords} = dictionaryRequests();
+const dictionary = dictionaryStore();
+const {clearForSearching, changeSortTypeUserWords, ALFABET_SORT, COMPLETED_SORT} = dictionary;
+const {sortUserWords} = storeToRefs(dictionary);
 
-// eslint-disable-next-line no-undef
-const props = defineProps({
-  tabs: Array
-})
-// eslint-disable-next-line no-undef
-const emit = defineEmits(['selected']);
-
-let tabID = ref(0);
-
-onMounted(() => {
-  if (props.tabs.length > 0) {
-    tabID.value = props.tabs[0].id;
-  }
-})
+function changeSort(type) {
+  changeSortTypeUserWords(type);
+  clearForSearching();
+  getAllUsersWords();
+}
 </script>
 
 <style scoped lang="scss">

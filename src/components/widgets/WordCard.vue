@@ -15,6 +15,8 @@
       </p>
     </div>
 
+    <p class="label-in-dictionary" v-if="wordData?.in_dictionary">В словаре</p>
+
     <div class="actions">
       <div class="translate" @click="toggleIsShowTranslate"
            v-if="!isShowWordsTypeList"
@@ -51,7 +53,7 @@
         <v-tooltip activator="parent" location="bottom">Удалить слово</v-tooltip>
       </div>
 
-      <div class="learned" v-if="userWord?.training_count">
+      <div v-if="wordData?.in_dictionary" class="learned">
         <p><img src="img/icon/lean.png">{{ userWord?.training_count }}</p>
         <v-tooltip activator="parent" location="bottom">Отработанно</v-tooltip>
       </div>
@@ -120,9 +122,10 @@ function playPronunciation() {
 
 <style lang="scss">
 .wrapper-word {
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   gap: 40px;
   width: 23%;
   height: 275px;
@@ -145,6 +148,8 @@ function playPronunciation() {
     font-size: 20px;
     color: var(--dark-pink);
     position: relative;
+    margin-top: 25px;
+    z-index: 2;
 
     .scene {
       display: flex;
@@ -215,10 +220,27 @@ function playPronunciation() {
     }
   }
 
+  .label-in-dictionary {
+    position: absolute;
+    bottom: 60px;
+    width: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--yellow);
+    border: 1px solid var(--yellow);
+    border-radius: 7px;
+    padding: 1px 6px;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 0;
+  }
+
   .actions {
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
+    margin-bottom: 15px;
 
     .translate,
     .volume,

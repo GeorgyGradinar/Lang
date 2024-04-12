@@ -21,6 +21,10 @@ export const dictionaryStore = defineStore('dictionary', () => {
         title: 'по прогрессу',
         type: 'translation'
     };
+    const COMPLETED_SORT = {
+        title: 'Отработанные слова',
+        type: 'is_completed'
+    }
     let sortUserWords = ref(ALFABET_SORT);
 
     //pagination for user words
@@ -128,7 +132,7 @@ export const dictionaryStore = defineStore('dictionary', () => {
         groups, changeGroups,
         groupWords, changeGroupWords, addWordsToGroupWords,
         selectedGroupWords, changeSelectedGroup,
-        PROGRESS_SORT, ALFABET_SORT, sortUserWords, changeSortTypeUserWords,
+        PROGRESS_SORT, ALFABET_SORT, COMPLETED_SORT, sortUserWords, changeSortTypeUserWords,
         allPagesWordInGroup, changeAllPagesWordsInGroup,
         currentPageWordsInGroup, changeCurrentPageWordsInGroup,
         isSearching, changeIsSearch,

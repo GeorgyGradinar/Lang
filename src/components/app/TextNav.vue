@@ -1,5 +1,5 @@
 <template>
-  <div class="words-2__nav2" :class="{'left' : ALFABET_SORT.type === sortUserWords?.type}">
+  <div class="words-2__nav2" :class="{'left' : PROGRESS_SORT.type !== sortUserWords?.type}">
     <div @click="changeSort(ALFABET_SORT)"
          :class="{'active': ALFABET_SORT.type === sortUserWords?.type}">
       {{ ALFABET_SORT.title }}
