@@ -105,4 +105,24 @@ function exit() {
     }
   }
 }
+
+@media screen and (min-width: 2200px){
+  .dialog {
+    .title {
+      gap: 10px;
+
+      h2 {
+        font-size: 32px;
+      }
+    }
+
+    .wrapper-buttons {
+      gap: 20px;
+
+      .secondary-button {
+        font-size: 23px;
+      }
+    }
+  }
+}
 </style>

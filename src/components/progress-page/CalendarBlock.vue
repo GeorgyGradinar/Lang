@@ -306,7 +306,9 @@ function getImageForStatistic(isDoneImage) {
       }
 
       .v-btn--icon {
-
+        border-radius: 15px;
+        border: 4px solid var(--dark);
+        box-shadow: 2px 6px 1px var(--dark);
       }
 
       .v-picker__body {
@@ -552,14 +554,14 @@ function getImageForStatistic(isDoneImage) {
 
 @media screen and (max-width: 1200px) {
   .wrapper-calendar {
-    height: 800px;
+    //height: 800px;
     margin-right: unset;
     display: flex;
     justify-content: center;
     align-content: center;
 
     .v-container {
-      margin-bottom: 100px;
+      margin-bottom: 80px;
 
       .v-picker.v-sheet {
         width: unset;

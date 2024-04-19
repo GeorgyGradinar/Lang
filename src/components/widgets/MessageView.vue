@@ -1,16 +1,24 @@
 <template>
   <div class="message-date-subscribe">
     <div class="message">
-      <img src="img/icon/notification.svg">&nbsp;{{ messageText }}
+      <img src="img/icon/notification.svg">Ваш тариф действует до {{ messageText }}
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MessageView',
-  props: ['messageText']
-}
+<script setup>
+import {toRefs} from "vue";
+
+// eslint-disable-next-line no-undef
+const props = defineProps({
+  messageText: String
+})
+const {messageText} = toRefs(props);
+
+// export default {
+//   name: 'MessageView',
+//   props: ['messageText']
+// }
 </script>
 
 <style scoped lang="scss">

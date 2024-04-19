@@ -38,14 +38,14 @@ const statistic = statisticStore();
 const {currentDayStatistic, isActiveCleanAnimation} = storeToRefs(statistic);
 
 function getPercentDone(done, totalTasks) {
-  return done && totalTasks ? (done * 100) / totalTasks : 0;
+  return done && totalTasks ? (done * 120) / totalTasks : 0;
 }
 </script>
 
 <style scoped lang="scss">
 .statistic {
   display: flex;
-  gap: 30px;
+  gap: 35px;
 
   .progress-chart {
     position: relative;
@@ -53,8 +53,8 @@ function getPercentDone(done, totalTasks) {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 250px;
-    height: 250px;
+    width: 13vw;
+    height: 13vw;
     border-radius: 50%;
     background-color: var(--green);
     border: 4px solid var(--dark);
@@ -182,8 +182,8 @@ function getPercentDone(done, totalTasks) {
   .statistic {
 
     .progress-chart {
-      width: 400px;
-      height: 400px;
+      //width: 400px;
+      //height: 400px;
 
       p {
         font-size: 60px;
@@ -221,11 +221,11 @@ function getPercentDone(done, totalTasks) {
 
 @media screen and (max-width: 1500px) {
   .statistic {
-    gap: 10px;
+    gap: 25px;
 
     .progress-chart {
-      width: 230px;
-      height: 230px;
+      //width: 230px;
+      //height: 230px;
 
       p {
 
@@ -266,8 +266,8 @@ function getPercentDone(done, totalTasks) {
     gap: 40px;
 
     .progress-chart {
-      width: 350px;
-      height: 350px;
+      width: 23vw;
+      height: 23vw;
 
       p {
 
@@ -303,54 +303,57 @@ function getPercentDone(done, totalTasks) {
   }
 }
 
+
 @media screen and (max-width: 750px) {
   .statistic {
+    gap: 4vw;
+
+    .progress-chart {
+      width: 30vw;
+      height: 30vw;
+
+      p {
+
+      }
+
+      .progress-chart--title {
+
+      }
+
+      .main_wave,
+      .secondary_wave {
+
+      }
+
+      // 100% - 110
+      .main_wave {
+
+      }
+
+      // 100% - 105
+      .secondary_wave {
+
+      }
+
+      &:nth-child(even) {
+
+        .main_wave,
+        .secondary_wave {
+
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .statistic {
+    flex-wrap: wrap;
+    justify-content: center;
 
     .progress-chart {
       width: 200px;
       height: 200px;
-
-      p {
-
-      }
-
-      .progress-chart--title {
-
-      }
-
-      .main_wave,
-      .secondary_wave {
-
-      }
-
-      // 100% - 110
-      .main_wave {
-
-      }
-
-      // 100% - 105
-      .secondary_wave {
-
-      }
-
-      &:nth-child(even) {
-
-        .main_wave,
-        .secondary_wave {
-
-        }
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 750px) {
-  .statistic {
-    flex-direction: column;
-
-    .progress-chart {
-      width: 75vw;
-      height: 75vw;
 
       p {
 

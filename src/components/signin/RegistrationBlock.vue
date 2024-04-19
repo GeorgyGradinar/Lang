@@ -92,7 +92,7 @@ function submitRegistration() {
           if (response?.data?.status === "success") {
             router.push({path: '/'})
           } else {
-            errorMessage.value = response.response.data.errors_validation.email[0];
+            errorMessage.value = response.response.data?.errors_validation?.email[0];
           }
         })
   }

@@ -55,4 +55,21 @@ const {currentTask} = storeToRefs(taskStore);
     }
   }
 }
+
+@media screen and (min-width: 2200px) {
+  .wrapper-character {
+    .character-block {
+      width: 450px;
+
+      .wrapper-img {
+        width: 250px;
+        height: 250px;
+      }
+
+      p {
+        font-size: 23px;
+      }
+    }
+  }
+}
 </style>

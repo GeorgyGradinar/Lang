@@ -1,10 +1,5 @@
 <template>
   <footer class="footer">
-    <!--          <promo-view-->
-    <!--              :data="footerLeft"-->
-    <!--          />-->
-
-
     <router-link to="/" class="logo">
       <img src="img/robots/робот-01.png" alt="logo">
       НейроРепетитор
@@ -78,6 +73,44 @@
           transform: scale(1.1);
         }
       }
+    }
+  }
+}
+
+@media screen and (min-width: 2200px) {
+  .footer {
+    .logo {
+      font-size: 45px;
+
+      img {
+        width: 70px;
+      }
+    }
+
+    .add-to-us {
+      gap: 15px;
+
+      p {
+        font-size: 24px;
+      }
+
+      .wrapper-footer-button {
+        a {
+          img {
+            width: 55px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .footer {
+    flex-direction: column;
+
+    .add-to-us {
+      align-items: unset;
     }
   }
 }

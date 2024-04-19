@@ -1,31 +1,35 @@
 <template>
   <div class="wrapper-state">
-    <h2><img src="img/icon/bxs-crown1.svg">&nbsp;PRO-подписка</h2>
-    <p>
-      - Изучайте анлийский со всеми преимуществами подписки на эксклюзивные материалы и специальные функции
-    </p>
-    <p>
-      - {{ state.price }} <span class="lower">₽ </span>
-    </p>
+    <h2><img src="img/icon/bxs-crown1.svg">{{ plan?.name }}</h2>
+    <p>Цена: <span>{{ plan?.price }} ₽ / месяц</span></p>
 
-    <p>- Оплата действует до: {{ state.stopDate }}</p>
+    <p>Остаток заданий: <span>{{ person?.tasks }}</span></p>
+    <p>Остаток сообщений: <span>{{ person?.messages }}</span></p>
+
+    <p>Оплата действует до: <span>{{ messageText }}</span></p>
+
     <div class="wrapper-buttons">
-<!--      <button class="button-cancel-subscribe" @click="$emit('cancelSubscr')">Отменить подписку</button>-->
-      <button @click="$router.push('/tariff')">Открыть тарифы</button>
+      <button @click="getPaymentLink(plan?.id)">Продлить и пополнить</button>
+      <button @click="$router.push('/tariff')"> Выбрать другой тариф</button>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'PaymentStateView',
+<script setup>
+import {toRefs} from "vue";
+import userRequests from "@/mixins/requests/userRequesrs";
+import {mainStore} from "@/store/mainStore";
+import {storeToRefs} from "pinia/dist/pinia";
 
-  props: {
-    'state': Object
-  },
-
-  emits: ['cancelSubscr']
-}
+// eslint-disable-next-line no-undef
+const props = defineProps({
+  messageText: String,
+  plan: Object
+})
+const {messageText, plan} = toRefs(props);
+const {getPaymentLink} = userRequests();
+const main = mainStore();
+const {person} = storeToRefs(main);
 </script>
 
 <style scoped lang="scss">
@@ -43,6 +47,20 @@ export default {
   h2 {
     display: flex;
     align-items: center;
+    gap: 10px;
+    font-size: 35px;
+    color: var(--yellow);
+
+    img {
+      width: 30px;
+    }
+  }
+
+  p {
+    span {
+      color: var(--yellow);
+      font-size: 17px;
+    }
   }
 
   .wrapper-buttons {
@@ -54,9 +72,13 @@ export default {
       color: var(--dark);
       background-color: var(--yellow);
       border-radius: 10px;
-      border: 1px solid var(--dark);
+      border: 2px solid var(--dark);
       box-shadow: 1px 4px 1px var(--dark);
       transition: all 0.2s;
+
+      &:last-of-type {
+        background-color: var(--light_pink);
+      }
 
       &:hover {
         background-color: var(--light-green);

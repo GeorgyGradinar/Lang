@@ -125,4 +125,21 @@ function openTask(id) {
     align-items: center;
   }
 }
+
+@media screen and (max-width: 700px) {
+  .word-list-dialog {
+    width: 100%;
+    max-width: 700px;
+    max-height: 70vh;
+    padding: 25px 15px;
+
+    h3 {
+      text-align: center;
+    }
+
+    .wrapper-words {
+      gap: 15px;
+    }
+  }
+}
 </style>

@@ -122,4 +122,64 @@ onUnmounted(() => {
     }
   }
 }
+
+@media screen and (min-width: 2200px) {
+  .wrapper-timer {
+
+    .reject,
+    .done {
+      font-size: 23px;
+    }
+
+    .done {
+
+    }
+
+    .reject {
+
+    }
+
+
+    p {
+      font-size: 23px;
+    }
+
+    .timer {
+
+      p {
+        font-size: 23px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .wrapper-timer {
+
+    .reject,
+    .done {
+
+    }
+
+    .done {
+
+    }
+
+    .reject {
+
+    }
+
+    p {
+      font-size: 14px;
+    }
+
+    .timer {
+      gap: 2px;
+
+      p {
+        font-size: 14px;
+      }
+    }
+  }
+}
 </style>

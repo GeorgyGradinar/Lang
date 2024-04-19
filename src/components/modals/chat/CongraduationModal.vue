@@ -88,9 +88,6 @@ function exit() {
   }
 }
 
-:deep(.v-overlay__scrim) {
-}
-
 .dialog {
   position: relative;
   display: flex;
@@ -141,7 +138,6 @@ function exit() {
       }
     }
   }
-
 }
 
 .font-well,
@@ -167,5 +163,39 @@ function exit() {
 
 .show-flag-great {
   right: calc(50vw - 50px);
+}
+
+@media screen and (min-width: 2200px) {
+  .dialog {
+    .wrapper-title {
+      img {
+        width: 70px;
+        height: 70px;
+      }
+
+      h2 {
+        font-size: 32px;
+      }
+    }
+
+    .wrapper-buttons {
+      button {
+        font-size: 22px;
+      }
+    }
+  }
+
+  .font-well,
+  .font-great {
+    width: 350px;
+  }
+
+  .font-well {
+    left: calc(50vw + 350px);
+  }
+
+  .font-great {
+    right: calc(50vw + 350px);
+  }
 }
 </style>

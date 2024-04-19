@@ -98,4 +98,61 @@ function toggleOpenDialog(isOpen) {
     }
   }
 }
+
+@media screen and (min-width: 2200px) {
+  .wrapper-words-theme {
+    .words__title {
+      font-size: 35px;
+    }
+
+    .words__group-row {
+      .words__group {
+        h4 {
+          font-size: 24px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .wrapper-words-theme {
+    padding: 20px 10px;
+
+    .words__title {
+      font-size: 26px;
+    }
+
+    .words__group-row {
+
+      .words__group {
+        padding: 5px;
+
+        h4 {
+          color: var(--yellow);
+          font-size: 15px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .wrapper-words-theme {
+    width: 100%;
+    height: unset;
+
+    .words__title {
+    }
+
+    .words__group-row {
+
+      .words__group {
+
+        h4 {
+        }
+      }
+    }
+  }
+}
 </style>

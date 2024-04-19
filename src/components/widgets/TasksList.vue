@@ -42,7 +42,7 @@ function toggleOpenWordsList(isOpen) {
 
 <style scoped lang="scss">
 .tasks-list {
-  height: 300px;
+  max-height: 330px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -72,10 +72,14 @@ function toggleOpenWordsList(isOpen) {
 
     &:hover {
       background-color: var(--light_pink);
+
+      p {
+        color: var(--dark-pink);
+      }
     }
 
     p {
-      color: var(--dark);
+      color: var(--yellow);
       font-weight: 800;
     }
 
@@ -97,6 +101,39 @@ function toggleOpenWordsList(isOpen) {
         transform: translateY(5px);
       }
     }
+  }
+}
+
+@media screen and (min-width: 2200px) {
+  .tasks-list {
+    max-height: 450px;
+
+    h4 {
+      font-size: 35px;
+    }
+
+    .task {
+      p {
+        font-size: 23px;
+      }
+
+      button {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .tasks-list {
+    max-height: 400px;
+    padding: 20px 10px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .tasks-list {
+    width: 100%;
   }
 }
 </style>

@@ -22,6 +22,13 @@ import NewChat from "@/components/widgets/NewChat";
   overflow: hidden;
 }
 
+@media screen and (max-width: 1100px){
+  .lesson--page {
+    padding: 10px;
+    gap: 10px;
+  }
+}
+
 @media screen and (max-width: 800px){
   .lesson--page {
     padding: unset;

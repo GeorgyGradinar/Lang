@@ -1,7 +1,9 @@
 <template>
   <div class="wrapper-mini-chat" :class="{'full-size': isShowChat}">
+
     <img src="img/chart/chat-message.svg" alt="" @click="toggleShowChat" v-if="!isShowChat">
-    <div v-if="isShowChat">
+
+    <div v-if="isShowChat" class="mini-chat">
       <ChartBlock :isMiniChat="true" @closeMini="toggleShowChat"></ChartBlock>
     </div>
   </div>
@@ -44,5 +46,45 @@ function toggleShowChat() {
   width: 450px;
   height: 600px;
   border-radius: 13px;
+
+
+  .mini-chat {
+    height: 100%;
+  }
+}
+
+@media screen and (min-width: 2200px) {
+  .wrapper-mini-chat {
+    width: 70px;
+    height: 70px;
+    border: 4px solid var(--dark);
+
+    img {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  .full-size {
+    width: 600px;
+    height: 800px;
+    border-radius: 13px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .wrapper-mini-chat {
+    right: 5px;
+
+    img {
+      width: 45px;
+      height: 45px;
+    }
+  }
+
+  .full-size {
+    width: 95%;
+    height: 600px;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {HEADER_PARAMETERS, testUrl} from "../../../config";
+import {ERROR_SOME_THING_WRONG, ERROR_TO_MANY_REQUESTS, HEADER_PARAMETERS, testUrl} from "../../../config";
 import requestOptions from "@/mixins/prepare-requests/requestOptions";
 import {chatStore} from "@/store/chatStore";
 import {tasksStore} from "@/store/tasksStore";
@@ -7,6 +7,7 @@ import shared from "@/mixins/shared";
 import taskRequests from "@/mixins/requests/taskRequests";
 import {useRouter} from "vue-router/dist/vue-router";
 import {LESSON} from "@/configuration/Routers";
+import {notificationStore} from "@/store/notificationStore";
 
 export default function dialogsRequests() {
     const router = useRouter();
@@ -25,6 +26,8 @@ export default function dialogsRequests() {
     const {changeIsOpenDialog, changeIsOpenRejectDialog, changeStatusCurrentTask} = taskStore;
     const {taskShow} = taskRequests();
     const {prepareForLogout} = shared();
+    const notifications = notificationStore();
+    const {openSnackBarReject} = notifications;
 
     function getMessages(isPagination) {
         axios.get(`${testUrl}/api/user/dialog?page=${chat.currentPage}`, {
@@ -34,7 +37,6 @@ export default function dialogsRequests() {
                 if (isPagination) {
                     addNextPageMessages(response.data.data);
                 } else {
-                    console.log('new test')
                     changeMessages(response.data.data);
                     changeMessageLimit(response.data.message_limit);
                     changeLastPage(response.data.pagination.last_page);
@@ -152,11 +154,23 @@ export default function dialogsRequests() {
 
     function handleError(error) {
         changeActiveLoaderMessageGeneration(false);
+        changeActiveGeneration(false);
 
         switch (error.response?.status) {
             case 401:
                 prepareForLogout();
                 break;
+            case 500:
+            case 404:
+                openSnackBarReject(ERROR_SOME_THING_WRONG);
+                break;
+            case 429:
+                openSnackBarReject(ERROR_TO_MANY_REQUESTS);
+                break;
+            case 503:
+            case 422:
+            case 409:
+                openSnackBarReject(error.response?.data?.message);
         }
     }
 

@@ -45,8 +45,8 @@ const {
   .wrapper-words {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 2%;
+    justify-content: center;
+    gap: 20px;
     width: 100%;
     padding-top: 20px;
     transition: all 1s;

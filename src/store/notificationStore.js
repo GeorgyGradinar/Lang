@@ -4,9 +4,9 @@ import {ref} from "vue";
 export const notificationStore = defineStore('notifications', () => {
     let isOpenSnackBarDone = ref(false);
     let textForSnackBarDone = ref(null);
-
     let isOpenSnackBarReject = ref(false);
     let textForSnackBarReject = ref(null);
+    let isOpenConfirmEmailModal = ref(false);
 
     function openSnackBarDone(text) {
         isOpenSnackBarDone.value = true;
@@ -26,10 +26,15 @@ export const notificationStore = defineStore('notifications', () => {
         textForSnackBarReject.value = text;
     }
 
+    function changeShowConfirmEmailModal(isOpen) {
+        isOpenConfirmEmailModal.value = isOpen;
+    }
+
     return {
         isOpenSnackBarDone, openSnackBarDone,
         textForSnackBarDone, changeTextForSnackBarDone,
         isOpenSnackBarReject, openSnackBarReject,
-        textForSnackBarReject, changeTextForSnackBarReject
+        textForSnackBarReject, changeTextForSnackBarReject,
+        isOpenConfirmEmailModal, changeShowConfirmEmailModal,
     }
 })

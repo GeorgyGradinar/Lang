@@ -1,34 +1,35 @@
 <template>
   <div class="wrapper-payment-finish">
-    <h2>Ваш <span>PRO</span> тариф истек</h2>
+    <h2>Ваш <span>{{ plan?.name }}</span> тариф истек</h2>
 
-    <button>Продлить <span>PRO</span> тариф</button>
+    <button @click="getPaymentLink(plan?.id)">Продлить <span>{{ plan?.name }}</span> тариф</button>
+    <p>Так же вы можете выбрать другой тариф ниже</p>
 
     <div class="price__tariffs-row">
-      <p>Так же вы можете выбрать другой тариф ниже</p>
-
       <tariff-card-view v-for="(tariff, index) in plans" :key="tariff.id"
-          :tariff="tariff" :index="index"
-                        :isMiniBlock="true"
-      />
+                        :tariff="tariff"
+                        :index="index"
+                        :isMiniBlock="true"/>
     </div>
   </div>
 </template>
 
 <script setup>
-import {onMounted} from "vue";
-import userRequests from "@/mixins/requests/userRequesrs";
 import {mainStore} from "@/store/mainStore";
 import {storeToRefs} from "pinia/dist/pinia";
 import TariffCardView from '@/components/widgets/TariffCardView.vue';
+import {toRefs} from "vue";
+import userRequests from "@/mixins/requests/userRequesrs";
 
-const {getPlans} = userRequests();
+// eslint-disable-next-line no-undef
+const props = defineProps({
+  plan: Object
+})
+const {plan} = toRefs(props);
 const main = mainStore();
 const {plans} = storeToRefs(main);
+const {getPaymentLink} = userRequests();
 
-onMounted(() => {
-  getPlans();
-})
 </script>
 
 <style scoped lang="scss">
@@ -86,8 +87,7 @@ onMounted(() => {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+    justify-content: space-between;
   }
 }
 </style>

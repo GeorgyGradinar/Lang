@@ -1,10 +1,11 @@
 import axios from "axios";
-import {testUrl} from '@/../config';
+import {ERROR_SOME_THING_WRONG, ERROR_TO_MANY_REQUESTS, testUrl} from '@/../config';
 import requestOptions from "@/mixins/prepare-requests/requestOptions";
 import {HEADER_PARAMETERS} from "@/../config"
 import {dictionaryStore} from "@/store/dictionaryStore";
 import {chatStore} from "@/store/chatStore";
 import {notificationStore} from "@/store/notificationStore";
+import shared from "@/mixins/shared";
 
 export default function dictionaryRequests() {
     const dictionary = dictionaryStore();
@@ -27,7 +28,8 @@ export default function dictionaryRequests() {
     const chat = chatStore();
     const {changeSearchWord, changeActiveSearching, changeActiveLoaderTranslate, changeTranslationsMessage} = chat;
     const notifications = notificationStore();
-    const {openSnackBarDone} = notifications;
+    const {openSnackBarDone, openSnackBarReject} = notifications;
+    const {prepareForLogout} = shared();
 
     function getGroups() {
         axios.get(`${testUrl}/api/group`, {
@@ -175,9 +177,27 @@ export default function dictionaryRequests() {
     }
 
     function handleError(error) {
-        console.log(error)
+        toggleActiveLoader(false);
+        toggleActiveUserWordLoader(false);
         changeActiveSearching(false);
         changeActiveLoaderTranslate(false);
+
+        switch (error.response?.status) {
+            case 401:
+                prepareForLogout();
+                break;
+            case 500:
+            case 404:
+                openSnackBarReject(ERROR_SOME_THING_WRONG);
+                break;
+            case 429:
+                openSnackBarReject(ERROR_TO_MANY_REQUESTS);
+                break;
+            case 503:
+            case 422:
+            case 409:
+                openSnackBarReject(error.response?.data?.message);
+        }
     }
 
     return {

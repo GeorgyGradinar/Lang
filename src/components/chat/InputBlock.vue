@@ -1,4 +1,4 @@
-<template>
+y<template>
   <div class="input-block">
     <div class="wrapper-input">
       <input v-model="messageToBot"
@@ -372,6 +372,55 @@ function stopTimer() {
       box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
     }
   }
+}
 
+@media screen and (min-width: 2200px) {
+  .input-block {
+
+    .record {
+
+      .marker {
+
+      }
+    }
+
+    .wrapper-input {
+      height: 65px;
+
+      input {
+        font-size: 23px;
+      }
+
+      .wrapper-buttons {
+
+        .trash {
+
+          img {
+
+          }
+        }
+
+        .sendMessage {
+          width: 60px;
+
+          img {
+            width: 60px;
+            height: 60px;
+          }
+        }
+
+        .micro {
+
+          img {
+
+          }
+        }
+
+        .show {
+
+        }
+      }
+    }
+  }
 }
 </style>

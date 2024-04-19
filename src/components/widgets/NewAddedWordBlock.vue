@@ -104,4 +104,39 @@ onMounted(() => {
     }
   }
 }
+
+@media screen and (min-width: 2200px){
+  .words-wrap {
+
+    a {
+    }
+
+    .words__title {
+      font-size: 35px;
+    }
+
+    .have-not-words {
+      font-size: 17px;
+    }
+
+    .wrapper-loader {
+
+    }
+
+    .secondary-button {
+      width: 270px;
+      font-size: 20px;
+
+      svg {
+
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .words-wrap {
+    width: 97%;
+  }
+}
 </style>

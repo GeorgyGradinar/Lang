@@ -65,4 +65,17 @@ function animateSoundIcon() {
     height: 40px;
   }
 }
+
+@media screen and (min-width: 2200px){
+  .sound {
+    width: 50px;
+    height: 50px;
+
+    img {
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
+
 </style>

@@ -66,6 +66,24 @@ function getWordData(word) {
   }
 }
 
+@media screen and (min-width: 2200px) {
+  .wrapper-list-view {
+
+    .word__list__view {
+
+      .wrapper-list {
+        margin-bottom: 30px;
+      }
+
+      .two_columns {
+      }
+
+      .three_columns {
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 900px) {
   .word__list__view.popup_style {
     flex-wrap: unset;
@@ -79,31 +97,34 @@ function getWordData(word) {
   }
 }
 
-@media screen and (max-width: 500px) {
-  .word__list__view {
-    flex-wrap: unset;
-    flex-direction: column;
-    align-items: center;
+@media screen and (max-width: 450px) {
+  .wrapper-list-view {
+    .word__list__view {
+      flex-wrap: unset;
+      flex-direction: column;
+      align-items: center;
 
-    .wrapper-list {
+      .wrapper-list {
+        margin-bottom: 10px;
 
-      p {
-        font-size: 15px;
-      }
+        p {
+          font-size: 15px;
+        }
 
-      .sound,
-      .question,
-      .puzzle {
+        .sound,
+        .question,
+        .puzzle {
 
-        &:hover {
+          &:hover {
 
+          }
         }
       }
-    }
 
-    .two_columns,
-    .three_columns {
-      width: unset;
+      .two_columns,
+      .three_columns {
+        width: 100%;
+      }
     }
   }
 }

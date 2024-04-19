@@ -114,7 +114,10 @@ function selectGroup(group) {
       justify-content: space-between;
       align-items: flex-start;
       flex-direction: column;
-      width: 200px;
+      flex: 1;
+      width: 100%;
+      max-width: 250px;
+      min-width: 200px;
       color: var(--light-yellow);
       background-color: var(--dark-pink);
       padding: 10px;
@@ -229,6 +232,7 @@ function selectGroup(group) {
     .words-3__list {
       div {
         width: 100%;
+        max-width: unset;
       }
     }
   }

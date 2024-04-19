@@ -30,8 +30,10 @@ export const statisticStore = defineStore('statistic', () => {
     function changeCurrentDayStatistic(allStatistic, currentDay) {
         toggleClearAnimation();
         const foundDay = allStatistic.find(day => new Date(day.date).getDate() === currentDay);
-        currentDayStatistic.value = foundDay ? foundDay : null;
-        toggleClearAnimation();
+        setTimeout(() => {
+            toggleClearAnimation();
+            currentDayStatistic.value = foundDay ? foundDay : null;
+        }, 1000)
     }
 
     function toggleClearAnimation() {

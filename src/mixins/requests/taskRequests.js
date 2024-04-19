@@ -1,11 +1,12 @@
 import axios from "axios";
-import {HEADER_PARAMETERS, testUrl} from "../../../config";
+import {ERROR_SOME_THING_WRONG, ERROR_TO_MANY_REQUESTS, HEADER_PARAMETERS, testUrl} from "../../../config";
 import requestOptions from "@/mixins/prepare-requests/requestOptions";
-// import dialogsRequests from "@/mixins/requests/dialogsRequests";
 import {tasksStore} from "@/store/tasksStore";
 import {useRouter} from "vue-router/dist/vue-router";
 import {storeToRefs} from "pinia/dist/pinia";
 import {chatStore} from "@/store/chatStore";
+import shared from "@/mixins/shared";
+import {notificationStore} from "@/store/notificationStore";
 
 export default function taskRequests() {
     const taskStore = tasksStore();
@@ -20,8 +21,10 @@ export default function taskRequests() {
     const {pagination} = storeToRefs(taskStore);
     const chat = chatStore()
     const {changeActiveLoaderMessageGeneration} = chat;
-    // const {getAllMessagesInTask} = dialogsRequests();
     const router = useRouter();
+    const {prepareForLogout} = shared();
+    const notifications = notificationStore();
+    const {openSnackBarReject} = notifications;
 
     function getAllTasks() {
         axios.get(`${testUrl}/api/task`, {
@@ -30,6 +33,7 @@ export default function taskRequests() {
             .then(response => {
                 changeTasks(response.data.data)
             })
+            .catch(error => handleError(error))
     }
 
     function getAllUsersTasks(isPagination) {
@@ -88,7 +92,6 @@ export default function taskRequests() {
         })
             .then(response => {
                 changeCurrentTask(response.data.data.task);
-                // getAllMessagesInTask(response.data.data.id, false);
             })
             .catch(error => handleError(error))
     }
@@ -108,15 +111,30 @@ export default function taskRequests() {
             headers: requestOptions([HEADER_PARAMETERS.content, HEADER_PARAMETERS.accept, HEADER_PARAMETERS.authorization])
         })
             .then(response => {
-                console.log(response)
                 changeUsersErrors(response.data.data);
             })
             .catch(error => handleError(error))
     }
 
     function handleError(error) {
-        console.log(error)
         changeActiveLoaderMessageGeneration(false);
+
+        switch (error.response?.status) {
+            case 401:
+                prepareForLogout();
+                break;
+            case 500:
+            case 404:
+                openSnackBarReject(ERROR_SOME_THING_WRONG);
+                break;
+            case 429:
+                openSnackBarReject(ERROR_TO_MANY_REQUESTS);
+                break;
+            case 503:
+            case 422:
+            case 409:
+                openSnackBarReject(error.response?.data?.message);
+        }
     }
 
     return {

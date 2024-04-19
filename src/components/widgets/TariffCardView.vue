@@ -10,18 +10,18 @@
          data-aos-once="true"
          src="img/robots/робот-05.png" alt="robot">
     <p class="price__tariff-title">{{ tariff.name }}</p>
-    <p class="price__tariff-text">Описание</p>
+    <p class="price__tariff-text">{{ tariff.description }}</p>
     <div class="wrapper-price">
       <span class="price__tariff-price">{{ tariff.price }} </span>
       <span class="price__tariff-price2">₽</span>
       /месяц
     </div>
     <div class="price__tariff-buy">
-      <button @click="buyTariff">Начать обучение</button>
+      <button @click="buyTariff">Купить</button>
     </div>
     <div class="price__tariff-descr">
-      <p>Сообщений в день - {{ tariff.count_daily_messages }}</p>
-      <p>Заданий в день - {{ tariff.count_daily_tasks }}</p>
+      <p>Сообщений в месяц - {{ tariff.message_quota }}</p>
+      <p>Заданий в месяц - {{ tariff.task_quota }}</p>
     </div>
   </div>
 </template>
@@ -35,7 +35,6 @@ const props = defineProps({
   index: Number,
   isMiniBlock: Boolean
 });
-// eslint-disable-next-line no-unused-vars
 const {getPaymentLink} = userRequests();
 
 function buyTariff() {
@@ -107,7 +106,7 @@ function getTimeDelay() {
     button {
       border-radius: 10px;
       color: #fff;
-      padding: 5px;
+      padding: 5px 10px;
       border: 1px solid var(--dark);
       box-shadow: 1px 4px 1px var(--dark);
       transition: all 0.2s;
@@ -248,43 +247,6 @@ function getTimeDelay() {
     }
   }
 
-  //&:nth-child(2) {
-  //  color: var(--light-green);
-  //  background-color: var(--red);
-  //
-  //  .wrapper-price {
-  //    color: var(--purple);
-  //
-  //    .price__tariff-price {
-  //      color: var(--blue);
-  //    }
-  //
-  //    .price__tariff-price2 {
-  //      color: var(--blue);
-  //    }
-  //  }
-  //
-  //  .price__tariff-buy {
-  //
-  //    button {
-  //      background-color: var(--blue);
-  //
-  //      &:hover {
-  //        background-color: var(--red);
-  //        color: var(--light-green);
-  //      }
-  //
-  //      &:active {
-  //
-  //      }
-  //    }
-  //  }
-  //
-  //  .price__tariff-descr {
-  //    color: var(--light-green);
-  //  }
-  //}
-
   &:last-child {
     color: var(--dark);
     background-color: var(--yellow);
@@ -328,9 +290,10 @@ function getTimeDelay() {
 }
 
 .mini-block {
-  width: 250px;
+  width: 49%;
   padding: 10px 15px;
   margin-top: unset;
+  margin-bottom: 15px;
 
   .robot {
     display: none !important;
@@ -345,17 +308,29 @@ function getTimeDelay() {
   .price__tariff {
     width: 30%;
   }
+
+  .mini-block {
+    width: 49%;
+  }
 }
 
 @media screen and (max-width: 1300px) {
   .price__tariff {
     width: 40%;
   }
+
+  .mini-block {
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 1000px) {
   .price__tariff {
     width: 80%;
+  }
+
+  .mini-block {
+    width: 49%;
   }
 }
 

@@ -27,6 +27,7 @@ import CalendarBlock from "@/components/progress-page/CalendarBlock";
     justify-content: center;
     align-items: center;
     gap: 50px;
+    width: 50vw;
     height: calc(100vh - 90px);
     flex: 1;
   }
@@ -43,7 +44,7 @@ import CalendarBlock from "@/components/progress-page/CalendarBlock";
 
 
     .wrapper-show-result {
-
+      width: 100vw;
     }
 
     .wrapper-data-picker {

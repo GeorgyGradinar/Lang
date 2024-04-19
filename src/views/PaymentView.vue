@@ -1,43 +1,43 @@
 <template>
   <div class="wrapper-payment-page">
-    <message-view :messageText="messageText"/>
+    <message-view :messageText="endTariff"/>
     <div class="payment-page">
       <div class="wrapper-details">
-        <payment-state-view :state="paymentState" @cancelSubscr="toggleDialogSubscription(true)"/>
-        <payment-state-finish></payment-state-finish>
-<!--        <payment-method-view :state="paymentMethod"/>-->
+        <payment-state-view v-if="!checkExpired()" :messageText="endTariff" :plan="currentPlan"/>
+        <payment-state-finish v-else :plan="currentPlan"></payment-state-finish>
+        <!--        <payment-method-view :state="paymentMethod"/>-->
       </div>
 
       <payment-list-view :payments="payments"/>
     </div>
   </div>
-  <cancel-subscription-dlg :isShow="isOpenCancelDialog" @close="toggleDialogSubscription"/>
 </template>
 
 <script setup>
+// import PaymentMethodView from '@/components/widgets/PaymentMethodView.vue';
 import MessageView from '@/components/widgets/MessageView.vue';
 import PaymentStateView from '@/components/widgets/PaymentStateView.vue';
-// import PaymentMethodView from '@/components/widgets/PaymentMethodView.vue';
 import PaymentListView from '@/components/widgets/PaymentListView.vue';
-import CancelSubscriptionDlg from '@/components/modals/CancelSubscriptionDlg.vue';
 import PaymentStateFinish from "@/components/widgets/PaymentStateFinish";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
+import {mainStore} from "@/store/mainStore";
+import {storeToRefs} from "pinia/dist/pinia";
+import userRequests from "@/mixins/requests/userRequesrs";
+import shared from "@/mixins/shared";
 
-let messageText = ref('111');
-let paymentState = ref({});
-let paymentMethod = ref({});
+const main = mainStore();
+const {person, plans} = storeToRefs(main);
+const {getUser, getPlans} = userRequests();
+const {getDate} = shared();
+
 let payments = ref([]);
-let isOpenCancelDialog = ref(false);
+
+let endTariff = ref(null);
+let currentPlan = ref(null);
 
 onMounted(() => {
-  messageText.value = 'Ваша подписка действует до 29 октября 2024, 23:00';
-  paymentState.value = {
-    price: '21 480',
-    stopDate: '29 окт. 2024, 23:01'
-  };
-  paymentMethod.value = {
-    cardNumber: '***0102'
-  };
+  checkPerson();
+  checkPlans();
   payments.value = [
     {
       id: 0,
@@ -89,13 +89,39 @@ onMounted(() => {
     },
     {id: 6, method: 'sbp', cardNumber: 'СБП по карте ***0102', date: '5 мая 2021', state: 'Исполнен', amount: '2 990'}
   ]
-
 })
 
-function toggleDialogSubscription(isOpen) {
-  isOpenCancelDialog.value = isOpen;
+watch(person, () => {
+  checkPerson();
+})
+
+watch(plans, () => {
+  checkPlans();
+})
+
+function checkPerson() {
+  if (!Object.keys(person.value).length) {
+    getUser();
+  } else {
+    endTariff.value = getDate(person.value.plan_ended_at);
+  }
 }
 
+function checkPlans() {
+  if (!plans.value) {
+    getPlans();
+  } else {
+    findTariff();
+  }
+}
+
+function findTariff() {
+  currentPlan.value = plans.value.find(plan => plan.id === person.value?.last_plan_id);
+}
+
+function checkExpired() {
+  return (person.value.plan_ended_at * 1000) < new Date().getTime();
+}
 </script>
 
 <style scoped lang="scss">

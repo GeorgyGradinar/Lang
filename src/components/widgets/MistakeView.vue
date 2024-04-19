@@ -1,28 +1,10 @@
 <template>
   <div class="mistakes__list-wrap">
-    <!--    <div class="mistakes__list-row">-->
-    <!--      <p class="mistake__title"-->
-    <!--           v-for="item in mistakes.title" :key="item"-->
-    <!--           :class="{ 'w60' : item.w === 60, 'w50' : item.w === 50}"-->
-    <!--      >-->
-    <!--        {{ item.text }}-->
-    <!--      </p>-->
-    <!--    </div>-->
-    <!--    <div class="mistakes__list-row"-->
-    <!--         v-for="row in mistakes.rows" :key="row"-->
-    <!--    >-->
-    <!--      <div class="mistake__item"-->
-    <!--           v-for="item in row" :key="item"-->
-    <!--           :class="{ 'w60' : item.w === 60, 'w50' : item.w === 50}"-->
-    <!--           v-html="item.text"-->
-    <!--      >-->
-    <!--      </div>-->
-    <!--    </div>-->
     <template v-for="error in userErrors" :key="error.id">
       <div class="error" v-if="error.user_text">
-        <p>{{ error.user_text }}</p>
-        <p>{{ error.spelling_comment }}</p>
-        <p>{{ error.timestamp }}</p>
+        <p class="user-message"><span>Ваше сообщение</span> {{ error.user_text }}</p>
+        <p class="comment"><span>Комментарий к сообщению</span> {{ error.spelling_comment }}</p>
+        <p class="time">{{ getDate(error.timestamp) }}</p>
       </div>
     </template>
 
@@ -30,21 +12,19 @@
 </template>
 
 <script setup>
-import {onMounted, watch} from "vue";
+import {onMounted} from "vue";
 import {tasksStore} from "@/store/tasksStore";
 import {storeToRefs} from "pinia/dist/pinia";
 import taskRequests from "@/mixins/requests/taskRequests";
+import shared from "@/mixins/shared";
 
 const {getUsersErrors} = taskRequests();
 const taskStore = tasksStore();
 const {userErrors} = storeToRefs(taskStore);
+const {getDate} = shared();
 
 onMounted(() => {
   getUsersErrors();
-})
-
-watch(userErrors, () => {
-  console.log(userErrors.value)
 })
 </script>
 
@@ -53,82 +33,79 @@ watch(userErrors, () => {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 15px;
+  gap: 30px;
   height: 100%;
 
   .error {
     display: flex;
     flex-direction: column;
-    width: 30%;
+    gap: 30px;
+    width: 100%;
     padding: 20px;
     border-radius: 10px;
-    background-color: var(--blue);
+    background-color: var(--dark-pink);
     border: 2px solid var(--dark);
     box-shadow: 1px 4px 1px var(--dark);
-  }
 
-  .mistakes__list-row {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-
-    .mistake__title {
-      text-align: center;
+    .user-message,
+    .comment {
+      position: relative;
+      color: var(--yellow);
       font-size: 20px;
-      font-weight: 700;
-      padding-bottom: 30px;
-      width: 33%;
+      white-space: pre-wrap;
+      border: 1px solid var(--yellow);
+      padding: 15px;
+      border-radius: 10px;
+
+      span {
+        position: absolute;
+        top: -14px;
+        padding: 0 5px;
+        background-color: var(--dark-pink);
+        color: var(--light-yellow);
+      }
+    }
+
+    .comment {
+      font-size: 17px;
+    }
+
+    .time {
       color: var(--light-yellow);
-    }
-
-    .mistake__title.w50 {
-      width: 50%
-    }
-
-    .mistake__title.w60 {
-      width: 60%
+      font-size: 20px;
+      text-align: end;
     }
   }
+}
 
-  .mistake__item {
-    border-radius: 10px;
-    background-color: var(--light-yellow);
-    color: var(--dark);
-    padding: 20px;
-    margin-bottom: 30px;
-    width: 33%;
-    border: 2px solid var(--dark);
-  }
+@media screen and (min-width: 2200px) {
+  .mistakes__list-wrap {
+    .error {
+      .user-message,
+      .comment {
+        font-size: 28px;
+        padding: 20px 15px;
 
-  .mistake__item.w60 {
-    width: 60%
-  }
+        span {
+          font-size: 25px;
+          top: -20px;
+        }
+      }
 
-  .mistake__item.w50 {
-    width: 50%
-  }
-
-  .mistake__item.w40 {
-    width: 40%
+      .time {
+        font-size: 25px;
+      }
+    }
   }
 }
 
 @media screen and (max-width: 700px) {
   .mistakes__list-wrap {
-
     .mistakes__list-row {
       gap: 10px;
 
       .mistake__title {
         font-size: 12px;
-      }
-
-      .mistake__title.w50 {
-
-      }
-
-      .mistake__title.w60 {
-
       }
     }
 
@@ -137,17 +114,13 @@ watch(userErrors, () => {
       font-size: 10px;
       padding: 7px;
     }
+  }
+}
 
-    .mistake__item.w60 {
-
-    }
-
-    .mistake__item.w50 {
-
-    }
-
-    .mistake__item.w40 {
-
+@media screen and (max-width: 500px) {
+  .mistakes__list-wrap {
+    .error {
+      padding: 20px 10px;
     }
   }
 }

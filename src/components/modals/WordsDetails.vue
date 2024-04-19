@@ -352,4 +352,18 @@ function getPartOrAllListExamples() {
     }
   }
 }
+
+@media screen and (max-width: 800px) {
+  .details-word-dialog {
+    width: 100%;
+
+    .header-modal {
+      gap: 25px;
+    }
+
+    .wrapper-transcriptions {
+      flex-direction: column;
+    }
+  }
+}
 </style>

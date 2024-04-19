@@ -115,7 +115,8 @@ function updateHeightMessage() {
     }
   }
 
-  .message {
+  :deep(.message) {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     border-radius: 20px;
@@ -200,6 +201,66 @@ function updateHeightMessage() {
     &:hover {
       .translate-all-message {
         opacity: 1;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 2200px) {
+  .bot-message {
+
+    .icon-bot {
+      width: 60px;
+      height: 60px;
+
+      img {
+
+      }
+    }
+
+    :deep(.message) {
+
+      span {
+
+
+        span.english-word {
+          font-size: 23px;
+
+          &:hover {
+            color: var(--red);
+          }
+        }
+
+        &.new-line {
+        }
+      }
+
+      .message-in-main-page {
+        font-size: 23px;
+        cursor: default;
+      }
+
+      .wrapper-translate {
+
+        &.show-translate {
+
+        }
+
+        .translate {
+          font-size: 23px;
+        }
+
+        .wrapper-loader-translate-message {
+
+        }
+      }
+
+      .translate-all-message {
+        border: 3px solid var(--dark);
+
+        img {
+          width: 30px;
+        }
       }
     }
   }

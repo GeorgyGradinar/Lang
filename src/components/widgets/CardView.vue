@@ -182,6 +182,5 @@ function toggleOpenWordsList(isOpen) {
       }
     }
   }
-
 }
 </style>

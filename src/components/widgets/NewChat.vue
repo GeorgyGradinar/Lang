@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper-chart" :class="{'animate__animated animate__bounceInRight': !(isMiniChat || isMainPageChat)}">
 
-    <div class="mobile-nav-block">
+    <div class="mobile-nav-block" v-if="!isMiniChat">
       <button @click="cancelTask">
         <img src="img/chart/redo.svg" alt="arrow">
         вернуться
@@ -13,15 +13,14 @@
     </div>
 
     <div class="title-chat">
-
       <TimerLesson></TimerLesson>
-
-      <img v-if="isMiniChat" src="img/chart/close.svg" alt="close" @click="emit('closeMini')">
 
       <div class="wrapper-messages-counter" v-if="!isMiniChat">
         <p>Использованно сообщений</p>
         <p> {{ getCountUserMessages(messages) }} / {{ getCountLimitMessage() }}</p>
       </div>
+
+      <img v-if="isMiniChat" src="img/chart/close.svg" alt="close" @click="emit('closeMini')">
     </div>
 
     <div class="chat" :class="{'size-mini': isMiniChat}">
@@ -33,18 +32,7 @@
              v-for="message in messages" :key="message?.id">
           <!--          <template v-if="message.isText">-->
           <BotMessage v-if="message.is_bot" :message="message" @openOption="openOptionBlock"></BotMessage>
-
-          <div v-else class="person_message animate__animated animate__fast animate__fadeInRight">
-            <div class="message"
-                 :class="{
-                    'bg-done': message?.grading === 'success',
-                    'bg-reject': message?.grading === 'error'
-                 }">
-              <span>{{ message.message }}</span>
-            </div>
-            <CommentElement v-if="message?.spelling_comment" :comment="message"></CommentElement>
-          </div>
-
+          <PersonMessage v-else :message="message"></PersonMessage>
 
           <!--          <template v-if="!message.is_bot">-->
           <!--            <p class="error-message animate__animated animate__bounceInRight" v-if="message.errorMessage">-->
@@ -106,22 +94,18 @@ import {storeToRefs} from "pinia/dist/pinia";
 // eslint-disable-next-line no-unused-vars
 import Vue3WaveAudioPlayer from 'vue3-wave-audio-player';
 import dialogsRequests from "@/mixins/requests/dialogsRequests";
-// eslint-disable-next-line no-unused-vars
 import OptionWordBlock from "@/components/chat/OptionWordBlock";
 import {onClickOutside} from '@vueuse/core';
 import TypingLoader from "@/components/chat/TypingLoader";
 import InputBlock from "@/components/chat/InputBlock";
-// import taskRequests from "@/mixins/requests/taskRequests";
 import {useRouter} from "vue-router/dist/vue-router";
 import {tasksStore} from "@/store/tasksStore";
 import {TASKS, LESSON} from "@/configuration/Routers";
 import TaskAndAnswer from "@/components/widgets/TaskAndAnswer";
-import CommentElement from "@/components/chat/CommentElement";
+import PersonMessage from "@//components/chat/PersonMessage";
 import LoaderSpiner from "@/components/widgets/LoaderSpiner";
 import CharacterBlock from "@/components/chat/CharacterBlock";
 import TimerLesson from "@/components/chat/TimerLesson";
-import dictionaryRequests from "@/mixins/requests/dictionaryRequests";
-// eslint-disable-next-line no-unused-vars
 import BotMessage from "@/components/chat/BotMessage";
 
 const router = useRouter();
@@ -148,9 +132,6 @@ const taskStore = tasksStore();
 const {changeCurrentTask} = taskStore;
 const {currentTask} = storeToRefs(taskStore);
 const {getMessages, getAllMessagesInTask} = dialogsRequests();
-// eslint-disable-next-line no-unused-vars
-const {translateFullMessage} = dictionaryRequests();
-// const {taskShow} = taskRequests();
 
 let messagesBlock = ref(null);
 let top = ref(null);
@@ -197,11 +178,8 @@ function handelScrollForPagination() {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
 function openOptionBlock(event) {
-  if (!event?.target?.className?.includes('english-word')) {
-    return;
-  }
+  if (!event?.target?.className?.includes('english-word')) return;
 
   top.value = event.y + event.view.scrollY;
   left.value = event.x - 200;
@@ -324,6 +302,7 @@ onUnmounted(() => {
   .title-chat {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 10px 20px;
     color: var(--light-gray);
 
@@ -375,107 +354,9 @@ onUnmounted(() => {
         width: 100%;
         margin-bottom: 10px;
 
-        //.bot-message {
-        //  display: flex;
-        //  align-items: flex-end;
-        //  gap: 5px;
-        //
-        //  .icon-bot {
-        //    display: flex;
-        //    justify-content: center;
-        //    align-items: center;
-        //    border-radius: 50%;
-        //    width: 35px;
-        //    height: 35px;
-        //    border: 3px solid var(--dark-pink);
-        //    overflow: hidden;
-        //
-        //    img {
-        //      width: 100%;
-        //      object-fit: cover;
-        //    }
-        //  }
-        //}
-
-        .person_message {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          width: 100%;
-        }
-
         .typing-message {
           display: flex;
         }
-
-        .message {
-          position: relative;
-          display: flex;
-          flex-wrap: wrap;
-          border-radius: 20px;
-          padding: 5px 10px;
-          border: 2px solid var(--dark);
-          box-shadow: 1px 4px 1px var(--dark);
-          max-width: 60%;
-          background-color: var(--light-gray);
-
-          span {
-            position: relative;
-            cursor: pointer;
-            transition: all 0.2s;
-
-            span.english-word:hover {
-              color: var(--red);
-            }
-          }
-
-          .message-in-main-page {
-            white-space: pre-wrap;
-          }
-
-          .translate-all-message {
-            position: absolute;
-            opacity: 0;
-            bottom: -7px;
-            right: -15px;
-            display: flex;
-            border-radius: 10px;
-            padding: 4px 6px;
-            border: 2px solid var(--dark);
-            box-shadow: 1px 4px 1px var(--dark);
-            background-color: var(--yellow);
-            transition: all 0.2s;
-
-            img {
-              width: 20px;
-            }
-
-            &:hover {
-              background-color: var(--light-yellow);
-            }
-
-            &:active {
-              box-shadow: 0 0 1px var(--dark);
-              transform: translateY(5px);
-            }
-
-          }
-
-          &:hover {
-            .translate-all-message {
-              opacity: 1;
-            }
-          }
-        }
-
-        .bg-done {
-          background-color: var(--green);
-        }
-
-        .bg-reject {
-          background-color: var(--light-red);
-        }
-
 
         :deep(.animate__fast) {
           --animate-duration: 0.3s;
@@ -539,14 +420,10 @@ onUnmounted(() => {
   }
 
   .size-mini {
-    height: 475px;
-    flex: unset;
-
     .wrapper-messages {
       padding: 5px 2px 0 2px;
 
       .wrapper-message {
-
         .message {
           max-width: 75%;
         }
@@ -558,8 +435,6 @@ onUnmounted(() => {
             }
           }
         }
-
-
       }
     }
   }
@@ -613,13 +488,13 @@ onUnmounted(() => {
   }
 }
 
-@media screen and (max-width: 1100px) {
+@media screen and (min-width: 2200px) {
   .wrapper-chart {
+
 
     .title-chat {
 
       h3 {
-        font-size: 15px;
       }
 
       img {
@@ -632,26 +507,14 @@ onUnmounted(() => {
       .wrapper-messages-counter {
 
         p {
-          font-size: 15px;
+          font-size: 23px;
         }
       }
     }
 
     .chat {
-
       .wrapper-messages {
-
         .wrapper-message {
-
-          .message {
-
-            span {
-
-              span.kuku:hover {
-
-              }
-            }
-          }
 
           :deep(.animate__fast) {
 
@@ -659,6 +522,105 @@ onUnmounted(() => {
 
           .sound-message {
 
+          }
+
+          .error-message,
+          .done-message {
+
+          }
+
+          .done-message {
+
+          }
+
+          .person_message {
+
+          }
+
+          :deep(.player) {
+            #duration,
+            #current-time {
+
+            }
+
+            #play {
+
+              svg {
+
+              }
+            }
+
+            #slider {
+              svg {
+                #path1 {
+
+                }
+
+                #path2 {
+
+                }
+              }
+            }
+
+            #seek-slider::-webkit-slider-thumb {
+
+            }
+          }
+        }
+      }
+    }
+
+    .size-mini {
+
+      .wrapper-messages {
+        .wrapper-message {
+          :deep(.player) {
+            #slider {
+              svg {
+
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .wrapper-chart {
+
+    .title-chat {
+      padding: 10px 5px;
+
+      h3 {
+        font-size: 15px;
+      }
+
+      img {
+        &:hover {
+
+        }
+      }
+
+      .wrapper-messages-counter {
+        align-items: center;
+
+        p {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .chat {
+      .wrapper-messages {
+        .wrapper-message {
+
+          :deep(.animate__fast) {
+
+          }
+
+          .sound-message {
           }
 
           .error-message,
@@ -755,20 +717,8 @@ onUnmounted(() => {
     }
 
     .chat {
-
       .wrapper-messages {
-
         .wrapper-message {
-
-          .message {
-
-            span {
-
-              span.kuku:hover {
-
-              }
-            }
-          }
 
           :deep(.animate__fast) {
 
@@ -851,6 +801,8 @@ onUnmounted(() => {
     }
 
     .title-chat {
+      flex-direction: column;
+      gap: 10px;
 
       h3 {
         font-size: 13px;
@@ -868,26 +820,16 @@ onUnmounted(() => {
         p {
           display: flex;
           align-items: center;
-          font-size: 11px;
+          font-size: 14px;
         }
       }
     }
 
     .chat {
-
       .wrapper-messages {
+        padding: 5px 5px 0 5px;
 
         .wrapper-message {
-
-          .message {
-
-            span {
-
-              span.kuku:hover {
-
-              }
-            }
-          }
 
           :deep(.animate__fast) {
 

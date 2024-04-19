@@ -283,6 +283,7 @@ function goBack() {
 
       &:hover {
         background-color: var(--dark-pink);
+        color: var(--white);
       }
 
       img {
@@ -317,6 +318,90 @@ function goBack() {
   position: absolute;
   width: 100vw;
   height: 100vh;
+}
+
+@media screen and (min-width: 2200px) {
+  .wrapper-task-and-answer {
+
+    .wrapper-title {
+
+      h3 {
+        font-size: 30px;
+      }
+
+      button {
+
+        &:hover {
+
+        }
+      }
+    }
+
+    .task {
+
+      .wrapper-theme,
+      .wrapper-task-description,
+      .wrapper-task-word,
+      .wrapper-condition-reject {
+        font-size: 23px;
+
+        p:first-child {
+        }
+      }
+
+      .wrapper-condition-reject {
+
+        p:first-of-type {
+        }
+      }
+    }
+
+    .wrapper-counter-message {
+      .counter {
+
+        img {
+          width: 30px;
+        }
+
+        span {
+          font-size: 23px;
+
+          &:first-of-type {
+          }
+        }
+
+        &:first-of-type {
+        }
+      }
+    }
+
+    .answer {
+
+      p {
+      }
+
+      textarea {
+
+      }
+    }
+
+    .wrapper-button-back {
+      font-size: 23px;
+
+      button {
+
+        img {
+          width: 33px;
+          height: 33px;
+
+        }
+      }
+    }
+
+    button {
+
+    }
+  }
 }
 
 @media screen and (max-width: 1100px) {

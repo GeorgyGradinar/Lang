@@ -71,4 +71,16 @@ function toggleIsShowComment() {
     color: var(--light-gray);
   }
 }
+
+@media screen and (min-width: 2200px) {
+  .wrapper-comment {
+    .comment {
+      font-size: 17px;
+    }
+
+    button {
+      font-size: 17px;
+    }
+  }
+}
 </style>

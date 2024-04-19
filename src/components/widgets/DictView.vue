@@ -2,7 +2,13 @@
   <div class="words-2">
     <div class="words-2__nav">
       <BorderNav :tabs="wordNav"/>
+
       <div class="wrapper-right-block">
+        <button class="information">
+          <img src="img/dictionary/info.svg" alt="information">
+          <PopapBlock></PopapBlock>
+        </button>
+
         <TextNav :tabs="textNav"/>
         <!--        <button class="add-new-word" @click="openDialogNewWord">-->
         <!--          <img src="img/dictionary/plus.svg" alt="plus">-->
@@ -13,7 +19,7 @@
 
     <div class="wrapper-types-view">
       <DictionarySearchBlock></DictionarySearchBlock>
-      <ToggleShowWordsListOrBlock></ToggleShowWordsListOrBlock>
+      <!--      <ToggleShowWordsListOrBlock></ToggleShowWordsListOrBlock>-->
     </div>
 
     <div class="words-2__list" v-if="words.length" :class="{'list-show': isShowWordsTypeList}">
@@ -42,8 +48,9 @@ import LoaderSpiner from "@/components/widgets/LoaderSpiner";
 import BorderNav from '@/components/app/BorderNav.vue';
 import TextNav from '@/components/app/TextNav.vue';
 import DictionarySearchBlock from "@/components/widgets/DictionarySearchBlock";
-import ToggleShowWordsListOrBlock from "@/components/widgets/ToggleShowWordsListOrBlock";
+// import ToggleShowWordsListOrBlock from "@/components/widgets/ToggleShowWordsListOrBlock";
 import ButtonMoreWords from "@/components/dictionary/ButtonMoreWords";
+import PopapBlock from "@/components/dictionary/PopapBlock";
 
 const dictionary = dictionaryStore();
 const {
@@ -67,6 +74,10 @@ const textNav = [
 
 <style scoped lang="scss">
 
+.popap-word {
+  width: 600px;
+}
+
 .words-2 {
   padding: 40px 60px;
   display: flex;
@@ -86,6 +97,30 @@ const textNav = [
     .wrapper-right-block {
       display: flex;
       align-items: center;
+      gap: 10px;
+
+      .information {
+        width: 33px;
+        height: 33px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        border: 2px solid var(--dark);
+        box-shadow: 1px 4px 1px var(--dark);
+        background-color: var(--pink);
+        transition: all 0.2s;
+
+        &:active {
+          box-shadow: 0 0 1px var(--dark);
+          transform: translateY(4px);
+        }
+
+        img {
+          width: 25px;
+          height: 25px;
+        }
+      }
 
       //.add-new-word {
       //  display: flex;
@@ -129,8 +164,8 @@ const textNav = [
   .words-2__list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 2%;
+    justify-content: center;
+    gap: 20px;
     width: 100%;
     padding-top: 50px;
     transition: all 1s;

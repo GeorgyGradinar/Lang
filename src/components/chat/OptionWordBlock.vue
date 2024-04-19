@@ -130,7 +130,7 @@ function getTopPosition() {
       padding: 5px;
       transition: all 0.2s;
       font-size: 12px;
-      background-color: var(--dark-pink);
+      background-color: var(--pink);
       color: var(--light-yellow);
       cursor: pointer;
 
@@ -140,7 +140,7 @@ function getTopPosition() {
       }
 
       &:hover {
-        background-color: var(--pink);
+        background-color: var(--dark-pink);
       }
     }
   }
@@ -213,6 +213,60 @@ function getTopPosition() {
 
     p {
       color: var(--light-green);
+    }
+  }
+}
+
+@media screen and (min-width: 2200px) {
+  .option-block {
+
+    p {
+      font-size: 13px;
+    }
+
+    .cant-find {
+      font-size: 15px;
+    }
+
+    .wrapper-option-word {
+
+      .add-word {
+        font-size: 17px;
+      }
+    }
+
+    .wrapper-translate {
+
+      p {
+        font-size: 20px;
+      }
+    }
+
+    .transcriptions {
+
+      .uk,
+      .us {
+
+        p {
+
+          img {
+            width: 32px;
+          }
+        }
+
+        button {
+
+          img {
+            width: 25px;
+          }
+        }
+      }
+
+      .line {
+      }
+
+      p {
+      }
     }
   }
 }

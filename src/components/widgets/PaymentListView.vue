@@ -1,9 +1,8 @@
 <template>
   <div class="wrapper-history">
-    <table>
+    <table v-if="transactions">
       <thead>
       <tr>
-        <th>Способ оплаты</th>
         <th>Дата платежа</th>
         <th>Статус</th>
         <th>Сумма</th>
@@ -11,29 +10,54 @@
       </thead>
 
       <tbody>
-      <tr v-for="payment in payments" :key="payment.id">
-        <td>
-          <img v-if="payment.method ==='card'" src="img/icon/7367561.png">
-          <img v-if="payment.method ==='sbp'" src="img/icon/sbp_2.png">
-          {{ payment.cardNumber }}
-        </td>
-        <td>{{ payment.date }}</td>
-        <td>{{ payment.state }}</td>
-        <td>{{ payment.amount }}</td>
-      </tr>
+      <template v-for="transaction in transactions?.data" :key="transaction.id">
+        <tr v-if="transaction.payment">
+          <td>{{ getDate(transaction.payment.created_at) }}</td>
+          <td>{{ transaction.payment.status }}</td>
+          <td>{{ transaction.payment.sum }} руб</td>
+        </tr>
+      </template>
       </tbody>
     </table>
+    <div class="wrapper-pagination">
+      <v-row justify="center">
+        <v-col cols="8">
+          <v-pagination
+              v-model="currentPage"
+              :length="transactions?.pagination?.last_page"
+              class="my-4"
+              @update:modelValue="changePage"
+          ></v-pagination>
+        </v-col>
+      </v-row>
+    </div>
   </div>
-
 </template>
 
-<script>
-export default {
-  name: 'PaymentListView',
+<script setup>
+import {onMounted, ref, watch} from "vue";
+import userRequests from "@/mixins/requests/userRequesrs";
+import {mainStore} from "@/store/mainStore";
+import {storeToRefs} from "pinia/dist/pinia";
+import shared from "@/mixins/shared";
 
-  props: {
-    'payments': Array
-  }
+const {getTransactions} = userRequests();
+const main = mainStore();
+const {transactions} = storeToRefs(main);
+const {getDate} = shared();
+
+let currentPage = ref(null);
+
+onMounted(() => {
+  getTransactions();
+})
+
+watch(transactions, () => {
+  currentPage.value = transactions.value?.pagination?.current_page;
+})
+
+function changePage() {
+  getTransactions(currentPage.value);
 }
 </script>
 
@@ -52,24 +76,25 @@ export default {
     border-collapse: collapse;
 
     thead {
-      background: var(--light-yellow);
+      background: var(--pink);
 
       tr {
         th {
-          padding: 0.7em 2em;
+          padding: 10px 5px;
           text-align: start;
-          border-radius: 10px;
+          color: var(--light-yellow);
         }
       }
     }
 
     tbody {
       border-radius: 10px;
+
       tr {
         border-bottom: 1px solid var(--dark);
 
         td {
-          padding: 1em 2em;
+          padding: 10px 5px;
           text-align: start;
           color: var(--dark);
 
@@ -77,6 +102,38 @@ export default {
             color: var(--dark);
             font-weight: 500;
             padding-right: 3em;
+          }
+        }
+      }
+    }
+  }
+
+  .wrapper-pagination {
+    :deep(.v-row) {
+      margin: unset;
+
+      .v-col, .v-col-8 {
+        padding: unset;
+        flex: unset;
+        max-width: unset;
+
+        .my-4 {
+          margin-top: 10px !important;
+          margin-bottom: 10px !important;
+
+          .v-pagination__list {
+            display: flex;
+            align-items: center;
+
+            .v-pagination__item--is-active {
+              display: flex;
+              border: 2px solid var(--dark);
+              border-radius: 10px;
+
+              .v-btn--icon.v-btn--density-default {
+
+              }
+            }
           }
         }
       }
@@ -107,6 +164,23 @@ export default {
         tr {
           td {
             padding: 0.5em 1em;
+          }
+        }
+      }
+    }
+
+    .wrapper-pagination {
+      :deep(.v-row) {
+        .v-col, .v-col-8 {
+          .my-4 {
+            .v-pagination__list {
+              .v-pagination__item--is-active {
+                .v-btn--icon.v-btn--density-default {
+                  width: 35px;
+                  height: 35px;
+                }
+              }
+            }
           }
         }
       }

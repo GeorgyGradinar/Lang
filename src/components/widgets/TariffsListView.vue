@@ -29,6 +29,7 @@ const {plans} = storeToRefs(main);
 @media screen and (max-width: 1000px){
   .price__tariffs-row {
     padding: 50px 25px;
+    gap: 10px;
   }
 }
 </style>

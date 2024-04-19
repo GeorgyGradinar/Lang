@@ -1,21 +1,41 @@
 <template>
   <div class="wrapper-word" :class="{'list-view': isShowWordsTypeList, 'block-view': !isShowWordsTypeList }">
-    <div class="word">
-      <div class="scene">
-        <div class="cube" :class="{'show_translate': isShowTranslate}">
-          <p class="side top" @click="toggleIsShowTranslate">{{ wordData?.translation }}</p>
-          <p class="side front" @click="toggleIsShowTranslate">
-            {{ wordData?.word }}
-          </p>
-        </div>
-      </div>
 
-      <p class="translate show-translate" v-if="isShowWordsTypeList">
-        {{ wordData?.translation }}
-      </p>
+    <div class="wrapper-subscriptions">
+      <p class="label-in-dictionary" v-if="wordData?.in_dictionary">В словаре</p>
+      <p class="completed" v-if="userWord?.is_completed">Изучено: {{ userWord?.is_completed }}</p>
     </div>
 
-    <p class="label-in-dictionary" v-if="wordData?.in_dictionary">В словаре</p>
+
+    <!--    <div class="wrap-word">-->
+    <!--      <div class="word" :class="{'show_translate': isShowTranslate}">-->
+    <!--        <div class="scene">-->
+    <!--          <div class="cube" :class="{'show_translate': false}">-->
+    <!--            <p class="side top" @click="toggleIsShowTranslate">{{ wordData?.translation }}</p>-->
+    <!--            <p class="side front" @click="toggleIsShowTranslate">-->
+    <!--              {{ wordData?.word }}-->
+    <!--            </p>-->
+    <!--          </div>-->
+    <!--        </div>-->
+
+    <!--        <p class="translate show-translate" v-if="isShowWordsTypeList">-->
+    <!--          {{ wordData?.translation }}-->
+    <!--        </p>-->
+    <!--      </div>-->
+    <!--    </div>-->
+
+    <div class="wrap-word">
+      <div class="word" :class="{'show_translate': isShowTranslate}">
+        <p class="side" @click="toggleIsShowTranslate">
+          {{ wordData?.word }}
+        </p>
+
+        <p class="translate" @click="toggleIsShowTranslate">
+          {{ wordData?.translation }}
+        </p>
+      </div>
+    </div>
+
 
     <div class="actions">
       <div class="translate" @click="toggleIsShowTranslate"
@@ -25,37 +45,37 @@
           <path
               d="m480-80-40-120H160q-33 0-56.5-23.5T80-280v-520q0-33 23.5-56.5T160-880h240l35 120h365q35 0 57.5 22.5T880-680v520q0 33-22.5 56.5T800-80H480ZM286-376q69 0 113.5-44.5T444-536q0-8-.5-14.5T441-564H283v62h89q-8 28-30.5 43.5T287-443q-39 0-67-28t-28-69q0-41 28-69t67-28q18 0 34 6.5t29 19.5l49-47q-21-22-50.5-34T286-704q-67 0-114.5 47.5T124-540q0 69 47.5 116.5T286-376Zm268 20 22-21q-14-17-25.5-33T528-444l26 88Zm50-51q28-33 42.5-63t19.5-47H507l12 42h40q8 15 19 32.5t26 35.5Zm-84 287h280q18 0 29-11.5t11-28.5v-520q0-18-11-29t-29-11H447l47 162h79v-42h41v42h146v41h-51q-10 38-30 74t-47 67l109 107-29 29-108-108-36 37 32 111-80 80Z"/>
         </svg>
-        <v-tooltip activator="parent" location="bottom">Перевести</v-tooltip>
+        <v-tooltip activator="parent" location="bottom" class="button-word"><p>Перевести</p></v-tooltip>
       </div>
 
       <div class="volume" @click="playPronunciation">
         <img src="img/icon/bxs-volume-low.svg">
-        <v-tooltip activator="parent" location="bottom">Озвучить</v-tooltip>
+        <v-tooltip activator="parent" location="bottom" class="button-word"><p>Озвучить</p></v-tooltip>
       </div>
 
       <div class="tasks" @click="openTaskWithWord()">
         <img src="img/icon/bxs-extension.svg">
-        <v-tooltip activator="parent" location="bottom">Задачи</v-tooltip>
+        <v-tooltip activator="parent" location="bottom" class="button-word"><p>Задачи</p></v-tooltip>
       </div>
 
       <div class="help" @click="toggleOpenDetailModal">
         <img src="img/icon/bxs-help-circle.svg">
-        <v-tooltip activator="parent" location="bottom">Детальная информация</v-tooltip>
+        <v-tooltip activator="parent" location="bottom" class="button-word"><p>Детальная информация</p></v-tooltip>
       </div>
 
       <div v-if="!wordData?.in_dictionary" class="add-word" @click="addWordToAccount()">
         <img src="img/dictionary/add.svg">
-        <v-tooltip activator="parent" location="bottom">Добавить в аккаунт</v-tooltip>
+        <v-tooltip activator="parent" location="bottom" class="button-word"><p>Добавить в аккаунт</p></v-tooltip>
       </div>
 
       <div v-if="wordData?.in_dictionary" class="delete-word" @click="deleteUserWord()">
         <img src="img/dictionary/trash.svg">
-        <v-tooltip activator="parent" location="bottom">Удалить слово</v-tooltip>
+        <v-tooltip activator="parent" location="bottom" class="button-word"><p>Удалить слово</p></v-tooltip>
       </div>
 
       <div v-if="wordData?.in_dictionary" class="learned">
         <p><img src="img/icon/lean.png">{{ userWord?.training_count }}</p>
-        <v-tooltip activator="parent" location="bottom">Отработанно</v-tooltip>
+        <v-tooltip activator="parent" location="bottom" class="button-word"><p>Отработанно</p></v-tooltip>
       </div>
     </div>
   </div>
@@ -126,120 +146,114 @@ function playPronunciation() {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 40px;
-  width: 23%;
-  height: 275px;
+  flex: 1;
+  gap: 20px;
+  width: 100%;
+  max-width: 320px;
+  min-width: 250px;
+  height: 230px;
   background-color: var(--pink);
   border-radius: 10px;
   font-size: 15px;
   font-weight: 800;
   padding: 0 10px;
-  margin-bottom: 20px;
   cursor: pointer;
   border: 2px solid var(--dark);
   box-shadow: 1px 4px 1px var(--dark);
   overflow: hidden;
 
-  p {
-    width: 100px;
-  }
-
-  .word {
-    font-size: 20px;
-    color: var(--dark-pink);
+  .wrap-word {
     position: relative;
-    margin-top: 25px;
-    z-index: 2;
-
-    .scene {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 150px;
-      border-radius: 7px;
-
-      .cube {
-        width: 100%;
-        cursor: pointer;
-        transition: all 0.85s cubic-bezier(.15, .70, .15, 1);
-        transform-style: preserve-3d;
-        transform-origin: 100% 50%;
-        height: 150px;
-        border-radius: 10px;
-
-        .side {
-          width: 100%;
-          height: 150px;
-          position: absolute;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          text-align: center;
-          text-transform: uppercase;
-          font-weight: bold;
-          border-radius: 5px;
-
-          &.top {
-            background: var(--purple);
-            color: var(--light-yellow);
-            transform: rotateX(90deg) translate3d(0, 0, 75px);
-            border: 1px solid var(--dark);
-            box-shadow: 1px 4px 1px var(--dark);
-          }
-
-          &.front {
-            background-color: var(--light_pink);
-            color: var(--dark);
-            box-shadow: 1px 4px 1px var(--dark);
-            border: 1px solid var(--dark);
-            transform: translate3d(0, 0, 75px);
-          }
-
-          span {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            margin-left: 5px;
-          }
-        }
-      }
-
-      .show_translate {
-        transform: rotateX(-90deg);
-      }
-    }
-
-    .translate {
-      height: 0;
-      opacity: 0;
-      border: 1px solid var(--yellow);
-      border-radius: 5px;
-      text-transform: uppercase;
-    }
-  }
-
-  .label-in-dictionary {
-    position: absolute;
-    bottom: 60px;
-    width: unset;
+    width: 100%;
+    height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--yellow);
-    border: 1px solid var(--yellow);
-    border-radius: 7px;
-    padding: 1px 6px;
-    font-size: 12px;
-    font-weight: 700;
-    z-index: 0;
+    border-radius: 10px;
+    margin-top: 34px;
+    transition: all 0.2s;
+
+    .word {
+      width: 100%;
+      transform-style: preserve-3d;
+      transition: transform 400ms;
+      border-radius: 10px;
+      border: 2px solid var(--dark);
+      box-shadow: 1px 4px 1px var(--dark);
+
+      .side {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 7px;
+        backface-visibility: hidden;
+        background-color: var(--light_pink);
+        color: var(--dark-pink);
+        font-size: 18px;
+      }
+
+      .translate {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 7px;
+        backface-visibility: hidden;
+        transform: rotateX(180deg);
+        background-color: var(--dark-pink);
+        color: var(--yellow);
+        font-size: 15px;
+        text-align: center;
+      }
+    }
+
+    .show_translate {
+      transform: rotateX(180deg);
+      border: 2px solid var(--dark);
+      box-shadow: 1px -4px 1px var(--dark);
+    }
   }
+
+  .wrapper-subscriptions {
+    position: absolute;
+    top: 5px;
+    width: 94%;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+
+    .label-in-dictionary,
+    .completed {
+      width: unset;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--yellow);
+      border: 1px solid var(--yellow);
+      border-radius: 7px;
+      padding: 1px 6px;
+      font-size: 12px;
+      font-weight: 700;
+      z-index: 0;
+    }
+
+    .completed {
+      color: var(--hard-green);
+      border: 1px solid var(--hard-green);
+    }
+  }
+
 
   .actions {
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
+    gap: 10px;
     margin-bottom: 15px;
 
     .translate,
@@ -270,12 +284,15 @@ function playPronunciation() {
       }
     }
 
+    .delete-word {
+      position: absolute;
+      top: -50px;
+      right: 5px;
+      z-index: 2;
+    }
+
     .is_active-translate {
       background-color: var(--purple);
-
-      svg {
-        //fill: var(--blue);
-      }
     }
 
     .learned {
@@ -285,7 +302,7 @@ function playPronunciation() {
       width: 100%;
       min-width: 40px;
       max-width: 55px;
-      height: 40px;
+      height: 37px;
       box-shadow: 0 0 1px var(--dark);
       transform: translateY(2px);
       border: 2px solid var(--yellow);
@@ -324,6 +341,14 @@ function playPronunciation() {
     }
   }
 
+  &:hover {
+    .actions {
+      .delete-word {
+        top: 5px;
+      }
+    }
+  }
+
   animation-name: resizeBlock;
   animation-timing-function: ease-out;
   animation-duration: 0.5s;
@@ -345,6 +370,7 @@ function playPronunciation() {
     display: flex;
     gap: 10px;
     align-items: center;
+    margin-top: unset;
     width: 70%;
 
     .scene {
@@ -381,6 +407,14 @@ function playPronunciation() {
     }
   }
 
+  .label-in-dictionary {
+    bottom: 15px;
+    left: 25px;
+    border-radius: 5px;
+    background-color: var(--dark-pink);
+    z-index: 4;
+  }
+
   .actions {
     gap: 20px;
     align-items: center;
@@ -405,153 +439,28 @@ function playPronunciation() {
   }
 }
 
-.v-tooltip > .v-overlay__content {
+.button-word.v-tooltip > .v-overlay__content {
+  display: flex;
   background-color: var(--yellow) !important;
-  opacity: 0.8;
+  opacity: 0.9;
   color: var(--blue) !important;
   border-radius: 10px;
   border: 1px solid var(--dark);
 }
 
-@media screen and (max-width: 1350px) {
+@media screen and (max-width: 1100px){
   .wrapper-word {
-    width: 23%;
-  }
-
-  .list-view {
-    width: 90%;
-
-    .word {
-
-      .scene {
-
-        .cube {
-
-          .side {
-
-            &.front {
-
-            }
-          }
-        }
-      }
-
-      .show-translate {
-
-      }
-    }
-
     .actions {
-
-    }
-  }
-}
-
-@media screen and (max-width: 1200px) {
-  .wrapper-word {
-    width: 32%;
-  }
-
-  .list-view {
-    width: 100%;
-
-    .word {
-
-      .scene {
-
-        .cube {
-
-          .side {
-
-            &.front {
-
-            }
-          }
-        }
+      .delete-word {
+        top: 10px;
       }
-
-      .show-translate {
-
-      }
-    }
-
-    .actions {
-
-    }
-  }
-}
-
-@media screen and (max-width: 850px) {
-  .wrapper-word {
-    width: 49%;
-  }
-
-  .list-view {
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    gap: 20px;
-
-    .word {
-      width: 100%;
-
-      .scene {
-
-        .cube {
-
-          .side {
-
-            &.front {
-
-            }
-          }
-        }
-      }
-
-      .show-translate {
-
-      }
-    }
-
-    .actions {
-      width: 210px
     }
   }
 }
 
 @media screen and (max-width: 550px) {
   .wrapper-word {
-    width: 100%;
-  }
-
-  .list-view {
-
-    .word {
-      flex-direction: column;
-
-      .scene {
-        height: 45px;
-
-        .cube {
-
-          .side {
-
-            &.front {
-
-            }
-          }
-        }
-      }
-
-      .show-translate {
-
-      }
-    }
-
-    .actions {
-
-    }
+    max-width: 400px;
   }
 }
 </style>

@@ -71,4 +71,19 @@ p {
     fill: var(--yellow);
   }
 }
+
+@media screen and (min-width: 2200px){
+  p {
+    font-size: 22px;
+  }
+
+  .question,
+  .puzzle {
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
 </style>
